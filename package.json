@@ -1,0 +1,21 @@
+{
+  "name": "waypoint",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Waypoint: delivery planning system. Team smoothOperator, Rootcode Tech-Triathlon 2026 Hackathon.",
+  "workspaces": ["server", "web"],
+  "scripts": {
+    "dev": "concurrently -n server,web -c yellow,cyan \"npm run dev -w server\" \"npm run dev -w web\"",
+    "build": "npm run build -w web",
+    "start": "npm run start -w server",
+    "test": "npm test -w server",
+    "reset-data": "npm run reset -w server",
+    "format": "prettier --write \"server/src/**/*.js\" \"server/test/**/*.js\" \"web/src/**/*.{js,jsx,css}\"",
+    "format:check": "prettier --check \"server/src/**/*.js\" \"server/test/**/*.js\" \"web/src/**/*.{js,jsx,css}\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0",
+    "prettier": "^3.3.3"
+  },
+  "engines": { "node": ">=20" }
+}

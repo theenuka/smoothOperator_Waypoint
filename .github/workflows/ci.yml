@@ -1,0 +1,24 @@
+# Runs on every pull request: install, test the backend, build the web app.
+# A red X means something is broken. The Lead does not merge red PRs.
+name: CI
+on:
+  pull_request:
+  push:
+    branches: [main]
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Formatting (run `npm run format` locally if this fails)
+        run: npm run format:check
+      - run: npm test
+      - run: npm run build

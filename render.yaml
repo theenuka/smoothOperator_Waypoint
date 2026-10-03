@@ -1,0 +1,12 @@
+# Render blueprint. Owner: LEAD. See docs/DEPLOY.md
+services:
+  - type: web
+    name: waypoint
+    runtime: node
+    plan: free
+    buildCommand: npm ci --include=dev && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: "20"

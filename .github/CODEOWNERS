@@ -1,0 +1,10 @@
+# Who reviews which files. The Lead reviews everything during the hackathon.
+# After the team is set, you can replace the commented lines with real usernames, e.g.:
+# /web/src/roles/driver/   @driver-username
+*   @theenuka
+# /server/src/logic/fairness.js /server/src/routes/orders.js ...   @backend-a-username
+# /server/src/logic/conflict.js /server/src/routes/sync.js ...     @backend-b-username
+# /web/src/roles/dispatcher/   @dispatcher-username
+# /web/src/roles/loader/       @loader-username
+# /web/src/roles/driver/       @driver-username
+# /web/src/roles/store/        @store-username

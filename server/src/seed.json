@@ -1,0 +1,918 @@
+{
+  "meta": {
+    "demoDate": "2026-09-29",
+    "planDate": "2026-09-30",
+    "cutoff": "16:00",
+    "company": "Waypoint demo retail chain"
+  },
+  "depots": [
+    {
+      "id": "PLG",
+      "name": "Peliyagoda depot"
+    },
+    {
+      "id": "KDY",
+      "name": "Kandy depot"
+    }
+  ],
+  "outlets": [
+    {
+      "id": "OUT014",
+      "name": "Dehiwala",
+      "depot": "PLG",
+      "lat": 6.8511,
+      "lng": 79.8653,
+      "dockOpen": "05:30",
+      "dockClose": "10:00",
+      "manager": "Nadeeka Fernando"
+    },
+    {
+      "id": "OUT011",
+      "name": "Wellawatte",
+      "depot": "PLG",
+      "lat": 6.874,
+      "lng": 79.8606,
+      "dockOpen": "05:30",
+      "dockClose": "10:00",
+      "manager": "S. Kumara"
+    },
+    {
+      "id": "OUT022",
+      "name": "Borella",
+      "depot": "PLG",
+      "lat": 6.9147,
+      "lng": 79.8778,
+      "dockOpen": "05:00",
+      "dockClose": "09:00",
+      "manager": "R. Silva"
+    },
+    {
+      "id": "OUT031",
+      "name": "Kelaniya",
+      "depot": "PLG",
+      "lat": 6.9553,
+      "lng": 79.922,
+      "dockOpen": "06:00",
+      "dockClose": "11:00",
+      "manager": "D. Perera"
+    },
+    {
+      "id": "OUT036",
+      "name": "Kirulapone",
+      "depot": "PLG",
+      "lat": 6.878,
+      "lng": 79.877,
+      "dockOpen": "05:30",
+      "dockClose": "10:00",
+      "manager": "M. Fonseka"
+    },
+    {
+      "id": "OUT045",
+      "name": "Negombo",
+      "depot": "PLG",
+      "lat": 7.2083,
+      "lng": 79.8358,
+      "dockOpen": "06:00",
+      "dockClose": "12:00",
+      "manager": "A. Fernando"
+    },
+    {
+      "id": "OUT058",
+      "name": "Nugegoda",
+      "depot": "PLG",
+      "lat": 6.8649,
+      "lng": 79.8997,
+      "dockOpen": "05:30",
+      "dockClose": "10:30",
+      "manager": "T. Jayawardena"
+    },
+    {
+      "id": "OUT067",
+      "name": "Wattala",
+      "depot": "PLG",
+      "lat": 6.989,
+      "lng": 79.892,
+      "dockOpen": "05:30",
+      "dockClose": "10:00",
+      "manager": "K. Peiris"
+    },
+    {
+      "id": "OUT061",
+      "name": "Kadawatha",
+      "depot": "PLG",
+      "lat": 7.001,
+      "lng": 79.953,
+      "dockOpen": "06:00",
+      "dockClose": "12:00",
+      "manager": "H. Rajapakse"
+    },
+    {
+      "id": "OUT077",
+      "name": "Nittambuwa",
+      "depot": "PLG",
+      "lat": 7.144,
+      "lng": 80.096,
+      "dockOpen": "06:00",
+      "dockClose": "12:00",
+      "manager": "P. Senanayake"
+    },
+    {
+      "id": "OUT083",
+      "name": "Kegalle",
+      "depot": "PLG",
+      "lat": 7.2513,
+      "lng": 80.3464,
+      "dockOpen": "07:00",
+      "dockClose": "13:00",
+      "manager": "Sunil Perera"
+    },
+    {
+      "id": "OUT075",
+      "name": "Peradeniya",
+      "depot": "PLG",
+      "lat": 7.269,
+      "lng": 80.595,
+      "dockOpen": "08:00",
+      "dockClose": "14:00",
+      "manager": "N. Bandara"
+    },
+    {
+      "id": "OUT072",
+      "name": "Kandy City",
+      "depot": "PLG",
+      "lat": 7.2906,
+      "lng": 80.6337,
+      "dockOpen": "08:00",
+      "dockClose": "13:00",
+      "manager": "R. Mendis"
+    }
+  ],
+  "vehicles": [
+    {
+      "id": "VEH022",
+      "type": "dry",
+      "capacityKg": 1400,
+      "slots": 0,
+      "driver": "Chamara Wickramasinghe",
+      "depot": "PLG",
+      "status": "on_road"
+    },
+    {
+      "id": "VEH014",
+      "type": "reefer",
+      "capacityKg": 1100,
+      "slots": 2,
+      "driver": "S. Kumara",
+      "depot": "PLG",
+      "status": "on_road"
+    },
+    {
+      "id": "VEH019",
+      "type": "reefer",
+      "capacityKg": 1100,
+      "slots": 2,
+      "driver": "R. Silva",
+      "depot": "PLG",
+      "status": "on_road"
+    },
+    {
+      "id": "VEH026",
+      "type": "reefer",
+      "capacityKg": 1100,
+      "slots": 1,
+      "driver": "K. Dias",
+      "depot": "PLG",
+      "status": "on_road"
+    },
+    {
+      "id": "VEH031",
+      "type": "reefer",
+      "capacityKg": 1100,
+      "slots": 2,
+      "driver": "-",
+      "depot": "PLG",
+      "status": "workshop"
+    },
+    {
+      "id": "VEH037",
+      "type": "dry",
+      "capacityKg": 1400,
+      "slots": 0,
+      "driver": "D. Pathirana",
+      "depot": "PLG",
+      "status": "at_depot"
+    }
+  ],
+  "orders": [
+    {
+      "id": "ORD41801",
+      "outletId": "OUT061",
+      "deliveryDate": "2026-09-29",
+      "chilled": false,
+      "lines": [
+        {
+          "sku": "SKU-1101",
+          "name": "Rice, 5 kg bag",
+          "qty": 10,
+          "unit": "bag"
+        },
+        {
+          "sku": "SKU-2207",
+          "name": "Coconut oil, 1 L",
+          "qty": 6,
+          "unit": "bottle"
+        }
+      ],
+      "kg": 150,
+      "status": "loaded",
+      "placedAt": "2026-09-28T15:12:00+05:30"
+    },
+    {
+      "id": "ORD41802",
+      "outletId": "OUT077",
+      "deliveryDate": "2026-09-29",
+      "chilled": false,
+      "lines": [
+        {
+          "sku": "SKU-1101",
+          "name": "Rice, 5 kg bag",
+          "qty": 8,
+          "unit": "bag"
+        },
+        {
+          "sku": "SKU-4410",
+          "name": "Cream crackers",
+          "qty": 8,
+          "unit": "pack"
+        }
+      ],
+      "kg": 160,
+      "status": "loaded",
+      "placedAt": "2026-09-28T15:12:00+05:30"
+    },
+    {
+      "id": "ORD41803",
+      "outletId": "OUT083",
+      "deliveryDate": "2026-09-29",
+      "chilled": false,
+      "lines": [
+        {
+          "sku": "SKU-1101",
+          "name": "Rice, 5 kg bag",
+          "qty": 12,
+          "unit": "bag"
+        },
+        {
+          "sku": "SKU-2207",
+          "name": "Coconut oil, 1 L",
+          "qty": 6,
+          "unit": "bottle"
+        },
+        {
+          "sku": "SKU-4410",
+          "name": "Cream crackers",
+          "qty": 8,
+          "unit": "pack"
+        },
+        {
+          "sku": "SKU-3305",
+          "name": "Detergent powder, 1 kg",
+          "qty": 10,
+          "unit": "carton"
+        },
+        {
+          "sku": "SKU-5120",
+          "name": "Ceylon tea, 400 g",
+          "qty": 5,
+          "unit": "pack"
+        }
+      ],
+      "kg": 410,
+      "status": "loaded",
+      "placedAt": "2026-09-28T15:12:00+05:30"
+    },
+    {
+      "id": "ORD41804",
+      "outletId": "OUT075",
+      "deliveryDate": "2026-09-29",
+      "chilled": false,
+      "lines": [
+        {
+          "sku": "SKU-1101",
+          "name": "Rice, 5 kg bag",
+          "qty": 6,
+          "unit": "bag"
+        },
+        {
+          "sku": "SKU-5120",
+          "name": "Ceylon tea, 400 g",
+          "qty": 5,
+          "unit": "pack"
+        }
+      ],
+      "kg": 140,
+      "status": "loaded",
+      "placedAt": "2026-09-28T15:12:00+05:30"
+    },
+    {
+      "id": "ORD41805",
+      "outletId": "OUT072",
+      "deliveryDate": "2026-09-29",
+      "chilled": false,
+      "lines": [
+        {
+          "sku": "SKU-1101",
+          "name": "Rice, 5 kg bag",
+          "qty": 5,
+          "unit": "bag"
+        },
+        {
+          "sku": "SKU-4410",
+          "name": "Cream crackers",
+          "qty": 4,
+          "unit": "pack"
+        }
+      ],
+      "kg": 150,
+      "status": "loaded",
+      "placedAt": "2026-09-28T15:12:00+05:30"
+    },
+    {
+      "id": "ORD41822",
+      "outletId": "OUT014",
+      "deliveryDate": "2026-09-29",
+      "chilled": true,
+      "lines": [
+        {
+          "sku": "SKU-7001",
+          "name": "Fresh milk 1 L, crate of 12",
+          "qty": 8,
+          "unit": "crate"
+        },
+        {
+          "sku": "SKU-7010",
+          "name": "Set yoghurt 80 g, tray of 24",
+          "qty": 6,
+          "unit": "tray"
+        },
+        {
+          "sku": "SKU-7101",
+          "name": "Chicken 1 kg, carton of 10",
+          "qty": 4,
+          "unit": "carton"
+        },
+        {
+          "sku": "SKU-8001",
+          "name": "Carrots 1 kg, box of 10",
+          "qty": 5,
+          "unit": "box"
+        },
+        {
+          "sku": "SKU-1150",
+          "name": "Rice, samba 5 kg",
+          "qty": 3,
+          "unit": "bag"
+        }
+      ],
+      "kg": 486,
+      "status": "delivered",
+      "placedAt": "2026-09-28T15:12:00+05:30"
+    },
+    {
+      "id": "ORD41901",
+      "outletId": "OUT045",
+      "deliveryDate": "2026-09-30",
+      "chilled": true,
+      "lines": [
+        {
+          "sku": "SKU-7001",
+          "name": "Fresh milk 1 L, crate of 12",
+          "qty": 4,
+          "unit": "crate"
+        },
+        {
+          "sku": "SKU-7010",
+          "name": "Set yoghurt 80 g, tray of 24",
+          "qty": 3,
+          "unit": "tray"
+        }
+      ],
+      "kg": 312,
+      "status": "placed",
+      "placedAt": "2026-09-28T15:12:00+05:30"
+    },
+    {
+      "id": "ORD41902",
+      "outletId": "OUT058",
+      "deliveryDate": "2026-09-30",
+      "chilled": true,
+      "lines": [
+        {
+          "sku": "SKU-7001",
+          "name": "Fresh milk 1 L, crate of 12",
+          "qty": 4,
+          "unit": "crate"
+        },
+        {
+          "sku": "SKU-7010",
+          "name": "Set yoghurt 80 g, tray of 24",
+          "qty": 3,
+          "unit": "tray"
+        }
+      ],
+      "kg": 270,
+      "status": "placed",
+      "placedAt": "2026-09-28T15:12:00+05:30"
+    },
+    {
+      "id": "ORD41903",
+      "outletId": "OUT014",
+      "deliveryDate": "2026-09-30",
+      "chilled": true,
+      "lines": [
+        {
+          "sku": "SKU-7001",
+          "name": "Fresh milk 1 L, crate of 12",
+          "qty": 4,
+          "unit": "crate"
+        },
+        {
+          "sku": "SKU-7010",
+          "name": "Set yoghurt 80 g, tray of 24",
+          "qty": 3,
+          "unit": "tray"
+        }
+      ],
+      "kg": 486,
+      "status": "placed",
+      "placedAt": "2026-09-28T15:12:00+05:30"
+    },
+    {
+      "id": "ORD41904",
+      "outletId": "OUT031",
+      "deliveryDate": "2026-09-30",
+      "chilled": true,
+      "lines": [
+        {
+          "sku": "SKU-7001",
+          "name": "Fresh milk 1 L, crate of 12",
+          "qty": 4,
+          "unit": "crate"
+        },
+        {
+          "sku": "SKU-7010",
+          "name": "Set yoghurt 80 g, tray of 24",
+          "qty": 3,
+          "unit": "tray"
+        }
+      ],
+      "kg": 240,
+      "status": "placed",
+      "placedAt": "2026-09-28T15:12:00+05:30"
+    },
+    {
+      "id": "ORD41905",
+      "outletId": "OUT011",
+      "deliveryDate": "2026-09-30",
+      "chilled": true,
+      "lines": [
+        {
+          "sku": "SKU-7001",
+          "name": "Fresh milk 1 L, crate of 12",
+          "qty": 4,
+          "unit": "crate"
+        },
+        {
+          "sku": "SKU-7010",
+          "name": "Set yoghurt 80 g, tray of 24",
+          "qty": 3,
+          "unit": "tray"
+        }
+      ],
+      "kg": 220,
+      "status": "placed",
+      "placedAt": "2026-09-28T15:12:00+05:30"
+    },
+    {
+      "id": "ORD41906",
+      "outletId": "OUT067",
+      "deliveryDate": "2026-09-30",
+      "chilled": true,
+      "lines": [
+        {
+          "sku": "SKU-7001",
+          "name": "Fresh milk 1 L, crate of 12",
+          "qty": 4,
+          "unit": "crate"
+        },
+        {
+          "sku": "SKU-7010",
+          "name": "Set yoghurt 80 g, tray of 24",
+          "qty": 3,
+          "unit": "tray"
+        }
+      ],
+      "kg": 198,
+      "status": "placed",
+      "placedAt": "2026-09-28T15:12:00+05:30"
+    },
+    {
+      "id": "ORD41907",
+      "outletId": "OUT022",
+      "deliveryDate": "2026-09-30",
+      "chilled": true,
+      "lines": [
+        {
+          "sku": "SKU-7001",
+          "name": "Fresh milk 1 L, crate of 12",
+          "qty": 4,
+          "unit": "crate"
+        },
+        {
+          "sku": "SKU-7010",
+          "name": "Set yoghurt 80 g, tray of 24",
+          "qty": 3,
+          "unit": "tray"
+        }
+      ],
+      "kg": 224,
+      "status": "placed",
+      "placedAt": "2026-09-28T15:12:00+05:30"
+    },
+    {
+      "id": "ORD41908",
+      "outletId": "OUT036",
+      "deliveryDate": "2026-09-30",
+      "chilled": true,
+      "lines": [
+        {
+          "sku": "SKU-7001",
+          "name": "Fresh milk 1 L, crate of 12",
+          "qty": 4,
+          "unit": "crate"
+        },
+        {
+          "sku": "SKU-7010",
+          "name": "Set yoghurt 80 g, tray of 24",
+          "qty": 3,
+          "unit": "tray"
+        }
+      ],
+      "kg": 186,
+      "status": "placed",
+      "placedAt": "2026-09-28T15:12:00+05:30"
+    }
+  ],
+  "history": {
+    "lastChilledDelivery": {
+      "OUT045": "2026-09-28T07:00:00+05:30",
+      "OUT058": "2026-09-28T07:30:00+05:30",
+      "OUT014": "2026-09-29T06:02:00+05:30",
+      "OUT031": "2026-09-26T06:40:00+05:30",
+      "OUT011": "2026-09-29T06:15:00+05:30",
+      "OUT067": "2026-09-29T07:10:00+05:30",
+      "OUT022": "2026-09-29T06:40:00+05:30",
+      "OUT036": "2026-09-29T07:25:00+05:30"
+    }
+  },
+  "deferrals": [
+    {
+      "id": "DEF-0917-014",
+      "orderId": "ORD41320",
+      "outletId": "OUT014",
+      "fromDate": "2026-09-18",
+      "toDate": "2026-09-19",
+      "reason": "Chilled trucks fully booked.",
+      "decidedBy": "Kavindi Perera",
+      "at": "2026-09-17T16:05:00+05:30",
+      "reversed": false
+    },
+    {
+      "id": "DEF-0924-014",
+      "orderId": "ORD41519",
+      "outletId": "OUT014",
+      "fromDate": "2026-09-25",
+      "toDate": "2026-09-28",
+      "reason": "Colombo's refrigerated trucks are fully booked on Friday. Your last chilled delivery was on Thursday, so a store that had waited longer goes first this time.",
+      "decidedBy": "Kavindi Perera",
+      "at": "2026-09-24T16:05:00+05:30",
+      "reversed": false
+    },
+    {
+      "id": "DEF-0929-045",
+      "orderId": "ORD41790",
+      "outletId": "OUT045",
+      "fromDate": "2026-09-29",
+      "toDate": "2026-09-30",
+      "reason": "Reefer VEH031 in the workshop.",
+      "decidedBy": "Kavindi Perera",
+      "at": "2026-09-28T16:02:00+05:30",
+      "reversed": false
+    },
+    {
+      "id": "DEF-0929-058",
+      "orderId": "ORD41791",
+      "outletId": "OUT058",
+      "fromDate": "2026-09-29",
+      "toDate": "2026-09-30",
+      "reason": "Reefer VEH031 in the workshop.",
+      "decidedBy": "Kavindi Perera",
+      "at": "2026-09-28T16:02:00+05:30",
+      "reversed": false
+    }
+  ],
+  "runs": [
+    {
+      "id": "RUN-VEH022",
+      "vehicleId": "VEH022",
+      "date": "2026-09-29",
+      "driver": "Chamara Wickramasinghe",
+      "bay": "03",
+      "status": "on_road",
+      "departedAt": "2026-09-29T06:30:00+05:30",
+      "stops": [
+        {
+          "seq": 1,
+          "outletId": "OUT061",
+          "orderId": "ORD41801",
+          "eta": "07:05",
+          "status": "delivered"
+        },
+        {
+          "seq": 2,
+          "outletId": "OUT077",
+          "orderId": "ORD41802",
+          "eta": "07:40",
+          "status": "delivered"
+        },
+        {
+          "seq": 3,
+          "outletId": "OUT083",
+          "orderId": "ORD41803",
+          "eta": "08:40",
+          "status": "next"
+        },
+        {
+          "seq": 4,
+          "outletId": "OUT075",
+          "orderId": "ORD41804",
+          "eta": "09:50",
+          "status": "pending"
+        },
+        {
+          "seq": 5,
+          "outletId": "OUT072",
+          "orderId": "ORD41805",
+          "eta": "10:10",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": "RUN-VEH014",
+      "vehicleId": "VEH014",
+      "date": "2026-09-29",
+      "driver": "S. Kumara",
+      "bay": "01",
+      "status": "done",
+      "departedAt": "2026-09-29T05:10:00+05:30",
+      "stops": [
+        {
+          "seq": 1,
+          "outletId": "OUT014",
+          "orderId": "ORD41822",
+          "eta": "06:00",
+          "status": "delivered"
+        }
+      ]
+    }
+  ],
+  "loads": {
+    "RUN-VEH022": {
+      "runId": "RUN-VEH022",
+      "status": "sealed",
+      "lines": [
+        {
+          "orderId": "ORD41801",
+          "stopSeq": 1,
+          "sku": "SKU-1101",
+          "name": "Rice, 5 kg bag",
+          "planned": 10,
+          "loaded": 10,
+          "checked": true
+        },
+        {
+          "orderId": "ORD41801",
+          "stopSeq": 1,
+          "sku": "SKU-2207",
+          "name": "Coconut oil, 1 L",
+          "planned": 6,
+          "loaded": 6,
+          "checked": true
+        },
+        {
+          "orderId": "ORD41802",
+          "stopSeq": 2,
+          "sku": "SKU-1101",
+          "name": "Rice, 5 kg bag",
+          "planned": 8,
+          "loaded": 8,
+          "checked": true
+        },
+        {
+          "orderId": "ORD41802",
+          "stopSeq": 2,
+          "sku": "SKU-4410",
+          "name": "Cream crackers",
+          "planned": 8,
+          "loaded": 8,
+          "checked": true
+        },
+        {
+          "orderId": "ORD41803",
+          "stopSeq": 3,
+          "sku": "SKU-1101",
+          "name": "Rice, 5 kg bag",
+          "planned": 12,
+          "loaded": 12,
+          "checked": true
+        },
+        {
+          "orderId": "ORD41803",
+          "stopSeq": 3,
+          "sku": "SKU-2207",
+          "name": "Coconut oil, 1 L",
+          "planned": 6,
+          "loaded": 6,
+          "checked": true
+        },
+        {
+          "orderId": "ORD41803",
+          "stopSeq": 3,
+          "sku": "SKU-4410",
+          "name": "Cream crackers",
+          "planned": 8,
+          "loaded": 8,
+          "checked": true
+        },
+        {
+          "orderId": "ORD41803",
+          "stopSeq": 3,
+          "sku": "SKU-3305",
+          "name": "Detergent powder, 1 kg",
+          "planned": 10,
+          "loaded": 6,
+          "checked": true
+        },
+        {
+          "orderId": "ORD41803",
+          "stopSeq": 3,
+          "sku": "SKU-5120",
+          "name": "Ceylon tea, 400 g",
+          "planned": 5,
+          "loaded": 5,
+          "checked": true
+        },
+        {
+          "orderId": "ORD41804",
+          "stopSeq": 4,
+          "sku": "SKU-1101",
+          "name": "Rice, 5 kg bag",
+          "planned": 6,
+          "loaded": 6,
+          "checked": true
+        },
+        {
+          "orderId": "ORD41804",
+          "stopSeq": 4,
+          "sku": "SKU-5120",
+          "name": "Ceylon tea, 400 g",
+          "planned": 5,
+          "loaded": 5,
+          "checked": true
+        },
+        {
+          "orderId": "ORD41805",
+          "stopSeq": 5,
+          "sku": "SKU-1101",
+          "name": "Rice, 5 kg bag",
+          "planned": 5,
+          "loaded": 5,
+          "checked": true
+        },
+        {
+          "orderId": "ORD41805",
+          "stopSeq": 5,
+          "sku": "SKU-4410",
+          "name": "Cream crackers",
+          "planned": 4,
+          "loaded": 4,
+          "checked": true
+        }
+      ],
+      "shortfalls": [
+        {
+          "id": "SF-1",
+          "orderId": "ORD41803",
+          "outletId": "OUT083",
+          "sku": "SKU-3305",
+          "name": "Detergent powder, 1 kg",
+          "planned": 10,
+          "loaded": 6,
+          "reason": "short_on_dock",
+          "by": "Ruwan Jayasinghe",
+          "at": "2026-09-29T05:38:00+05:30"
+        }
+      ]
+    }
+  },
+  "deliveries": [
+    {
+      "id": "DLV-1",
+      "clientId": "seed-1",
+      "runId": "RUN-VEH022",
+      "stopSeq": 1,
+      "orderId": "ORD41801",
+      "outletId": "OUT061",
+      "status": "delivered",
+      "signedBy": "H. Rajapakse",
+      "recordedAt": "2026-09-29T07:02:00+05:30",
+      "syncedAt": "2026-09-29T07:02:05+05:30",
+      "items": []
+    },
+    {
+      "id": "DLV-2",
+      "clientId": "seed-2",
+      "runId": "RUN-VEH022",
+      "stopSeq": 2,
+      "orderId": "ORD41802",
+      "outletId": "OUT077",
+      "status": "delivered",
+      "signedBy": "P. Senanayake",
+      "recordedAt": "2026-09-29T07:41:00+05:30",
+      "syncedAt": "2026-09-29T07:41:04+05:30",
+      "items": []
+    },
+    {
+      "id": "DLV-3",
+      "clientId": "seed-3",
+      "runId": "RUN-VEH014",
+      "stopSeq": 1,
+      "orderId": "ORD41822",
+      "outletId": "OUT014",
+      "status": "delivered",
+      "signedBy": "Dilini Wijesinghe",
+      "recordedAt": "2026-09-29T06:02:00+05:30",
+      "syncedAt": "2026-09-29T06:02:03+05:30",
+      "items": []
+    }
+  ],
+  "conflicts": [],
+  "notices": [
+    {
+      "id": "NT-1",
+      "outletId": "OUT083",
+      "type": "shortfall",
+      "title": "4 cartons of detergent arrive Wednesday",
+      "body": "6 of 10 cartons of Detergent powder, 1 kg are on today's truck. The other 4 were short at the dock and are added to Wednesday's order.",
+      "at": "2026-09-29T05:40:00+05:30",
+      "read": false
+    },
+    {
+      "id": "NT-2",
+      "outletId": "OUT014",
+      "type": "deferral",
+      "title": "Your Friday order will arrive on Monday",
+      "body": "Colombo's refrigerated trucks are fully booked on Friday. Your last chilled delivery was on Thursday, so a store that had waited longer goes first this time. New delivery: Mon 28 Sep, 05:30 to 08:00. You are protected on the next tight day.",
+      "at": "2026-09-24T16:05:00+05:30",
+      "read": true
+    }
+  ],
+  "positions": {
+    "VEH022": {
+      "vehicleId": "VEH022",
+      "lat": 7.2513,
+      "lng": 80.3464,
+      "at": "2026-09-29T08:44:00+05:30"
+    },
+    "VEH014": {
+      "vehicleId": "VEH014",
+      "lat": 6.9,
+      "lng": 79.87,
+      "at": "2026-09-29T08:30:00+05:30"
+    },
+    "VEH019": {
+      "vehicleId": "VEH019",
+      "lat": 6.93,
+      "lng": 79.88,
+      "at": "2026-09-29T08:41:00+05:30"
+    },
+    "VEH026": {
+      "vehicleId": "VEH026",
+      "lat": 7.09,
+      "lng": 79.99,
+      "at": "2026-09-29T08:43:00+05:30"
+    }
+  },
+  "events": []
+}

@@ -1,0 +1,674 @@
+[
+  {
+    "role": "lead",
+    "title": "[lead] Get every member running the app and set up in the first hour",
+    "priority": "Must",
+    "milestone": "1 · Must (Checkpoint 1)",
+    "labels": [
+      "role:lead",
+      "priority:must",
+      "lead"
+    ],
+    "body": "**Owner role:** `lead`  \n**Task file:** [docs/tasks/01-lead.md](../blob/main/docs/tasks/01-lead.md)  \n**Priority:** Must\n\n## What to build\n\nEvery member runs the app in Antigravity with their prompt block within the first hour.\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `lead` changed (see AGENTS.md)\n\nBranch: `lead/<short-task>` · Commit: `feat(lead): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "lead",
+    "title": "[lead] Run the H4, H8 and freeze checkpoints",
+    "priority": "Must",
+    "milestone": "1 · Must (Checkpoint 1)",
+    "labels": [
+      "role:lead",
+      "priority:must",
+      "lead"
+    ],
+    "body": "**Owner role:** `lead`  \n**Task file:** [docs/tasks/01-lead.md](../blob/main/docs/tasks/01-lead.md)  \n**Priority:** Must\n\n## What to build\n\nCheckpoints at H4, H8 and freeze (see `TEAM_PLAN.md`): merge ready PRs, then `git checkout main && git pull && npm install && npm test && npm run dev`, click through `DEMO_SCRIPT.md`, post \"Merged, please pull\".\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `lead` changed (see AGENTS.md)\n\nBranch: `lead/<short-task>` · Commit: `feat(lead): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "lead",
+    "title": "[lead] Review every PR for file ownership and green CI",
+    "priority": "Must",
+    "milestone": "1 · Must (Checkpoint 1)",
+    "labels": [
+      "role:lead",
+      "priority:must",
+      "lead"
+    ],
+    "body": "**Owner role:** `lead`  \n**Task file:** [docs/tasks/01-lead.md](../blob/main/docs/tasks/01-lead.md)  \n**Priority:** Must\n\n## What to build\n\nReview every PR's **Files changed**: only files the author owns. If not, ask them to `git restore` the extra files and push again.\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `lead` changed (see AGENTS.md)\n\nBranch: `lead/<short-task>` · Commit: `feat(lead): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "lead",
+    "title": "[lead] Deploy to Render after checkpoint 2 and after the freeze",
+    "priority": "Must",
+    "milestone": "1 · Must (Checkpoint 1)",
+    "labels": [
+      "role:lead",
+      "priority:must",
+      "lead"
+    ],
+    "body": "**Owner role:** `lead`  \n**Task file:** [docs/tasks/01-lead.md](../blob/main/docs/tasks/01-lead.md)  \n**Priority:** Must\n\n## What to build\n\nDeploy to Render after checkpoint 2 (`DEPLOY.md`) and after the freeze.\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `lead` changed (see AGENTS.md)\n\nBranch: `lead/<short-task>` · Commit: `feat(lead): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "lead",
+    "title": "[lead] Rehearse the demo three times and record a backup video",
+    "priority": "Must",
+    "milestone": "1 · Must (Checkpoint 1)",
+    "labels": [
+      "role:lead",
+      "priority:must",
+      "lead"
+    ],
+    "body": "**Owner role:** `lead`  \n**Task file:** [docs/tasks/01-lead.md](../blob/main/docs/tasks/01-lead.md)  \n**Priority:** Must\n\n## What to build\n\nRehearse the demo three times with the team. Record a backup video (OBS or the Windows Game Bar `Win+G`, or QuickTime on Mac).\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `lead` changed (see AGENTS.md)\n\nBranch: `lead/<short-task>` · Commit: `feat(lead): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "lead",
+    "title": "[lead] Handle shared-code requests (components, CSS tokens, packages)",
+    "priority": "Should",
+    "milestone": "2 · Should (Checkpoint 2)",
+    "labels": [
+      "role:lead",
+      "priority:should",
+      "lead"
+    ],
+    "body": "**Owner role:** `lead`  \n**Task file:** [docs/tasks/01-lead.md](../blob/main/docs/tasks/01-lead.md)  \n**Priority:** Should\n\n## What to build\n\nHandle requests for shared code: a new component in `shared/ui.jsx`, a new CSS class in `tokens.css`, an npm package. Make the change on a `lead/<task>` branch, PR, merge, tell everyone to pull.\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `lead` changed (see AGENTS.md)\n\nBranch: `lead/<short-task>` · Commit: `feat(lead): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "lead",
+    "title": "[lead] Keep the \"Requested endpoints\" table in the API contract current",
+    "priority": "Should",
+    "milestone": "2 · Should (Checkpoint 2)",
+    "labels": [
+      "role:lead",
+      "priority:should",
+      "lead"
+    ],
+    "body": "**Owner role:** `lead`  \n**Task file:** [docs/tasks/01-lead.md](../blob/main/docs/tasks/01-lead.md)  \n**Priority:** Should\n\n## What to build\n\nKeep `docs/API_CONTRACT.md` \"Requested endpoints\" table up to date.\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `lead` changed (see AGENTS.md)\n\nBranch: `lead/<short-task>` · Commit: `feat(lead): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "lead",
+    "title": "[lead] Make the 5-6 slide pitch deck",
+    "priority": "Should",
+    "milestone": "2 · Should (Checkpoint 2)",
+    "labels": [
+      "role:lead",
+      "priority:should",
+      "lead"
+    ],
+    "body": "**Owner role:** `lead`  \n**Task file:** [docs/tasks/01-lead.md](../blob/main/docs/tasks/01-lead.md)  \n**Priority:** Should\n\n## What to build\n\nMake slides (5 or 6): problem, the three problems, solution and the four roles, live demo, architecture (reuse the Designathon architecture PNG), what's next.\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `lead` changed (see AGENTS.md)\n\nBranch: `lead/<short-task>` · Commit: `feat(lead): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "lead",
+    "title": "[lead] Demo controls panel on the home page",
+    "priority": "Nice",
+    "milestone": "3 · Nice (before freeze)",
+    "labels": [
+      "role:lead",
+      "priority:nice",
+      "lead"
+    ],
+    "body": "**Owner role:** `lead`  \n**Task file:** [docs/tasks/01-lead.md](../blob/main/docs/tasks/01-lead.md)  \n**Priority:** Nice\n\n## What to build\n\nA small \"Demo controls\" panel on the home page (reset, open all four roles in new tabs).\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `lead` changed (see AGENTS.md)\n\nBranch: `lead/<short-task>` · Commit: `feat(lead): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "lead",
+    "title": "[lead] Final consistency polish of shared/tokens.css",
+    "priority": "Nice",
+    "milestone": "3 · Nice (before freeze)",
+    "labels": [
+      "role:lead",
+      "priority:nice",
+      "lead"
+    ],
+    "body": "**Owner role:** `lead`  \n**Task file:** [docs/tasks/01-lead.md](../blob/main/docs/tasks/01-lead.md)  \n**Priority:** Nice\n\n## What to build\n\nPolish `shared/tokens.css` once all screens exist, so the whole app feels consistent.\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `lead` changed (see AGENTS.md)\n\nBranch: `lead/<short-task>` · Commit: `feat(lead): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "backend-a",
+    "title": "[backend-a] POST /orders: 16:00 cutoff rule (logic/cutoff.js + tests)",
+    "priority": "Must",
+    "milestone": "1 · Must (Checkpoint 1)",
+    "labels": [
+      "role:backend-a",
+      "priority:must",
+      "backend"
+    ],
+    "body": "**Owner role:** `backend-a`  \n**Task file:** [docs/tasks/02-backend-a.md](../blob/main/docs/tasks/02-backend-a.md)  \n**Priority:** Must\n\n## What to build\n\n**Cutoff rule** in `POST /orders` (there is a TODO). Orders placed after 16:00 Sri Lanka time for the next day go to the day after. Return the real `deliveryDate` and add `\"cutoffMoved\": true` when you moved it. Put the logic in a pure function `logic/cutoff.js` and test it in `test/cutoff.test.js` (see how `fairness.test.js` works).\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `backend-a` changed (see AGENTS.md)\n\nBranch: `backend-a/<short-task>` · Commit: `feat(backend-a): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "backend-a",
+    "title": "[backend-a] POST /orders: validate outlet, lines and quantities",
+    "priority": "Must",
+    "milestone": "1 · Must (Checkpoint 1)",
+    "labels": [
+      "role:backend-a",
+      "priority:must",
+      "backend"
+    ],
+    "body": "**Owner role:** `backend-a`  \n**Task file:** [docs/tasks/02-backend-a.md](../blob/main/docs/tasks/02-backend-a.md)  \n**Priority:** Must\n\n## What to build\n\n**Validation:** `POST /orders` rejects unknown `outletId`, empty lines, `qty <= 0` with a 400 and a clear message.\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `backend-a` changed (see AGENTS.md)\n\nBranch: `backend-a/<short-task>` · Commit: `feat(backend-a): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "backend-a",
+    "title": "[backend-a] POST /issues endpoint for the store problem report (SM7)",
+    "priority": "Should",
+    "milestone": "2 · Should (Checkpoint 2)",
+    "labels": [
+      "role:backend-a",
+      "priority:should",
+      "backend"
+    ],
+    "body": "**Owner role:** `backend-a`  \n**Task file:** [docs/tasks/02-backend-a.md](../blob/main/docs/tasks/02-backend-a.md)  \n**Design:** [SM7-ReportIssue](../blob/main/web/public/design/SM7-ReportIssue.jpg)  \n**Priority:** Should\n\n## What to build\n\n`POST /issues` for the store \"report a problem\" screen (SM7). It's in the \"Requested endpoints\" table of the API contract. Store issues in `db().issues` (create the array if missing: `d.issues ||= []`), publish `issue.reported`, and tell the Lead to add the event text to `shared/format.js`.\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `backend-a` changed (see AGENTS.md)\n\nBranch: `backend-a/<short-task>` · Commit: `feat(backend-a): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "backend-a",
+    "title": "[backend-a] Fairness tests: tie-break and no-deferral cases",
+    "priority": "Should",
+    "milestone": "2 · Should (Checkpoint 2)",
+    "labels": [
+      "role:backend-a",
+      "priority:should",
+      "backend"
+    ],
+    "body": "**Owner role:** `backend-a`  \n**Task file:** [docs/tasks/02-backend-a.md](../blob/main/docs/tasks/02-backend-a.md)  \n**Priority:** Should\n\n## What to build\n\nFairness: add a test for a tie (same gap, different size: the smaller order waits) and for \"no deferrals needed\" (orders ≤ slots: everyone is served).\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `backend-a` changed (see AGENTS.md)\n\nBranch: `backend-a/<short-task>` · Commit: `feat(backend-a): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "backend-a",
+    "title": "[backend-a] GET /plan/suggest: add waitsUntil to wait rows",
+    "priority": "Should",
+    "milestone": "2 · Should (Checkpoint 2)",
+    "labels": [
+      "role:backend-a",
+      "priority:should",
+      "backend"
+    ],
+    "body": "**Owner role:** `backend-a`  \n**Task file:** [docs/tasks/02-backend-a.md](../blob/main/docs/tasks/02-backend-a.md)  \n**Design:** [DP3-PlanAllocate](../blob/main/web/public/design/DP3-PlanAllocate.jpg)  \n**Priority:** Should\n\n## What to build\n\n`GET /plan/suggest`: add `\"waitsUntil\"` (the next day) to each `wait` row so DP3 can show it.\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `backend-a` changed (see AGENTS.md)\n\nBranch: `backend-a/<short-task>` · Commit: `feat(backend-a): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "backend-a",
+    "title": "[backend-a] GET /orders/:id/timeline for SM4",
+    "priority": "Nice",
+    "milestone": "3 · Nice (before freeze)",
+    "labels": [
+      "role:backend-a",
+      "priority:nice",
+      "backend"
+    ],
+    "body": "**Owner role:** `backend-a`  \n**Task file:** [docs/tasks/02-backend-a.md](../blob/main/docs/tasks/02-backend-a.md)  \n**Design:** [SM4-OrderDetail](../blob/main/web/public/design/SM4-OrderDetail.jpg)  \n**Priority:** Nice\n\n## What to build\n\n`GET /orders/:id/timeline`: a list of steps (placed, planned, loaded, out for delivery, delivered or deferred) with times, for SM4.\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `backend-a` changed (see AGENTS.md)\n\nBranch: `backend-a/<short-task>` · Commit: `feat(backend-a): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "backend-a",
+    "title": "[backend-a] Notice text mentions previous waits",
+    "priority": "Nice",
+    "milestone": "3 · Nice (before freeze)",
+    "labels": [
+      "role:backend-a",
+      "priority:nice",
+      "backend"
+    ],
+    "body": "**Owner role:** `backend-a`  \n**Task file:** [docs/tasks/02-backend-a.md](../blob/main/docs/tasks/02-backend-a.md)  \n**Priority:** Nice\n\n## What to build\n\nNotice text: if a store waited before, say when (\"You also waited on Thursday 24 September\").\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `backend-a` changed (see AGENTS.md)\n\nBranch: `backend-a/<short-task>` · Commit: `feat(backend-a): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "backend-b",
+    "title": "[backend-b] Back-order missing quantity onto the next order (logic/backorder.js)",
+    "priority": "Must",
+    "milestone": "1 · Must (Checkpoint 1)",
+    "labels": [
+      "role:backend-b",
+      "priority:must",
+      "backend"
+    ],
+    "body": "**Owner role:** `backend-b`  \n**Task file:** [docs/tasks/03-backend-b.md](../blob/main/docs/tasks/03-backend-b.md)  \n**Priority:** Must\n\n## What to build\n\n**Back-order** (TODO in `loads.js`): when a shortfall is flagged, add the missing quantity to the outlet's next open order (or create a new order for the next day if there is none). Mark the line `\"backorder\": true` and `\"fromShortfall\": \"<shortfall id>\"`. Pure function in `logic/backorder.js` + a test.\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `backend-b` changed (see AGENTS.md)\n\nBranch: `backend-b/<short-task>` · Commit: `feat(backend-b): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "backend-b",
+    "title": "[backend-b] Failed deliveries (DR4) set stop to failed, also through /sync",
+    "priority": "Must",
+    "milestone": "1 · Must (Checkpoint 1)",
+    "labels": [
+      "role:backend-b",
+      "priority:must",
+      "backend"
+    ],
+    "body": "**Owner role:** `backend-b`  \n**Task file:** [docs/tasks/03-backend-b.md](../blob/main/docs/tasks/03-backend-b.md)  \n**Design:** [DR4-IssueAtStop](../blob/main/web/public/design/DR4-IssueAtStop.jpg)  \n**Priority:** Must\n\n## What to build\n\n**Failed deliveries:** a record with `status: \"failed\"` (DR4, with `issue` and `note`) must set the stop to `failed`, keep the order not delivered, and publish `delivery.recorded` with the status. Check it works through `POST /sync` too.\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `backend-b` changed (see AGENTS.md)\n\nBranch: `backend-b/<short-task>` · Commit: `feat(backend-b): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "backend-b",
+    "title": "[backend-b] More conflict tests: duplicate in one sync, unknown order",
+    "priority": "Must",
+    "milestone": "1 · Must (Checkpoint 1)",
+    "labels": [
+      "role:backend-b",
+      "priority:must",
+      "backend"
+    ],
+    "body": "**Owner role:** `backend-b`  \n**Task file:** [docs/tasks/03-backend-b.md](../blob/main/docs/tasks/03-backend-b.md)  \n**Priority:** Must\n\n## What to build\n\n**More conflict tests:** the same record sent twice in one `POST /sync`; a record for an unknown order (should return a clear error for that record, not crash the whole sync).\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `backend-b` changed (see AGENTS.md)\n\nBranch: `backend-b/<short-task>` · Commit: `feat(backend-b): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "backend-b",
+    "title": "[backend-b] POST /sync: one bad record must not stop the others",
+    "priority": "Should",
+    "milestone": "2 · Should (Checkpoint 2)",
+    "labels": [
+      "role:backend-b",
+      "priority:should",
+      "backend"
+    ],
+    "body": "**Owner role:** `backend-b`  \n**Task file:** [docs/tasks/03-backend-b.md](../blob/main/docs/tasks/03-backend-b.md)  \n**Priority:** Should\n\n## What to build\n\nIn `POST /sync`, one bad record must not stop the others: wrap each record in try/catch and return `\"errors\": [{ clientId, error }]` (add it to the API contract).\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `backend-b` changed (see AGENTS.md)\n\nBranch: `backend-b/<short-task>` · Commit: `feat(backend-b): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "backend-b",
+    "title": "[backend-b] GET /runs/:id/summary for DR7",
+    "priority": "Should",
+    "milestone": "2 · Should (Checkpoint 2)",
+    "labels": [
+      "role:backend-b",
+      "priority:should",
+      "backend"
+    ],
+    "body": "**Owner role:** `backend-b`  \n**Task file:** [docs/tasks/03-backend-b.md](../blob/main/docs/tasks/03-backend-b.md)  \n**Design:** [DR7-TripSummary](../blob/main/web/public/design/DR7-TripSummary.jpg)  \n**Priority:** Should\n\n## What to build\n\n`GET /runs/:id/summary` for DR7: delivered, failed, deferred counts, first and last delivery time, shortfalls handed over.\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `backend-b` changed (see AGENTS.md)\n\nBranch: `backend-b/<short-task>` · Commit: `feat(backend-b): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "backend-b",
+    "title": "[backend-b] GET /tracking: add silentMinutes",
+    "priority": "Should",
+    "milestone": "2 · Should (Checkpoint 2)",
+    "labels": [
+      "role:backend-b",
+      "priority:should",
+      "backend"
+    ],
+    "body": "**Owner role:** `backend-b`  \n**Task file:** [docs/tasks/03-backend-b.md](../blob/main/docs/tasks/03-backend-b.md)  \n**Design:** [DP5-LiveTracking](../blob/main/web/public/design/DP5-LiveTracking.jpg)  \n**Priority:** Should\n\n## What to build\n\n`GET /tracking`: add `\"silentMinutes\"` (minutes since the last ping) so DP5 can show \"no signal for 25 min\".\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `backend-b` changed (see AGENTS.md)\n\nBranch: `backend-b/<short-task>` · Commit: `feat(backend-b): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "backend-b",
+    "title": "[backend-b] Position simulator script (sim.js) for the demo map",
+    "priority": "Nice",
+    "milestone": "3 · Nice (before freeze)",
+    "labels": [
+      "role:backend-b",
+      "priority:nice",
+      "backend"
+    ],
+    "body": "**Owner role:** `backend-b`  \n**Task file:** [docs/tasks/03-backend-b.md](../blob/main/docs/tasks/03-backend-b.md)  \n**Design:** [DP5-LiveTracking](../blob/main/web/public/design/DP5-LiveTracking.jpg)  \n**Priority:** Nice\n\n## What to build\n\nA small script `server/src/sim.js` (ask the Lead to add `\"sim\": \"node src/sim.js\"` to `server/package.json`) that sends a ping for VEH022 every 5 seconds moving along the A1, so the map on DP5 moves during the demo.\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `backend-b` changed (see AGENTS.md)\n\nBranch: `backend-b/<short-task>` · Commit: `feat(backend-b): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "dispatcher",
+    "title": "[dispatcher] DP1 Today's run: match the design (run cards, alerts column)",
+    "priority": "Must",
+    "milestone": "1 · Must (Checkpoint 1)",
+    "labels": [
+      "role:dispatcher",
+      "priority:must",
+      "frontend"
+    ],
+    "body": "**Owner role:** `dispatcher`  \n**Task file:** [docs/tasks/04-dispatcher-frontend.md](../blob/main/docs/tasks/04-dispatcher-frontend.md)  \n**Design:** [DP1-Dashboard](../blob/main/web/public/design/DP1-Dashboard.jpg)  \n**Priority:** Must\n\n## What to build\n\n**DP1** matches its design: run cards with stop progress, an \"alerts\" column (shortfalls, conflicts, offline trucks) above the live feed. Keep the feed live.\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `dispatcher` changed (see AGENTS.md)\n\nBranch: `dispatcher/<short-task>` · Commit: `feat(dispatcher): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "dispatcher",
+    "title": "[dispatcher] DP2 Orders: filters, search, totals, order lines panel",
+    "priority": "Must",
+    "milestone": "1 · Must (Checkpoint 1)",
+    "labels": [
+      "role:dispatcher",
+      "priority:must",
+      "frontend"
+    ],
+    "body": "**Owner role:** `dispatcher`  \n**Task file:** [docs/tasks/04-dispatcher-frontend.md](../blob/main/docs/tasks/04-dispatcher-frontend.md)  \n**Design:** [DP2-OrderQueue](../blob/main/web/public/design/DP2-OrderQueue.jpg)  \n**Priority:** Must\n\n## What to build\n\n**DP2**: filter chips (All / Chilled / Dry), outlet search, totals row, click a row to see its lines (`GET /api/orders/:id`). Remove the `<Todo/>`.\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `dispatcher` changed (see AGENTS.md)\n\nBranch: `dispatcher/<short-task>` · Commit: `feat(dispatcher): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "dispatcher",
+    "title": "[dispatcher] DP3 Plan and allocate: capacity bar and visible reasons",
+    "priority": "Must",
+    "milestone": "1 · Must (Checkpoint 1)",
+    "labels": [
+      "role:dispatcher",
+      "priority:must",
+      "frontend"
+    ],
+    "body": "**Owner role:** `dispatcher`  \n**Task file:** [docs/tasks/04-dispatcher-frontend.md](../blob/main/docs/tasks/04-dispatcher-frontend.md)  \n**Design:** [DP3-PlanAllocate](../blob/main/web/public/design/DP3-PlanAllocate.jpg)  \n**Priority:** Must\n\n## What to build\n\n**DP3** matches its design: a capacity bar (slots used vs available, the workshop truck shown as lost slots), and each row's reason clearly visible.\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `dispatcher` changed (see AGENTS.md)\n\nBranch: `dispatcher/<short-task>` · Commit: `feat(dispatcher): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "dispatcher",
+    "title": "[dispatcher] DP4 Deferral decision: live preview of the store notice",
+    "priority": "Must",
+    "milestone": "1 · Must (Checkpoint 1)",
+    "labels": [
+      "role:dispatcher",
+      "priority:must",
+      "frontend"
+    ],
+    "body": "**Owner role:** `dispatcher`  \n**Task file:** [docs/tasks/04-dispatcher-frontend.md](../blob/main/docs/tasks/04-dispatcher-frontend.md)  \n**Design:** [DP4-DeferralDecision](../blob/main/web/public/design/DP4-DeferralDecision.jpg), [SM5-DeferralNotice](../blob/main/web/public/design/SM5-DeferralNotice.jpg)  \n**Priority:** Must\n\n## What to build\n\n**DP4**: show a live preview of what the store will see (title + reason, styled like SM5) next to the form.\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `dispatcher` changed (see AGENTS.md)\n\nBranch: `dispatcher/<short-task>` · Commit: `feat(dispatcher): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "dispatcher",
+    "title": "[dispatcher] DP5 Live tracking: last seen and clear no-signal state",
+    "priority": "Should",
+    "milestone": "2 · Should (Checkpoint 2)",
+    "labels": [
+      "role:dispatcher",
+      "priority:should",
+      "frontend"
+    ],
+    "body": "**Owner role:** `dispatcher`  \n**Task file:** [docs/tasks/04-dispatcher-frontend.md](../blob/main/docs/tasks/04-dispatcher-frontend.md)  \n**Design:** [DP5-LiveTracking](../blob/main/web/public/design/DP5-LiveTracking.jpg)  \n**Priority:** Should\n\n## What to build\n\n**DP5**: a list of trucks with \"last seen\" and a clear red state for \"no signal\", plus what it means (\"deliveries are saved on the phone and will sync\"). Remove the `<Todo/>`.\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `dispatcher` changed (see AGENTS.md)\n\nBranch: `dispatcher/<short-task>` · Commit: `feat(dispatcher): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "dispatcher",
+    "title": "[dispatcher] DP6 Deferral log: outlet filter and reversal details",
+    "priority": "Should",
+    "milestone": "2 · Should (Checkpoint 2)",
+    "labels": [
+      "role:dispatcher",
+      "priority:should",
+      "frontend"
+    ],
+    "body": "**Owner role:** `dispatcher`  \n**Task file:** [docs/tasks/04-dispatcher-frontend.md](../blob/main/docs/tasks/04-dispatcher-frontend.md)  \n**Design:** [DP6-DeferredLog](../blob/main/web/public/design/DP6-DeferredLog.jpg)  \n**Priority:** Should\n\n## What to build\n\n**DP6**: filter by outlet; reversed deferrals show who reversed and why.\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `dispatcher` changed (see AGENTS.md)\n\nBranch: `dispatcher/<short-task>` · Commit: `feat(dispatcher): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "dispatcher",
+    "title": "[dispatcher] DP5 map with Leaflet",
+    "priority": "Nice",
+    "milestone": "3 · Nice (before freeze)",
+    "labels": [
+      "role:dispatcher",
+      "priority:nice",
+      "frontend"
+    ],
+    "body": "**Owner role:** `dispatcher`  \n**Task file:** [docs/tasks/04-dispatcher-frontend.md](../blob/main/docs/tasks/04-dispatcher-frontend.md)  \n**Design:** [DP5-LiveTracking](../blob/main/web/public/design/DP5-LiveTracking.jpg)  \n**Priority:** Nice\n\n## What to build\n\n**DP5 map** with Leaflet (ask the Lead to install `leaflet` and `react-leaflet`): depot, outlets, VEH022's position, stops coloured by status.\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `dispatcher` changed (see AGENTS.md)\n\nBranch: `dispatcher/<short-task>` · Commit: `feat(dispatcher): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "dispatcher",
+    "title": "[dispatcher] DP1: flash or sound when a conflict arrives",
+    "priority": "Nice",
+    "milestone": "3 · Nice (before freeze)",
+    "labels": [
+      "role:dispatcher",
+      "priority:nice",
+      "frontend"
+    ],
+    "body": "**Owner role:** `dispatcher`  \n**Task file:** [docs/tasks/04-dispatcher-frontend.md](../blob/main/docs/tasks/04-dispatcher-frontend.md)  \n**Design:** [DP1-Dashboard](../blob/main/web/public/design/DP1-Dashboard.jpg)  \n**Priority:** Nice\n\n## What to build\n\nA sound or a gentle flash on DP1 when a conflict arrives.\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `dispatcher` changed (see AGENTS.md)\n\nBranch: `dispatcher/<short-task>` · Commit: `feat(dispatcher): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "loader",
+    "title": "[loader] LD3 Item check: big counter screen",
+    "priority": "Must",
+    "milestone": "1 · Must (Checkpoint 1)",
+    "labels": [
+      "role:loader",
+      "priority:must",
+      "frontend"
+    ],
+    "body": "**Owner role:** `loader`  \n**Task file:** [docs/tasks/05-loader-frontend.md](../blob/main/docs/tasks/05-loader-frontend.md)  \n**Design:** [LD3-ItemCheck](../blob/main/web/public/design/LD3-ItemCheck.jpg), [LD4-FlagShortfall](../blob/main/web/public/design/LD4-FlagShortfall.jpg)  \n**Priority:** Must\n\n## What to build\n\n**LD3 Item check**: product name huge, planned count, big − / + (at least 64 px), \"All loaded\" → `POST /api/loads/:runId/check`. If loaded < planned, go to LD4 instead. Remove the `<Todo/>`.\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `loader` changed (see AGENTS.md)\n\nBranch: `loader/<short-task>` · Commit: `feat(loader): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "loader",
+    "title": "[loader] LD2 Load plan: match the design (progress, bay headers)",
+    "priority": "Must",
+    "milestone": "1 · Must (Checkpoint 1)",
+    "labels": [
+      "role:loader",
+      "priority:must",
+      "frontend"
+    ],
+    "body": "**Owner role:** `loader`  \n**Task file:** [docs/tasks/05-loader-frontend.md](../blob/main/docs/tasks/05-loader-frontend.md)  \n**Design:** [LD2-LoadList](../blob/main/web/public/design/LD2-LoadList.jpg)  \n**Priority:** Must\n\n## What to build\n\n**LD2** matches its design: a progress bar for the truck (lines checked / total), stop headers like painted bay signs, shortfall lines in red.\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `loader` changed (see AGENTS.md)\n\nBranch: `loader/<short-task>` · Commit: `feat(loader): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "loader",
+    "title": "[loader] LD4 Flag shortfall: match the design, truck not blocked",
+    "priority": "Must",
+    "milestone": "1 · Must (Checkpoint 1)",
+    "labels": [
+      "role:loader",
+      "priority:must",
+      "frontend"
+    ],
+    "body": "**Owner role:** `loader`  \n**Task file:** [docs/tasks/05-loader-frontend.md](../blob/main/docs/tasks/05-loader-frontend.md)  \n**Design:** [LD4-FlagShortfall](../blob/main/web/public/design/LD4-FlagShortfall.jpg)  \n**Priority:** Must\n\n## What to build\n\n**LD4** matches its design and makes it obvious that the truck is NOT blocked and who gets told.\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `loader` changed (see AGENTS.md)\n\nBranch: `loader/<short-task>` · Commit: `feat(loader): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "loader",
+    "title": "[loader] LD6 Loading history",
+    "priority": "Should",
+    "milestone": "2 · Should (Checkpoint 2)",
+    "labels": [
+      "role:loader",
+      "priority:should",
+      "frontend"
+    ],
+    "body": "**Owner role:** `loader`  \n**Task file:** [docs/tasks/05-loader-frontend.md](../blob/main/docs/tasks/05-loader-frontend.md)  \n**Design:** [LD6-LoadingHistory](../blob/main/web/public/design/LD6-LoadingHistory.jpg)  \n**Priority:** Should\n\n## What to build\n\n**LD6 Loading history**: today's trucks with sealed time, loaded vs planned, shortfalls with reason and who flagged them. Remove the `<Todo/>`.\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `loader` changed (see AGENTS.md)\n\nBranch: `loader/<short-task>` · Commit: `feat(loader): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "loader",
+    "title": "[loader] LD1 Dock home: lines left per truck, current bay",
+    "priority": "Should",
+    "milestone": "2 · Should (Checkpoint 2)",
+    "labels": [
+      "role:loader",
+      "priority:should",
+      "frontend"
+    ],
+    "body": "**Owner role:** `loader`  \n**Task file:** [docs/tasks/05-loader-frontend.md](../blob/main/docs/tasks/05-loader-frontend.md)  \n**Design:** [LD1-DockHome](../blob/main/web/public/design/LD1-DockHome.jpg)  \n**Priority:** Should\n\n## What to build\n\n**LD1**: show how many lines are left per truck and which bay is being loaded now (yellow).\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `loader` changed (see AGENTS.md)\n\nBranch: `loader/<short-task>` · Commit: `feat(loader): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "loader",
+    "title": "[loader] LD2: fake scan field opens LD3",
+    "priority": "Nice",
+    "milestone": "3 · Nice (before freeze)",
+    "labels": [
+      "role:loader",
+      "priority:nice",
+      "frontend"
+    ],
+    "body": "**Owner role:** `loader`  \n**Task file:** [docs/tasks/05-loader-frontend.md](../blob/main/docs/tasks/05-loader-frontend.md)  \n**Design:** [LD2-LoadList](../blob/main/web/public/design/LD2-LoadList.jpg), [LD3-ItemCheck](../blob/main/web/public/design/LD3-ItemCheck.jpg)  \n**Priority:** Nice\n\n## What to build\n\nA fake \"scan\" field on LD2: type or paste a SKU, press Enter, it opens LD3 for that line.\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `loader` changed (see AGENTS.md)\n\nBranch: `loader/<short-task>` · Commit: `feat(loader): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "loader",
+    "title": "[loader] LD3/LD4 keyboard shortcuts",
+    "priority": "Nice",
+    "milestone": "3 · Nice (before freeze)",
+    "labels": [
+      "role:loader",
+      "priority:nice",
+      "frontend"
+    ],
+    "body": "**Owner role:** `loader`  \n**Task file:** [docs/tasks/05-loader-frontend.md](../blob/main/docs/tasks/05-loader-frontend.md)  \n**Design:** [LD3-ItemCheck](../blob/main/web/public/design/LD3-ItemCheck.jpg), [LD4-FlagShortfall](../blob/main/web/public/design/LD4-FlagShortfall.jpg)  \n**Priority:** Nice\n\n## What to build\n\nKeyboard shortcuts on LD3/LD4 (− and + keys, Enter to confirm).\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `loader` changed (see AGENTS.md)\n\nBranch: `loader/<short-task>` · Commit: `feat(loader): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "driver",
+    "title": "[driver] DR4 Issue at stop (works offline)",
+    "priority": "Must",
+    "milestone": "1 · Must (Checkpoint 1)",
+    "labels": [
+      "role:driver",
+      "priority:must",
+      "frontend"
+    ],
+    "body": "**Owner role:** `driver`  \n**Task file:** [docs/tasks/06-driver-frontend.md](../blob/main/docs/tasks/06-driver-frontend.md)  \n**Design:** [DR4-IssueAtStop](../blob/main/web/public/design/DR4-IssueAtStop.jpg)  \n**Priority:** Must\n\n## What to build\n\n**DR4 Issue at stop**: big buttons for the problem (store closed, refused items, damaged, can't reach dock), optional note, save with `addRecord({ ..., status: \"failed\", issue, note })`. Works offline. Remove the `<Todo/>`.\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `driver` changed (see AGENTS.md)\n\nBranch: `driver/<short-task>` · Commit: `feat(driver): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "driver",
+    "title": "[driver] DR3 Proof of delivery: signature pad and item checklist",
+    "priority": "Must",
+    "milestone": "1 · Must (Checkpoint 1)",
+    "labels": [
+      "role:driver",
+      "priority:must",
+      "frontend"
+    ],
+    "body": "**Owner role:** `driver`  \n**Task file:** [docs/tasks/06-driver-frontend.md](../blob/main/docs/tasks/06-driver-frontend.md)  \n**Design:** [DR3-ProofOfDelivery](../blob/main/web/public/design/DR3-ProofOfDelivery.jpg)  \n**Priority:** Must\n\n## What to build\n\n**DR3** matches its design: a simple signature pad (HTML `<canvas>` with pointer events; save `canvas.toDataURL()` as `signature` in the record), item checklist from `stop.order.lines`, the shortfall shown.\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `driver` changed (see AGENTS.md)\n\nBranch: `driver/<short-task>` · Commit: `feat(driver): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "driver",
+    "title": "[driver] DR1, DR2, DR5, DR6: match the designs",
+    "priority": "Must",
+    "milestone": "1 · Must (Checkpoint 1)",
+    "labels": [
+      "role:driver",
+      "priority:must",
+      "frontend"
+    ],
+    "body": "**Owner role:** `driver`  \n**Task file:** [docs/tasks/06-driver-frontend.md](../blob/main/docs/tasks/06-driver-frontend.md)  \n**Design:** [DR1-TodaysRoute](../blob/main/web/public/design/DR1-TodaysRoute.jpg), [DR2-ActiveStop](../blob/main/web/public/design/DR2-ActiveStop.jpg), [DR5-OfflineMode](../blob/main/web/public/design/DR5-OfflineMode.jpg), [DR6-SyncReconcile](../blob/main/web/public/design/DR6-SyncReconcile.jpg)  \n**Priority:** Must\n\n## What to build\n\n**DR1, DR2, DR5, DR6** match their designs. DR5 must make it obvious that nothing is lost.\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `driver` changed (see AGENTS.md)\n\nBranch: `driver/<short-task>` · Commit: `feat(driver): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "driver",
+    "title": "[driver] Test the full offline flow five times (including reload)",
+    "priority": "Must",
+    "milestone": "1 · Must (Checkpoint 1)",
+    "labels": [
+      "role:driver",
+      "priority:must",
+      "frontend"
+    ],
+    "body": "**Owner role:** `driver`  \n**Task file:** [docs/tasks/06-driver-frontend.md](../blob/main/docs/tasks/06-driver-frontend.md)  \n**Priority:** Must\n\n## What to build\n\nTest the full offline flow from `DEMO_SCRIPT.md` section 3 at least five times, including a page reload while offline (the outbox must survive it).\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `driver` changed (see AGENTS.md)\n\nBranch: `driver/<short-task>` · Commit: `feat(driver): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "driver",
+    "title": "[driver] DR7 Trip summary",
+    "priority": "Should",
+    "milestone": "2 · Should (Checkpoint 2)",
+    "labels": [
+      "role:driver",
+      "priority:should",
+      "frontend"
+    ],
+    "body": "**Owner role:** `driver`  \n**Task file:** [docs/tasks/06-driver-frontend.md](../blob/main/docs/tasks/06-driver-frontend.md)  \n**Design:** [DR7-TripSummary](../blob/main/web/public/design/DR7-TripSummary.jpg)  \n**Priority:** Should\n\n## What to build\n\n**DR7 Trip summary**: delivered / failed / deferred counts, shortfalls handed over, anything still on the phone. Remove the `<Todo/>`.\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `driver` changed (see AGENTS.md)\n\nBranch: `driver/<short-task>` · Commit: `feat(driver): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "driver",
+    "title": "[driver] Real offline detection (online/offline events)",
+    "priority": "Should",
+    "milestone": "2 · Should (Checkpoint 2)",
+    "labels": [
+      "role:driver",
+      "priority:should",
+      "frontend"
+    ],
+    "body": "**Owner role:** `driver`  \n**Task file:** [docs/tasks/06-driver-frontend.md](../blob/main/docs/tasks/06-driver-frontend.md)  \n**Priority:** Should\n\n## What to build\n\nReal offline too: listen to `window` `online`/`offline` events and call `setOnline` (keep the demo switch).\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `driver` changed (see AGENTS.md)\n\nBranch: `driver/<short-task>` · Commit: `feat(driver): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "driver",
+    "title": "[driver] Toast after sync (\"2 deliveries sent\")",
+    "priority": "Should",
+    "milestone": "2 · Should (Checkpoint 2)",
+    "labels": [
+      "role:driver",
+      "priority:should",
+      "frontend"
+    ],
+    "body": "**Owner role:** `driver`  \n**Task file:** [docs/tasks/06-driver-frontend.md](../blob/main/docs/tasks/06-driver-frontend.md)  \n**Priority:** Should\n\n## What to build\n\nAfter a sync, show a small toast: \"2 deliveries sent\".\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `driver` changed (see AGENTS.md)\n\nBranch: `driver/<short-task>` · Commit: `feat(driver): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "driver",
+    "title": "[driver] DR3 photo proof",
+    "priority": "Nice",
+    "milestone": "3 · Nice (before freeze)",
+    "labels": [
+      "role:driver",
+      "priority:nice",
+      "frontend"
+    ],
+    "body": "**Owner role:** `driver`  \n**Task file:** [docs/tasks/06-driver-frontend.md](../blob/main/docs/tasks/06-driver-frontend.md)  \n**Priority:** Nice\n\n## What to build\n\nPhoto proof: `<input type=\"file\" accept=\"image/*\" capture=\"environment\">`, shrink it with a canvas to about 800 px, store as a data URL.\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `driver` changed (see AGENTS.md)\n\nBranch: `driver/<short-task>` · Commit: `feat(driver): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "driver",
+    "title": "[driver] Make the driver app installable (manifest)",
+    "priority": "Nice",
+    "milestone": "3 · Nice (before freeze)",
+    "labels": [
+      "role:driver",
+      "priority:nice",
+      "frontend"
+    ],
+    "body": "**Owner role:** `driver`  \n**Task file:** [docs/tasks/06-driver-frontend.md](../blob/main/docs/tasks/06-driver-frontend.md)  \n**Priority:** Nice\n\n## What to build\n\nMake it installable on the phone (ask the Lead about a `manifest.json`).\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `driver` changed (see AGENTS.md)\n\nBranch: `driver/<short-task>` · Commit: `feat(driver): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "store",
+    "title": "[store] SM2 Place order with cutoff and chilled toggle",
+    "priority": "Must",
+    "milestone": "1 · Must (Checkpoint 1)",
+    "labels": [
+      "role:store",
+      "priority:must",
+      "frontend"
+    ],
+    "body": "**Owner role:** `store`  \n**Task file:** [docs/tasks/07-store-frontend.md](../blob/main/docs/tasks/07-store-frontend.md)  \n**Design:** [SM2-PlaceOrder](../blob/main/web/public/design/SM2-PlaceOrder.jpg), [SM3-OrderQueue](../blob/main/web/public/design/SM3-OrderQueue.jpg)  \n**Priority:** Must\n\n## What to build\n\n**SM2 Place order**: product list with − / + steppers, chilled toggle, delivery date, the 16:00 cutoff shown clearly, `POST /api/orders`. Show the new order and go to SM3. Remove the `<Todo/>`.\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `store` changed (see AGENTS.md)\n\nBranch: `store/<short-task>` · Commit: `feat(store): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "store",
+    "title": "[store] SM5 Notices: match the design",
+    "priority": "Must",
+    "milestone": "1 · Must (Checkpoint 1)",
+    "labels": [
+      "role:store",
+      "priority:must",
+      "frontend"
+    ],
+    "body": "**Owner role:** `store`  \n**Task file:** [docs/tasks/07-store-frontend.md](../blob/main/docs/tasks/07-store-frontend.md)  \n**Design:** [SM5-DeferralNotice](../blob/main/web/public/design/SM5-DeferralNotice.jpg)  \n**Priority:** Must\n\n## What to build\n\n**SM5** matches its design: the new date big, the \"why\" block, a line saying the store is protected next time.\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `store` changed (see AGENTS.md)\n\nBranch: `store/<short-task>` · Commit: `feat(store): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "store",
+    "title": "[store] SM4 Order detail timeline",
+    "priority": "Must",
+    "milestone": "1 · Must (Checkpoint 1)",
+    "labels": [
+      "role:store",
+      "priority:must",
+      "frontend"
+    ],
+    "body": "**Owner role:** `store`  \n**Task file:** [docs/tasks/07-store-frontend.md](../blob/main/docs/tasks/07-store-frontend.md)  \n**Design:** [SM4-OrderDetail](../blob/main/web/public/design/SM4-OrderDetail.jpg)  \n**Priority:** Must\n\n## What to build\n\n**SM4 Order detail**: a timeline (placed → planned → loaded → on the road → delivered, or moved with the reason), shortfalls and deferrals from `GET /api/orders/:id`. Remove the `<Todo/>`.\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `store` changed (see AGENTS.md)\n\nBranch: `store/<short-task>` · Commit: `feat(store): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "store",
+    "title": "[store] SM3 Orders: Coming / Delivered / Moved tabs",
+    "priority": "Should",
+    "milestone": "2 · Should (Checkpoint 2)",
+    "labels": [
+      "role:store",
+      "priority:should",
+      "frontend"
+    ],
+    "body": "**Owner role:** `store`  \n**Task file:** [docs/tasks/07-store-frontend.md](../blob/main/docs/tasks/07-store-frontend.md)  \n**Design:** [SM3-OrderQueue](../blob/main/web/public/design/SM3-OrderQueue.jpg)  \n**Priority:** Should\n\n## What to build\n\n**SM3**: tabs Coming / Delivered / Moved. Remove the `<Todo/>`.\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `store` changed (see AGENTS.md)\n\nBranch: `store/<short-task>` · Commit: `feat(store): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "store",
+    "title": "[store] SM1 Today: match the design (next delivery hero)",
+    "priority": "Should",
+    "milestone": "2 · Should (Checkpoint 2)",
+    "labels": [
+      "role:store",
+      "priority:should",
+      "frontend"
+    ],
+    "body": "**Owner role:** `store`  \n**Task file:** [docs/tasks/07-store-frontend.md](../blob/main/docs/tasks/07-store-frontend.md)  \n**Design:** [SM1-Dashboard](../blob/main/web/public/design/SM1-Dashboard.jpg)  \n**Priority:** Should\n\n## What to build\n\n**SM1** matches its design: the next delivery as the hero card (date, ETA, chilled or dry), unread notices on top.\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `store` changed (see AGENTS.md)\n\nBranch: `store/<short-task>` · Commit: `feat(store): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "store",
+    "title": "[store] SM6 Check what arrived",
+    "priority": "Should",
+    "milestone": "2 · Should (Checkpoint 2)",
+    "labels": [
+      "role:store",
+      "priority:should",
+      "frontend"
+    ],
+    "body": "**Owner role:** `store`  \n**Task file:** [docs/tasks/07-store-frontend.md](../blob/main/docs/tasks/07-store-frontend.md)  \n**Design:** [SM6-ConfirmReceipt](../blob/main/web/public/design/SM6-ConfirmReceipt.jpg)  \n**Priority:** Should\n\n## What to build\n\n**SM6 Check what arrived**: list today's delivered lines, tick or correct the counts.\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `store` changed (see AGENTS.md)\n\nBranch: `store/<short-task>` · Commit: `feat(store): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "store",
+    "title": "[store] SM7 Report a problem",
+    "priority": "Nice",
+    "milestone": "3 · Nice (before freeze)",
+    "labels": [
+      "role:store",
+      "priority:nice",
+      "frontend"
+    ],
+    "body": "**Owner role:** `store`  \n**Task file:** [docs/tasks/07-store-frontend.md](../blob/main/docs/tasks/07-store-frontend.md)  \n**Design:** [SM7-ReportIssue](../blob/main/web/public/design/SM7-ReportIssue.jpg)  \n**Priority:** Nice\n\n## What to build\n\n**SM7 Report a problem** using `POST /api/issues` (ask Backend A; it's in the \"Requested endpoints\" table). Until it exists, show the form and a toast.\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `store` changed (see AGENTS.md)\n\nBranch: `store/<short-task>` · Commit: `feat(store): ...` · PR description: `Closes #<this issue>`\n"
+  },
+  {
+    "role": "store",
+    "title": "[store] Unread notice badge on the Notices menu",
+    "priority": "Nice",
+    "milestone": "3 · Nice (before freeze)",
+    "labels": [
+      "role:store",
+      "priority:nice",
+      "frontend"
+    ],
+    "body": "**Owner role:** `store`  \n**Task file:** [docs/tasks/07-store-frontend.md](../blob/main/docs/tasks/07-store-frontend.md)  \n**Priority:** Nice\n\n## What to build\n\nUnread notice count as a red badge on the \"Notices\" menu item (ask the Lead: the menu is in `shared/shells.jsx`).\n\n## Done when\n\n- [ ] Works in the browser on the right device size, matches the design\n- [ ] `npm test` and `npm run format` pass, CI green\n- [ ] Still works after **Reset demo data**\n- [ ] Only files owned by `store` changed (see AGENTS.md)\n\nBranch: `store/<short-task>` · Commit: `feat(store): ...` · PR description: `Closes #<this issue>`\n"
+  }
+]

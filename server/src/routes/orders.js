@@ -1,0 +1,64 @@
+// Orders API. Owner: BACKEND A.  Contract: docs/API_CONTRACT.md#orders
+import { Router } from "express";
+import { db, save, newId, nowIso } from "../db.js";
+import { publish } from "../events.js";
+import { httpError, wrap, outletName } from "./_util.js";
+
+const r = Router();
+
+// GET /api/orders?date=YYYY-MM-DD&outletId=OUT014&status=placed
+r.get("/", (req, res) => {
+  const { date, outletId, status } = req.query;
+  let list = db().orders;
+  if (date) list = list.filter((o) => o.deliveryDate === date);
+  if (outletId) list = list.filter((o) => o.outletId === outletId);
+  if (status) list = list.filter((o) => o.status === status);
+  res.json(list.map((o) => ({ ...o, outletName: outletName(db(), o.outletId) })));
+});
+
+r.get("/:id", (req, res, next) => {
+  const o = db().orders.find((x) => x.id === req.params.id);
+  if (!o) return next(httpError(404, "Order not found"));
+  const d = db();
+  res.json({
+    ...o,
+    outletName: outletName(d, o.outletId),
+    deferrals: d.deferrals.filter((x) => x.orderId === o.id),
+    deliveries: d.deliveries.filter((x) => x.orderId === o.id),
+    shortfalls: Object.values(d.loads)
+      .flatMap((l) => l.shortfalls)
+      .filter((s) => s.orderId === o.id),
+  });
+});
+
+// POST /api/orders  { outletId, deliveryDate, chilled, lines:[{sku,name,qty,unit}] }
+r.post(
+  "/",
+  wrap((req, res) => {
+    const { outletId, deliveryDate, chilled = false, lines = [] } = req.body || {};
+    if (!outletId || !deliveryDate || !lines.length)
+      throw httpError(400, "outletId, deliveryDate and lines are required");
+    // TODO (Backend A): reject orders after the 16:00 cutoff for the next day (db().meta.cutoff).
+    const order = {
+      id: newId("ORD"),
+      outletId,
+      deliveryDate,
+      chilled,
+      lines,
+      kg: lines.reduce((s, l) => s + (l.kg || 10) * l.qty, 0),
+      status: "placed",
+      placedAt: nowIso(),
+    };
+    db().orders.push(order);
+    save();
+    publish("order.placed", {
+      orderId: order.id,
+      outletId,
+      outletName: outletName(db(), outletId),
+      deliveryDate,
+    });
+    res.status(201).json(order);
+  })
+);
+
+export default r;

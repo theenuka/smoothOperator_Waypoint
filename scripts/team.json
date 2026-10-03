@@ -1,0 +1,14 @@
+{
+  "repo": "theenuka/waypoint",
+  "members": {
+    "lead": "theenuka",
+    "backend-a": "",
+    "backend-b": "",
+    "dispatcher": "",
+    "loader": "",
+    "driver": "",
+    "store": ""
+  },
+  "_how": "Put each member's GitHub USERNAME (not email) next to their role, then run: node scripts/setup-github.mjs --team",
+  "_known": "Username already known: Theek237. Emails received (ask them for their usernames, or invite by email in Settings > Collaborators): shukriahamed44@gmail.com, hirushanww@gmail.com, thiwankadissanayaka001@gmail.com, vanujakofficial@gmail.com"
+}
