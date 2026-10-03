@@ -80,7 +80,7 @@ A **delivery record** (made on the phone, may be sent hours later):
 
 | | Method and path | Body / query | Returns |
 |---|---|---|---|
-| ✅ | `POST /sync` | `{ deviceId, records:[delivery records] }` | `{ accepted:[clientId], duplicates:[clientId], conflicts:[conflict] }` |
+| ✅ | `POST /sync` | `{ deviceId, records:[delivery records] }` | `{ accepted:[clientId], duplicates:[clientId], conflicts:[conflict], errors:[{ clientId, error }] }`. Records are applied oldest first; the same `clientId` twice is saved once; a bad record (e.g. unknown order) only lands in `errors` and the rest still sync. Errored records stay on the phone |
 | ✅ | `GET /sync/conflicts` | `?runId=RUN-VEH022&status=open` | conflicts |
 | ✅ | `POST /sync/resolve` | `{ conflictId, choice:"phone"\|"server", by }` | the conflict. `phone` = delivery kept and deferral reversed. Publishes `sync.resolved` |
 
