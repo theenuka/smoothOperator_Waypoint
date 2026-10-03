@@ -11,6 +11,14 @@ import { Icon, icon } from "./icons.jsx";
 import { REASONS } from "./reasons.js";
 import "./driver.css";
 
+const REASONS = [
+  { id: "store_closed", label: "Shutter down, nobody to receive", icon: icon.shutter },
+  { id: "refused", label: "Outlet refused the goods", icon: icon.refused },
+  { id: "damaged", label: "Goods damaged on the way", icon: icon.damaged },
+  { id: "cant_reach_dock", label: "Can't reach the delivery bay", icon: icon.dock },
+  { id: "other", label: "Something else", icon: icon.other },
+];
+
 export default function DR4IssueAtStop() {
   const { seq } = useParams();
   const nav = useNavigate();
