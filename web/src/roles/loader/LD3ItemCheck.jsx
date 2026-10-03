@@ -21,12 +21,28 @@ const ordinal = (n) => {
 const sum = (list, key) => list.reduce((n, x) => n + (Number(x[key]) || 0), 0);
 
 const Tick = () => (
-  <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
+  <svg
+    width="30"
+    height="30"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.5"
+    aria-hidden="true"
+  >
     <path d="M4 12.5l5 5L20 6.5" />
   </svg>
 );
 const ScanIcon = () => (
-  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+  <svg
+    width="28"
+    height="28"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    aria-hidden="true"
+  >
     <path d="M3 8V4h4M17 4h4v4M21 16v4h-4M7 20H3v-4M3 12h18" />
   </svg>
 );
@@ -82,19 +98,33 @@ function CounterSheet({ line, runId, onClose, onSaved }) {
         </div>
 
         <div className="ld-counter">
-          <button className="btn secondary ld-step" aria-label="One less" disabled={count <= 0} onClick={() => step(-1)}>
+          <button
+            className="btn secondary ld-step"
+            aria-label="One less"
+            disabled={count <= 0}
+            onClick={() => step(-1)}
+          >
             −
           </button>
           <div className="col" style={{ alignItems: "center", gap: 2 }}>
             <span className={`stencil ld-count-n${missing > 0 ? " short" : ""}`}>{count}</span>
             <span className="mono ld-count-of">of {planned} planned</span>
           </div>
-          <button className="btn secondary ld-step" aria-label="One more" disabled={count >= planned} onClick={() => step(1)}>
+          <button
+            className="btn secondary ld-step"
+            aria-label="One more"
+            disabled={count >= planned}
+            onClick={() => step(1)}
+          >
             +
           </button>
         </div>
 
-        <button className={`btn ld-confirm block ${missing > 0 ? "danger" : "now"}`} disabled={busy} onClick={confirm}>
+        <button
+          className={`btn ld-confirm block ${missing > 0 ? "danger" : "now"}`}
+          disabled={busy}
+          onClick={confirm}
+        >
           {missing > 0 ? `Loaded ${count} of ${planned}: flag ${missing} short` : "All loaded"}
         </button>
         <div className="row between wrap">
@@ -235,7 +265,11 @@ export default function LD3ItemCheck() {
           const state = sf ? "short" : l.checked ? "done" : "todo";
           const fill = l.planned ? Math.min(100, (l.loaded / l.planned) * 100) : 0;
           return (
-            <div key={l.sku} className={`ld-line ${state}${l.sku === sku ? " active" : ""}`} style={i === 0 ? { borderTop: 0 } : undefined}>
+            <div
+              key={l.sku}
+              className={`ld-line ${state}${l.sku === sku ? " active" : ""}`}
+              style={i === 0 ? { borderTop: 0 } : undefined}
+            >
               <div className="col" style={{ gap: 2 }}>
                 <b className="ld-line-name">{l.name}</b>
                 <span className="mono small muted">{l.sku}</span>
@@ -247,7 +281,8 @@ export default function LD3ItemCheck() {
                   </span>
                   {sf && (
                     <span className="ld-note">
-                      {Math.max((sf.planned ?? l.planned) - sf.loaded, 0)} {REASON_NOTE[sf.reason] || sf.reason}
+                      {Math.max((sf.planned ?? l.planned) - sf.loaded, 0)}{" "}
+                      {REASON_NOTE[sf.reason] || sf.reason}
                     </span>
                   )}
                 </div>
@@ -257,7 +292,11 @@ export default function LD3ItemCheck() {
               </div>
               <div className="ld-act">
                 {state === "done" && (
-                  <button className="ld-tick" aria-label={`Change count for ${l.name}`} onClick={() => pick(l)}>
+                  <button
+                    className="ld-tick"
+                    aria-label={`Change count for ${l.name}`}
+                    onClick={() => pick(l)}
+                  >
                     <Tick />
                   </button>
                 )}
@@ -271,7 +310,10 @@ export default function LD3ItemCheck() {
                     <button className="btn secondary ld-act-btn" onClick={() => pick(l)}>
                       Check
                     </button>
-                    <Link className="btn now ld-act-btn" to={`/loader/run/${runId}/short/${l.orderId}/${l.sku}`}>
+                    <Link
+                      className="btn now ld-act-btn"
+                      to={`/loader/run/${runId}/short/${l.orderId}/${l.sku}`}
+                    >
                       Flag short
                     </Link>
                   </>
@@ -316,7 +358,13 @@ export default function LD3ItemCheck() {
       </div>
 
       {open && active && (
-        <CounterSheet key={`${orderId}-${sku}`} line={active} runId={runId} onClose={() => setOpen(false)} onSaved={saved} />
+        <CounterSheet
+          key={`${orderId}-${sku}`}
+          line={active}
+          runId={runId}
+          onClose={() => setOpen(false)}
+          onSaved={saved}
+        />
       )}
       {toast}
     </>
