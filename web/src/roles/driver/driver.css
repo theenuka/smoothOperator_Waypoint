@@ -1,0 +1,86 @@
+/* Driver phone styles. Owner: DRIVER FRONTEND. All classes start with "dr-". */
+
+.dr-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  color: var(--text-2);
+  text-decoration: none;
+  align-self: flex-start;
+}
+
+.dr-title {
+  font-family: var(--f-display);
+  font-weight: 800;
+  font-size: 34px;
+  line-height: 0.95;
+  margin: 0;
+}
+
+/* DR4: one big option per reason. Selected = yellow (the current step). */
+.dr-option {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  min-height: 60px;
+  padding: 0 16px;
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-lg);
+  background: var(--paper);
+  color: var(--ink);
+  font-weight: 600;
+  font-size: 15px;
+  text-align: left;
+  cursor: pointer;
+}
+.dr-option[aria-pressed="true"] {
+  background: var(--yellow);
+  border: 2px solid var(--ink);
+}
+.dr-option .dr-check {
+  margin-left: auto;
+}
+
+.dr-waited {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 6px 6px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--paper);
+}
+.dr-waited .btn {
+  min-width: 48px;
+  min-height: 48px;
+  padding: 0;
+  font-size: 22px;
+}
+
+.dr-choices {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.dr-choice {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 72px;
+  padding: 12px 14px;
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-lg);
+  background: var(--paper);
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+}
+.dr-choice b {
+  font-size: 15px;
+}
+.dr-choice[aria-pressed="true"] {
+  border: 2px solid var(--ink);
+  box-shadow: inset 0 4px 0 var(--yellow);
+}

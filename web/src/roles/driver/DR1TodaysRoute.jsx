@@ -50,7 +50,7 @@ export default function DR1TodaysRoute() {
                     ? "now"
                     : status === "saved"
                       ? "cold"
-                      : status === "deferred"
+                      : status === "deferred" || status === "failed"
                         ? "bad"
                         : ""
               }
