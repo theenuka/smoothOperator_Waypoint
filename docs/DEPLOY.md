@@ -16,6 +16,31 @@ Things to know:
 - The JSON database is reset to the demo data whenever the service restarts or redeploys. For a demo that's a feature. Still press **Reset demo data** before presenting.
 - Live updates use WebSockets, which Render supports. Nothing else to configure.
 
+## Google Cloud Run (no Render card needed, if you already have GCP billing)
+
+The repo has a `Dockerfile`. Cloud Run builds it and gives an HTTPS URL. WebSockets (live updates) work.
+
+```bash
+gcloud auth login
+gcloud projects list                       # pick your project id
+gcloud config set project <PROJECT_ID>
+gcloud services enable run.googleapis.com cloudbuild.googleapis.com artifactregistry.googleapis.com
+
+gcloud run deploy waypoint --source . --region asia-south1 --allow-unauthenticated \
+  --max-instances 1 --session-affinity --timeout 3600 --memory 512Mi
+```
+
+- `--max-instances 1` matters: the demo database is a JSON file inside the container, so there must be only one copy.
+- When nobody uses it for a while Cloud Run scales to zero, and the next visit starts with fresh demo data (same as Render).
+- Deploy again after merging new PRs: `git checkout main && git pull`, then the same `gcloud run deploy` command.
+
+## Plan C: public link from your laptop (no account, no card)
+
+```bash
+npm run build && npm start                      # tab 1
+cloudflared tunnel --url http://localhost:4000  # tab 2 (brew install cloudflared)
+```
+
 ## Plan B: run it on the demo laptop
 
 ```bash
