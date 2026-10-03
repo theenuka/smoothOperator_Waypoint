@@ -215,3 +215,59 @@ button.dr-line {
   right: 4px;
   min-height: 44px;
 }
+
+/* DR5: the signal bar. Offline = ink with hazard tape on the edge (the workflow is degraded). */
+.dr-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 40px 12px 16px;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+}
+.dr-bar.off {
+  background: var(--ink);
+  color: var(--paper);
+}
+.dr-bar.off > svg {
+  color: var(--dock-red);
+  flex: none;
+}
+.dr-bar.off .small {
+  color: var(--dock-text-2);
+}
+.dr-bar.off::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 14px;
+  background: var(--hazard);
+}
+.dr-bar.on {
+  background: var(--green-soft);
+  color: var(--green-text);
+}
+.dr-bar.on > svg {
+  flex: none;
+}
+
+.dr-checks {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.dr-checks li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.dr-checks svg {
+  color: var(--green);
+  flex: none;
+}

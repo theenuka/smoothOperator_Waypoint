@@ -6,8 +6,10 @@ import { api } from "../../shared/api.js";
 
 const KEY = "wp.outbox";
 const ONLINE = "wp.online";
+const SINCE = "wp.offlineSince";
 export const VEHICLE = "VEH022";
 export const RUN = "RUN-VEH022";
+export const DEAD_ZONE = "Kadugannawa pass"; // where the demo loses signal
 
 const read = (k, fallback) => {
   try {
@@ -22,12 +24,19 @@ const write = (k, v) => {
   } catch {}
 };
 
-let state = { online: read(ONLINE, true), outbox: read(KEY, []), syncing: false, last: null };
+let state = {
+  online: read(ONLINE, true),
+  offlineSince: read(SINCE, null), // when the signal was lost (ISO time), null while online
+  outbox: read(KEY, []),
+  syncing: false,
+  last: null,
+};
 const subs = new Set();
 const set = (patch) => {
   state = { ...state, ...patch };
   write(KEY, state.outbox);
   write(ONLINE, state.online);
+  write(SINCE, state.offlineSince);
   subs.forEach((f) => f());
 };
 
@@ -62,10 +71,10 @@ export function addRecord(rec) {
 }
 
 export async function setOnline(online) {
-  set({ online });
+  set({ online, offlineSince: online ? null : state.offlineSince || new Date().toISOString() });
   // In real life the server notices the silence by itself. Here we tell it, so dispatch sees it live.
   api
-    .post("/tracking/signal", { vehicleId: VEHICLE, online, place: online ? "" : "Kadugannawa pass" })
+    .post("/tracking/signal", { vehicleId: VEHICLE, online, place: online ? "" : DEAD_ZONE })
     .catch(() => {});
   if (online) await flush();
 }
