@@ -59,7 +59,7 @@ The agreement between frontend and backend. **If it's not written here, it doesn
 |---|---|---|---|
 | ✅ | `GET /loads/:runId` | | `{ runId, status, lines:[{ orderId, stopSeq, sku, name, planned, loaded, checked }], shortfalls[] }` |
 | ✅ | `POST /loads/:runId/check` | `{ orderId, sku, loaded }` | the line |
-| 🟡 | `POST /loads/:runId/shortfall` | `{ orderId, sku, loaded, reason:"short_on_dock"\|"damaged"\|"wrong_item"\|"never_arrived", by }` | the shortfall (201). Creates a store notice, publishes `load.shortfall`. TODO: back-order onto the next order |
+| ✅ | `POST /loads/:runId/shortfall` | `{ orderId, sku, loaded, reason:"short_on_dock"\|"damaged"\|"wrong_item"\|"never_arrived", by }` | the shortfall (201) with `backorder:{ orderId, deliveryDate, qty }`. The missing quantity is added to the outlet's next open order, or a new order for the next day is created (line marked `backorder:true, fromShortfall`). Creates a store notice, publishes `load.shortfall` |
 | ✅ | `POST /loads/:runId/complete` | | the load with `status:"sealed"`. Publishes `load.completed` |
 
 ## Deliveries [Backend B] {#deliveries}

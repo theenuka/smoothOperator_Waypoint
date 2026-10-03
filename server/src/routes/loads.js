@@ -3,6 +3,7 @@ import { Router } from "express";
 import { db, save, newId, nowIso } from "../db.js";
 import { publish } from "../events.js";
 import { httpError, wrap, outletName } from "./_util.js";
+import { planBackorder } from "../logic/backorder.js";
 
 const r = Router();
 
@@ -68,7 +69,23 @@ r.post(
       at: sf.at,
       read: false,
     });
-    // TODO (Backend B): add the missing quantity to the outlet's next order (back-order).
+    // Back-order: the missing quantity goes onto the outlet's next order (or a new one for tomorrow).
+    const orderLine = order.lines.find((x) => x.sku === sku);
+    const bo = planBackorder({
+      orders: d.orders,
+      shortfall: sf,
+      fromDate: order.deliveryDate,
+      unit: orderLine?.unit,
+      newOrderId: () => newId("ORD"),
+      now: sf.at,
+    });
+    if (bo.action === "added") {
+      bo.order.lines.push(bo.line);
+      bo.order.kg = (bo.order.kg || 0) + bo.line.qty * 10;
+    }
+    if (bo.action === "created") d.orders.push(bo.order);
+    if (bo.order)
+      sf.backorder = { orderId: bo.order.id, deliveryDate: bo.order.deliveryDate, qty: bo.line?.qty };
     save();
     publish("load.shortfall", { ...sf, outletName: outletName(d, order.outletId), runId: req.params.runId });
     res.status(201).json(sf);
