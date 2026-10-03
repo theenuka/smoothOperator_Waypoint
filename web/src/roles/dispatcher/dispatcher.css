@@ -805,3 +805,145 @@
   align-items: flex-start;
   gap: 8px;
 }
+
+/* DP5 Live Tracking styles */
+.dp5-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(360px, 440px);
+  gap: 20px;
+  align-items: start;
+}
+
+@media (max-width: 1080px) {
+  .dp5-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dp5-map-wrap {
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: #faf8f3;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.dp5-map-svg {
+  width: 100%;
+  height: 490px;
+  background: #faf8f3;
+  display: block;
+}
+
+.dp5-map-legend {
+  padding: 12px 18px;
+  background: var(--paper);
+  border-top: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-size: 12px;
+  color: var(--text-2);
+  flex-wrap: wrap;
+}
+
+.dp5-inspector {
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--paper);
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.dp5-inspector.offline {
+  border-color: var(--red);
+  box-shadow: 0 0 0 1px var(--red-soft);
+}
+
+.dp5-stat-grid {
+  display: grid;
+  grid-template-columns: 85px 1fr;
+  gap: 10px 14px;
+  font-size: 13px;
+  align-items: baseline;
+}
+
+.dp5-row-offline {
+  background: var(--red-soft) !important;
+}
+
+.dp5-row-offline:hover {
+  background: #f3d4cb !important;
+}
+
+.dp5-truck-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--line);
+  cursor: pointer;
+  transition: background 120ms var(--ease);
+}
+
+.dp5-truck-item:last-child {
+  border-bottom: none;
+}
+
+.dp5-truck-item:hover {
+  background: var(--paper-2);
+}
+
+.dp5-truck-item.selected {
+  background: var(--yellow-soft) !important;
+}
+
+/* DP5 Planned Stops Timeline styles */
+.dp5-stops-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.dp5-stop-card {
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 10px 14px;
+  background: var(--paper-2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 13px;
+}
+
+.dp5-stop-card.delivered {
+  background: var(--green-soft);
+  border-color: #bcd8c2;
+}
+
+.dp5-stop-card.next {
+  background: var(--yellow-soft);
+  border-color: #efd97a;
+}
+
+.dp5-stop-card.pending {
+  background: var(--paper);
+}
+
+.dp5-stop-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dp5-stop-num {
+  font-family: var(--f-mono);
+  font-weight: 700;
+  width: 20px;
+}
