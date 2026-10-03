@@ -1,0 +1,198 @@
+/* Dispatcher role styles. Owner: DISPATCHER FRONTEND. */
+
+.dp-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .dp-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Run cards */
+.dp-run-card {
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 14px 16px;
+  background: var(--paper);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: border-color 150ms var(--ease);
+}
+
+.dp-run-card.is-offline {
+  border-color: var(--red);
+  box-shadow: 0 0 0 1px var(--red-soft);
+}
+
+.dp-run-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.dp-vehicle-tag {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dp-vehicle-id {
+  font-family: var(--f-mono);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.dp-route-desc {
+  font-size: 13px;
+  color: var(--text-2);
+}
+
+.dp-driver-name {
+  font-size: 13px;
+  color: var(--ink-2);
+}
+
+/* Segmented progress bar */
+.dp-progress-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dp-progress-bar {
+  display: flex;
+  height: 12px;
+  border-radius: 4px;
+  overflow: hidden;
+  background: var(--line);
+  gap: 2px;
+}
+
+.dp-progress-segment {
+  flex: 1;
+  height: 100%;
+  position: relative;
+  transition: background 200ms var(--ease);
+}
+
+.dp-progress-segment.delivered {
+  background: var(--green);
+}
+
+.dp-progress-segment.next {
+  background: var(--yellow);
+}
+
+.dp-progress-segment.offline {
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--red) 0,
+    var(--red) 6px,
+    var(--red-soft) 6px,
+    var(--red-soft) 12px
+  );
+}
+
+.dp-progress-segment.pending {
+  background: var(--line);
+}
+
+.dp-progress-segment.failed {
+  background: var(--red);
+}
+
+.dp-progress-legend {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--text-2);
+}
+
+.dp-remaining-stops {
+  font-size: 12px;
+  color: var(--text-3);
+  font-style: italic;
+}
+
+.dp-stop-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.dp-move-btn {
+  font-size: 12px;
+  min-height: 28px;
+  padding: 0 10px;
+  border-radius: var(--r-sm);
+  background: var(--paper-2);
+  border: 1px solid var(--line-2);
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.dp-move-btn:hover {
+  border-color: var(--ink);
+  background: var(--paper);
+}
+
+/* Alerts column */
+.dp-alerts-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.dp-alert-item {
+  border-left: 4px solid var(--yellow);
+  background: var(--paper-2);
+  border-radius: var(--r-md);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-top: 1px solid var(--line);
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.dp-alert-item.bad {
+  border-left-color: var(--red);
+  background: var(--red-soft);
+}
+
+.dp-alert-item.now {
+  border-left-color: var(--yellow);
+  background: var(--yellow-soft);
+}
+
+.dp-alert-title {
+  font-weight: 600;
+  font-size: 13.5px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dp-alert-body {
+  font-size: 12.5px;
+  color: var(--text-2);
+  line-height: 1.4;
+}
+
+.dp-alert-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
