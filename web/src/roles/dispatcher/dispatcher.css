@@ -947,3 +947,68 @@
   font-weight: 700;
   width: 20px;
 }
+
+/* DP6 Deferral Log styles */
+.dp6-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(320px, 380px);
+  gap: 20px;
+  align-items: start;
+}
+
+@media (max-width: 1080px) {
+  .dp6-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dp6-waited-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dp6-waited-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+}
+
+.dp6-waited-bar-track {
+  height: 8px;
+  background: var(--paper-2);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.dp6-waited-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: var(--ink);
+}
+
+.dp6-waited-bar-fill.high {
+  background: var(--red);
+}
+
+.dp6-reversed-item {
+  border-left: 3px solid var(--green);
+  background: var(--paper-2);
+  padding: 12px 14px;
+  border-radius: var(--r-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+}
+
+.dp6-reversal-note {
+  font-size: 12.5px;
+  color: var(--text-2);
+  line-height: 1.4;
+  background: var(--paper);
+  padding: 8px 10px;
+  border-radius: 4px;
+  border: 1px dashed var(--line);
+}
