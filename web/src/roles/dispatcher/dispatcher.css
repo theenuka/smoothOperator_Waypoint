@@ -393,3 +393,351 @@
   flex-direction: column;
   gap: 12px;
 }
+
+/* DP3 Plan & Allocate styles */
+.dp3-capacity-banner {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.dp3-capacity-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.dp3-capacity-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.dp3-cap-bar {
+  display: flex;
+  height: 24px;
+  border-radius: var(--r-sm);
+  overflow: hidden;
+  gap: 3px;
+  background: var(--paper-2);
+}
+
+.dp3-cap-segment {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--f-mono);
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 2px;
+  transition: opacity 150ms var(--ease);
+}
+
+.dp3-cap-segment.active {
+  background: var(--blue);
+  color: #fff;
+}
+
+.dp3-cap-segment.over {
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--red) 0,
+    var(--red) 8px,
+    var(--red-soft) 8px,
+    var(--red-soft) 16px
+  );
+  color: #fff;
+  border: 1px solid var(--red);
+}
+
+.dp3-cap-segment.lost {
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--line-2) 0,
+    var(--line-2) 6px,
+    var(--paper-2) 6px,
+    var(--paper-2) 12px
+  );
+  color: var(--text-2);
+  border: 1px dashed var(--line-2);
+}
+
+.dp3-cap-legend {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  font-size: 12.5px;
+}
+
+.dp3-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dp3-legend-box {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+}
+
+.dp3-fleet-card {
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 12px 16px;
+  background: var(--paper);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dp3-fleet-card.workshop {
+  background: var(--paper-2);
+  border-style: dashed;
+  border-color: var(--line-2);
+}
+
+.dp3-truck-bar {
+  display: flex;
+  height: 16px;
+  border-radius: var(--r-sm);
+  background: var(--line);
+  overflow: hidden;
+  gap: 2px;
+}
+
+.dp3-truck-slot {
+  flex: 1;
+  background: var(--blue);
+  color: #fff;
+  font-size: 10px;
+  font-family: var(--f-mono);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dp3-truck-slot.empty {
+  background: var(--line);
+}
+
+.dp3-truck-slot.lost {
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--line-2) 0,
+    var(--line-2) 4px,
+    var(--paper-2) 4px,
+    var(--paper-2) 8px
+  );
+}
+
+.dp3-reason-pill {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11.5px;
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  color: var(--ink-2);
+  margin-top: 4px;
+}
+
+/* DP3 Complete Workspace matching design image */
+.dp3-two-col {
+  display: grid;
+  grid-template-columns: minmax(280px, 320px) minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .dp3-two-col {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dp3-unassigned-card {
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--paper);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.dp3-unassigned-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.dp3-unassigned-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 14.5px;
+}
+
+.dp3-unassigned-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dp3-unassigned-item {
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: var(--paper);
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  transition: all 120ms var(--ease);
+}
+
+.dp3-unassigned-item:hover {
+  border-color: var(--ink);
+}
+
+.dp3-drag-handle {
+  color: var(--line-2);
+  cursor: grab;
+  font-size: 16px;
+  line-height: 1;
+  user-select: none;
+}
+
+.dp3-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.dp3-item-outlet {
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.dp3-item-sub {
+  font-size: 12px;
+  color: var(--text-2);
+}
+
+/* Fleet Section */
+.dp3-fleet-section {
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--paper);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.dp3-fleet-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.dp3-fleet-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.dp3-vehicle-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dp3-vehicle-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.dp3-vehicle-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.dp3-vehicle-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-family: var(--f-mono);
+  font-size: 12px;
+}
+
+.dp3-truck-track {
+  display: flex;
+  height: 22px;
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  overflow: hidden;
+  gap: 1px;
+}
+
+.dp3-stop-block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--f-mono);
+  font-size: 11px;
+  padding: 0 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.dp3-stop-block.chilled {
+  background: var(--blue);
+  color: #fff;
+}
+
+.dp3-stop-block.ambient {
+  background: var(--ink);
+  color: #fff;
+}
+
+.dp3-stop-block.workshop {
+  flex: 1;
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--line-2) 0,
+    var(--line-2) 8px,
+    var(--paper-2) 8px,
+    var(--paper-2) 16px
+  );
+  border-right: none;
+}
+
+.dp3-empty-track {
+  flex: 1;
+  background: var(--paper-2);
+}
