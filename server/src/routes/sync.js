@@ -4,22 +4,20 @@ import { Router } from "express";
 import { db, save, nowIso } from "../db.js";
 import { publish } from "../events.js";
 import { applyDelivery } from "./deliveries.js";
+import { processBatch } from "../logic/syncBatch.js";
 import { httpError, wrap } from "./_util.js";
 
 const r = Router();
 
-// POST /api/sync  { deviceId, records:[delivery records] }  -> { accepted:[], duplicates:[], conflicts:[] }
+// POST /api/sync  { deviceId, records:[delivery records] }
+//   -> { accepted:[clientId], duplicates:[clientId], conflicts:[conflict], errors:[{clientId, error}] }
+// One bad record never stops the others (see logic/syncBatch.js).
 r.post(
   "/",
   wrap((req, res) => {
-    const out = { accepted: [], duplicates: [], conflicts: [] };
-    for (const rec of req.body?.records || []) {
-      const result = applyDelivery(rec);
-      if (result.status === "accepted") out.accepted.push(rec.clientId);
-      else if (result.status === "duplicate") out.duplicates.push(rec.clientId);
-      else out.conflicts.push(result.conflict);
-    }
-    res.json(out);
+    if (req.body?.records !== undefined && !Array.isArray(req.body.records))
+      throw httpError(400, "records must be an array");
+    res.json(processBatch(req.body?.records || [], applyDelivery));
   })
 );
 
