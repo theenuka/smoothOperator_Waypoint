@@ -1,53 +1,178 @@
 // DR6 Sync and reconcile: phone and office disagree, a person decides. Owner: DRIVER FRONTEND.  Design: /design/DR6-SyncReconcile.jpg
+// Clean records already synced silently. Only real disagreements come here, side by side, and nothing is overwritten.
+import { Link } from "react-router-dom";
 import { api } from "../../shared/api.js";
 import { useApi } from "../../shared/live.js";
-import { Card, Loading, useToast } from "../../shared/ui.jsx";
+import { Loading, ErrorNote, useToast } from "../../shared/ui.jsx";
 import { day, time } from "../../shared/format.js";
-import { RUN } from "./outbox.js";
+import { useDriver, RUN } from "./outbox.js";
+import { reasonLabel } from "./reasons.js";
+import { Icon, icon } from "./icons.jsx";
+import "./driver.css";
+
+const DRIVER = "Chamara Wickramasinghe";
+
+// "Photo 10:07 · signature · 9 items"
+function proofText(rec) {
+  const parts = [];
+  if (rec.photo) parts.push(`Photo ${time(rec.photoAt || rec.recordedAt)}`);
+  if (rec.signature) parts.push("signature");
+  if (rec.items) parts.push(`${rec.items.reduce((sum, i) => sum + i.handedOver, 0)} items`);
+  return parts.join(" · ");
+}
+
+function Conflict({ c, online, onResolve }) {
+  const phoneDelivered = c.phone.status !== "failed";
+  // The office moved the stop (deferral) or already recorded it as delivered.
+  const officeMoved = c.server.status === "deferred";
+  const proof = proofText(c.phone);
+
+  return (
+    <div className="stack" style={{ gap: 12 }}>
+      <span className="label">
+        {c.outletId} {c.outletName}
+      </span>
+
+      <div className="dr-versus">
+        <div className="dr-side">
+          <span className="label">On your phone</span>
+          <b className="dr-side-what">{phoneDelivered ? "Delivered" : "Not delivered"}</b>
+          <span className="mono small">{time(c.phone.recordedAt)}</span>
+          <span className="small muted">
+            {phoneDelivered
+              ? [c.phone.signedBy && `Signed by ${c.phone.signedBy}`, proof].filter(Boolean).join(" · ")
+              : reasonLabel(c.phone.issue)}
+          </span>
+        </div>
+        <div className="dr-side">
+          <span className="label">From dispatch</span>
+          <b className="dr-side-what">
+            {officeMoved ? `Moved to ${day(c.server.toDate).split(" ")[0]}` : "Already delivered"}
+          </b>
+          <span className="mono small">{time(c.server.changedAt)}</span>
+          <span className="small muted">
+            {officeMoved
+              ? c.server.reason || `Changed by ${c.server.changedBy}`
+              : "The office has a delivery record"}
+          </span>
+        </div>
+        <div className="dr-versus-foot small">
+          <Icon d={icon.lock} size={16} /> Nothing was overwritten. Pick what's true.
+        </div>
+      </div>
+
+      {phoneDelivered && (c.phone.photo || c.phone.signature) && (
+        <div className="dr-proof-card">
+          {c.phone.photo ? (
+            <img src={c.phone.photo} alt="Delivery photo" />
+          ) : (
+            <img src={c.phone.signature} alt="Signature" className="sig" />
+          )}
+          <div className="col" style={{ gap: 2 }}>
+            <span className="small muted">Proof that goes with your answer</span>
+            <b>{proof}</b>
+          </div>
+        </div>
+      )}
+
+      {!online && (
+        <div className="notice cold small">
+          Your answer needs signal to reach the office. Both versions stay safe until then.
+        </div>
+      )}
+
+      {phoneDelivered ? (
+        <>
+          <button className="btn big block" disabled={!online} onClick={() => onResolve(c, "phone")}>
+            It was delivered, send my proof
+          </button>
+          <button
+            className="btn secondary big block"
+            disabled={!online}
+            onClick={() => onResolve(c, "server")}
+          >
+            {officeMoved
+              ? `Dispatch is right, keep it for ${day(c.server.toDate).split(" ")[0]}`
+              : "Dispatch is right"}
+          </button>
+        </>
+      ) : (
+        <>
+          <button className="btn big block" disabled={!online} onClick={() => onResolve(c, "server")}>
+            The office is right, it was delivered
+          </button>
+          <span className="small muted">
+            If it really was not delivered, call dispatch. They will correct the office record.
+          </span>
+        </>
+      )}
+    </div>
+  );
+}
 
 export default function DR6SyncReconcile() {
-  const { data, loading, reload } = useApi(`/sync/conflicts?runId=${RUN}&status=open`, [
+  const { online, last } = useDriver();
+  const { data, loading, error, reload } = useApi(`/sync/conflicts?runId=${RUN}&status=open`, [
     "sync.conflict",
     "sync.resolved",
   ]);
   const [toast, show] = useToast();
   if (loading) return <Loading />;
+  if (error) return <ErrorNote error={error} />;
 
   const resolve = async (c, choice) => {
-    await api.post("/sync/resolve", { conflictId: c.id, choice, by: "Chamara Wickramasinghe" });
-    show(choice === "phone" ? "Delivery kept. Dispatch and the store were told." : "Kept the office change.");
-    reload();
+    try {
+      await api.post("/sync/resolve", { conflictId: c.id, choice, by: DRIVER });
+      show(
+        choice === "phone"
+          ? `Your delivery stands. Dispatch and ${c.outletName} were told.`
+          : "Kept the office version. Your record is kept in the log."
+      );
+      reload();
+    } catch (err) {
+      show(`Not sent yet: ${err.message}. Both versions are still safe.`);
+    }
   };
 
   return (
     <>
-      <div className="col" style={{ gap: 2 }}>
-        <span className="label">DR6 · Sync</span>
-        <h1 className="h-page" style={{ fontSize: 32 }}>
-          {data.length ? `${data.length} need a decision` : "All synced"}
-        </h1>
-        <span className="muted">Clean records were saved silently. Only real disagreements come here.</span>
-      </div>
-      {data.map((c) => (
-        <Card key={c.id} title={c.outletName}>
-          <div className="stack" style={{ gap: 10 }}>
-            <div className="notice cold small">
-              <b>Your phone:</b> delivered at {time(c.phone.recordedAt)}
-              {c.phone.signedBy ? `, signed by ${c.phone.signedBy}` : ""}.
-            </div>
-            <div className="notice small">
-              <b>Office:</b> {c.server.changedBy} moved it to {day(c.server.toDate)} at{" "}
-              {time(c.server.changedAt)}. "{c.server.reason}"
-            </div>
-            <button className="btn now block" onClick={() => resolve(c, "phone")}>
-              It was delivered. Keep my record
-            </button>
-            <button className="btn secondary block" onClick={() => resolve(c, "server")}>
-              Keep the office change
-            </button>
+      {online && last && (
+        <div className="dr-bar on" role="status">
+          <Icon d={icon.sync} />
+          <div className="col fill" style={{ gap: 2 }}>
+            <b>Back online {time(last.at)}</b>
+            <span className="small">
+              {last.accepted.length} {last.accepted.length === 1 ? "record" : "records"} sent without any
+              trouble
+            </span>
           </div>
-        </Card>
-      ))}
+          <Icon d={icon.check} />
+        </div>
+      )}
+
+      {data.length === 0 ? (
+        <>
+          <div className="col" style={{ gap: 4 }}>
+            <span className="label">Sync</span>
+            <h1 className="dr-title">Phone and office agree</h1>
+          </div>
+          <div className="notice ok">
+            Nothing needs you. Clean records are sent by themselves; only a real disagreement comes here.
+          </div>
+          <Link to="/driver/route" className="btn secondary big block">
+            Back to the route
+          </Link>
+        </>
+      ) : (
+        <>
+          <h1 className="dr-title">
+            {data.length === 1 ? "One delivery needs you" : `${data.length} deliveries need you`}
+          </h1>
+          {data.map((c) => (
+            <Conflict key={c.id} c={c} online={online} onResolve={resolve} />
+          ))}
+        </>
+      )}
       {toast}
     </>
   );
