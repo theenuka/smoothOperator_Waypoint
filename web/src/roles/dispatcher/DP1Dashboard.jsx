@@ -1,7 +1,8 @@
-// DP1 Today's run (dashboard). Owner: DISPATCHER FRONTEND.  Design: /design/DP1-Dashboard.jpg
-// Matches design: run cards with segmented stop progress, alerts column (offline, chilled over-capacity, shortfalls, conflicts), and live feed.
+// DP1 Today's run (dashboard). Owner: DISPATCHER FRONTEND. Design: /design/DP1-Dashboard.jpg
+// Matches design: run cards with segmented stop progress, alerts column, live feed, plus gentle flash & sound on conflict arrival.
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useApi, useEventFeed } from "../../shared/live.js";
+import { useApi, useEventFeed, useLiveEvent } from "../../shared/live.js";
 import { Card, PageHead, Stat, StatusBadge, Badge, Loading } from "../../shared/ui.jsx";
 import { describe, tone, time } from "../../shared/format.js";
 import "./dispatcher.css";
@@ -27,6 +28,48 @@ export default function DP1Dashboard() {
   const tracking = useApi("/tracking", ["vehicle.position", "vehicle.offline", "vehicle.online"]);
   const { events, fresh } = useEventFeed(25);
   const nav = useNavigate();
+
+  const [conflictFlash, setConflictFlash] = useState(false);
+  const [activeConflictBanner, setActiveConflictBanner] = useState(null);
+
+  // Synthesize gentle two-tone conflict chime via Web Audio API
+  const playConflictChime = () => {
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      const now = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(520, now);
+      osc.frequency.exponentialRampToValueAtTime(660, now + 0.15);
+
+      gain.gain.setValueAtTime(0.15, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start(now);
+      osc.stop(now + 0.6);
+    } catch {
+      // Handled if browser blocks autoplay before interaction
+    }
+  };
+
+  // Trigger flash and sound when sync.conflict arrives
+  useLiveEvent("sync.conflict", (ev) => {
+    setConflictFlash(true);
+    setActiveConflictBanner(ev.payload || { orderId: "Delivery conflict" });
+    playConflictChime();
+
+    const timer = setTimeout(() => {
+      setConflictFlash(false);
+    }, 4500);
+    return () => clearTimeout(timer);
+  });
 
   const moveStop = (s) =>
     nav("/dispatcher/decide", {
@@ -56,10 +99,42 @@ export default function DP1Dashboard() {
         title="Today's run"
         sub="Everything that changed today, as it happens."
       >
+        <button
+          type="button"
+          className="btn secondary"
+          onClick={() => {
+            setConflictFlash(true);
+            setActiveConflictBanner({ orderId: "ORD41803", outletName: "Kegalle" });
+            playConflictChime();
+            setTimeout(() => setConflictFlash(false), 4500);
+          }}
+          title="Simulate incoming conflict sound and flash"
+        >
+          🔔 Test sound & flash
+        </button>
         <Link className="btn now" to="/dispatcher/plan">
           Plan Wednesday
         </Link>
       </PageHead>
+
+      {/* Live Conflict Banner when a conflict arrives */}
+      {activeConflictBanner && (
+        <div className="dp-conflict-banner">
+          <div className="row" style={{ gap: 10 }}>
+            <span style={{ fontSize: 18 }}>⚠️</span>
+            <div>
+              <b>New conflict arrived:</b> Phone and office disagree on{" "}
+              {activeConflictBanner.outletName
+                ? `${activeConflictBanner.outletName} (${activeConflictBanner.orderId})`
+                : activeConflictBanner.orderId || "delivery"}
+              .
+            </div>
+          </div>
+          <button type="button" className="btn ghost small" onClick={() => setActiveConflictBanner(null)}>
+            ✕ Dismiss
+          </button>
+        </div>
+      )}
 
       <div className="grid-4">
         <Stat
@@ -196,9 +271,10 @@ export default function DP1Dashboard() {
 
         {/* Right Column: Alerts and Live Feed */}
         <div className="stack" style={{ gap: 16 }}>
-          {/* Alerts Box */}
+          {/* Alerts Box with gentle flash effect when conflict arrives */}
           <Card
             title="Needs a decision / Alerts"
+            className={conflictFlash ? "dp-conflict-flash" : ""}
             action={
               totalAlerts > 0 ? (
                 <span className="badge bad">{totalAlerts}</span>
@@ -213,7 +289,29 @@ export default function DP1Dashboard() {
               </p>
             ) : (
               <div className="dp-alerts-card">
-                {/* 1. Offline Vehicles */}
+                {/* 1. Open Conflicts */}
+                {openConflicts.map((c) => (
+                  <div key={c.id} className="dp-alert-item bad">
+                    <div className="dp-alert-title" style={{ color: "var(--red-text)" }}>
+                      <span>■</span> Conflict on {c.orderId}: phone and office disagree
+                    </div>
+                    <div className="dp-alert-body">
+                      {c.outletName}: driver completed delivery while offline, but dispatch moved it to
+                      tomorrow.
+                    </div>
+                    <div className="dp-alert-actions">
+                      <Link
+                        className="btn secondary"
+                        style={{ minHeight: 28, fontSize: 12, padding: "0 10px" }}
+                        to="/dispatcher/tracking"
+                      >
+                        Check tracking
+                      </Link>
+                    </div>
+                  </div>
+                ))}
+
+                {/* 2. Offline Vehicles */}
                 {offlineVehicles.map((v) => {
                   const run = (runs.data || []).find((r) => r.vehicleId === v.vehicleId);
                   const remaining = run ? run.stops.filter((s) => s.status !== "delivered").length : 2;
@@ -246,7 +344,7 @@ export default function DP1Dashboard() {
                   );
                 })}
 
-                {/* 2. Chilled Over Capacity */}
+                {/* 3. Chilled Over Capacity */}
                 {over > 0 && (
                   <div className="dp-alert-item now">
                     <div className="dp-alert-title" style={{ color: "var(--yellow-deep)" }}>
@@ -268,7 +366,7 @@ export default function DP1Dashboard() {
                   </div>
                 )}
 
-                {/* 3. Dock Shortfalls */}
+                {/* 4. Dock Shortfalls */}
                 {shortfalls.map((sf) => (
                   <div key={sf.id} className="dp-alert-item bad">
                     <div className="dp-alert-title" style={{ color: "var(--red-text)" }}>
@@ -277,28 +375,6 @@ export default function DP1Dashboard() {
                     <div className="dp-alert-body">
                       {sf.loaded} of {sf.planned} loaded for {sf.outletName}. The truck is not blocked;
                       missing items are automatically queued for the next delivery.
-                    </div>
-                  </div>
-                ))}
-
-                {/* 4. Open Conflicts */}
-                {openConflicts.map((c) => (
-                  <div key={c.id} className="dp-alert-item bad">
-                    <div className="dp-alert-title" style={{ color: "var(--red-text)" }}>
-                      <span>■</span> Conflict on {c.orderId}: phone and office disagree
-                    </div>
-                    <div className="dp-alert-body">
-                      {c.outletName}: driver completed delivery while offline, but dispatch moved it to
-                      tomorrow.
-                    </div>
-                    <div className="dp-alert-actions">
-                      <Link
-                        className="btn secondary"
-                        style={{ minHeight: 28, fontSize: 12, padding: "0 10px" }}
-                        to="/dispatcher/tracking"
-                      >
-                        Check tracking
-                      </Link>
                     </div>
                   </div>
                 ))}
