@@ -43,7 +43,7 @@ The agreement between frontend and backend. **If it's not written here, it doesn
 
 | | Method and path | Body / query | Returns |
 |---|---|---|---|
-| ✅ | `GET /notices` | `?outletId=OUT014` | `[{ id, outletId, type:"deferral"\|"shortfall", title, body, at, read }]` newest first |
+| ✅ | `GET /notices` | `?outletId=OUT014` | `[{ id, outletId, type:"deferral"\|"shortfall"\|"failed", title, body, at, read }]` newest first |
 | ✅ | `POST /notices/:id/read` | | the notice |
 
 ## Runs [Backend B] {#runs}
@@ -67,13 +67,15 @@ The agreement between frontend and backend. **If it's not written here, it doesn
 | | Method and path | Body / query | Returns |
 |---|---|---|---|
 | ✅ | `GET /deliveries` | `?runId=RUN-VEH022&outletId=OUT083` | deliveries |
-| ✅ | `POST /deliveries` | one delivery record (below) | `{ status:"accepted"\|"duplicate"\|"conflict", delivery?, conflict? }` |
+| ✅ | `POST /deliveries` | one delivery record (below) | `{ status:"accepted"\|"duplicate"\|"conflict", delivery?, conflict? }`. `status` must be `delivered` or `failed` (400 otherwise). A failed record (DR4) marks the stop `failed`, moves "next" on, sends the store a notice with the reason, and with `goods:"return"` sets the order to `failed` for re-planning (`goods:"retry"` keeps it on the truck). When every stop is delivered or failed the run becomes `done` |
 
 A **delivery record** (made on the phone, may be sent hours later):
 ```json
 { "clientId": "VEH022-1727600000000-ab12", "runId": "RUN-VEH022", "stopSeq": 3, "orderId": "ORD41803",
   "outletId": "OUT083", "status": "delivered", "signedBy": "Sunil Perera", "recordedAt": "2026-09-29T08:52:00+05:30" }
 ```
+A failed record adds `"status": "failed", "issue": "store_closed"|"refused"|"damaged"|"cant_reach_dock"|"other", "note", "goods": "retry"|"return", "waitedMinutes"`.
+
 `clientId` is made on the phone and makes sending twice safe (the second time is a `duplicate`).
 
 ## Sync [Backend B] {#sync}
@@ -105,7 +107,7 @@ The server emits `"event"` with `{ id, type, at, payload }`. In React use `useAp
 | `deferral.reversed` | the deferral | DP6 |
 | `load.shortfall` | the shortfall + `outletName`, `runId` | DP1, LD, DR1, DR2, SM5 |
 | `load.completed` | `{ runId, shortfalls }` | DP1, LD1 |
-| `delivery.recorded` | `{ orderId, outletName, runId, status, recordedAt }` | DP1, DR1, SM1 |
+| `delivery.recorded` | `{ orderId, outletName, runId, status:"delivered"\|"failed", issue?, goods?, recordedAt }` | DP1, DR1, SM1 |
 | `sync.conflict` | `{ id, orderId, outletName }` | DP1, DR6 |
 | `sync.resolved` | `{ conflictId, orderId, choice, by }` | DP1, DR6, SM5 |
 | `vehicle.position` / `vehicle.offline` / `vehicle.online` | position | DP5 |
