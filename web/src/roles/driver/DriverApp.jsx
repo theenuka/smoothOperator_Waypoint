@@ -1,7 +1,9 @@
 // Driver app (Chamara, own phone). Owner: DRIVER FRONTEND.  Task file: docs/tasks/06-driver-frontend.md
+import { useEffect, useRef } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { PhoneShell } from "../../shared/shells.jsx";
-import { useDriver, setOnline, VEHICLE } from "./outbox.js";
+import { useToast } from "../../shared/ui.jsx";
+import { useDriver, setOnline, flush, VEHICLE } from "./outbox.js";
 import DR1TodaysRoute from "./DR1TodaysRoute.jsx";
 import DR2ActiveStop from "./DR2ActiveStop.jsx";
 import DR3ProofOfDelivery from "./DR3ProofOfDelivery.jsx";
@@ -40,9 +42,47 @@ function Top() {
   );
 }
 
+// Real signal: follow the phone's own online/offline events (the demo switch still works too),
+// and retry every 30 seconds in case the server was unreachable while the phone had signal.
+function useRealSignal() {
+  useEffect(() => {
+    const goOnline = () => setOnline(true);
+    const goOffline = () => setOnline(false);
+    window.addEventListener("online", goOnline);
+    window.addEventListener("offline", goOffline);
+    if (!navigator.onLine) setOnline(false);
+    const retry = setInterval(flush, 30000);
+    return () => {
+      window.removeEventListener("online", goOnline);
+      window.removeEventListener("offline", goOffline);
+      clearInterval(retry);
+    };
+  }, []);
+}
+
+// After each sync, one short message on whatever screen the driver is on: "2 deliveries sent".
+function useSyncToast(show) {
+  const { last } = useDriver();
+  const seen = useRef(last?.at);
+  useEffect(() => {
+    if (!last || last.at === seen.current) return;
+    seen.current = last.at;
+    const sent = last.accepted.length;
+    const ask = last.conflicts.length;
+    const parts = [];
+    if (sent) parts.push(`${sent} ${sent === 1 ? "delivery" : "deliveries"} sent`);
+    if (ask) parts.push(`${ask} ${ask === 1 ? "needs" : "need"} your answer on Sync`);
+    if (parts.length) show(parts.join(". ") + ".");
+  }, [last, show]);
+}
+
 export default function DriverApp() {
+  const [toast, show] = useToast();
+  useRealSignal();
+  useSyncToast(show);
   return (
     <PhoneShell top={<Top />} nav={nav}>
+      {toast}
       <Routes>
         <Route index element={<Navigate to="route" replace />} />
         <Route path="route" element={<DR1TodaysRoute />} />
