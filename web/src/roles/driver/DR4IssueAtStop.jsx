@@ -7,32 +7,8 @@ import { useApi } from "../../shared/live.js";
 import { Loading, ErrorNote } from "../../shared/ui.jsx";
 import { time } from "../../shared/format.js";
 import { addRecord, useDriver, RUN } from "./outbox.js";
+import { Icon, icon } from "./icons.jsx";
 import "./driver.css";
-
-// Small line icons (24 x 24), drawn in the text colour.
-const icon = {
-  shutter: "M4 4h16M5 4v16h14V4M5 8h14M5 12h14M5 16h14",
-  refused: "M6 6l12 12M18 6L6 18",
-  damaged: "M4 8l8-4 8 4v8l-8 4-8-4zM4 8l8 4 8-4M12 12v8M9 6l3 3-2 2 3 3",
-  dock: "M2 7h11v9H2zM13 10h4l3 3v3h-7M6 19a2 2 0 100-4 2 2 0 000 4zM17 19a2 2 0 100-4 2 2 0 000 4z",
-  other: "M12 3l10 18H2zM12 10v5M12 18v.5",
-  check: "M5 12l5 5 9-10",
-};
-const Icon = ({ d }) => (
-  <svg
-    width="22"
-    height="22"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.8"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    aria-hidden="true"
-  >
-    <path d={d} />
-  </svg>
-);
 
 const REASONS = [
   { id: "store_closed", label: "Shutter down, nobody to receive", icon: icon.shutter },
