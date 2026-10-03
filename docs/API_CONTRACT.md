@@ -43,7 +43,7 @@ The agreement between frontend and backend. **If it's not written here, it doesn
 
 | | Method and path | Body / query | Returns |
 |---|---|---|---|
-| ✅ | `GET /notices` | `?outletId=OUT014` | `[{ id, outletId, type:"deferral"\|"shortfall", title, body, at, read }]` newest first |
+| ✅ | `GET /notices` | `?outletId=OUT014` | `[{ id, outletId, type:"deferral"\|"shortfall"\|"failed", title, body, at, read }]` newest first |
 | ✅ | `POST /notices/:id/read` | | the notice |
 
 ## Runs [Backend B] {#runs}
@@ -59,7 +59,7 @@ The agreement between frontend and backend. **If it's not written here, it doesn
 |---|---|---|---|
 | ✅ | `GET /loads/:runId` | | `{ runId, status, lines:[{ orderId, stopSeq, sku, name, planned, loaded, checked }], shortfalls[] }` |
 | ✅ | `POST /loads/:runId/check` | `{ orderId, sku, loaded }` | the line |
-| 🟡 | `POST /loads/:runId/shortfall` | `{ orderId, sku, loaded, reason:"short_on_dock"\|"damaged"\|"wrong_item"\|"never_arrived", by }` | the shortfall (201). Creates a store notice, publishes `load.shortfall`. TODO: back-order onto the next order |
+| ✅ | `POST /loads/:runId/shortfall` | `{ orderId, sku, loaded, reason:"short_on_dock"\|"damaged"\|"wrong_item"\|"never_arrived", by }` | the shortfall (201) with `backorder:{ orderId, deliveryDate, qty }`. The missing quantity is added to the outlet's next open order, or a new order for the next day is created (line marked `backorder:true, fromShortfall`). Creates a store notice, publishes `load.shortfall` |
 | ✅ | `POST /loads/:runId/complete` | | the load with `status:"sealed"`. Publishes `load.completed` |
 
 ## Deliveries [Backend B] {#deliveries}
@@ -67,20 +67,22 @@ The agreement between frontend and backend. **If it's not written here, it doesn
 | | Method and path | Body / query | Returns |
 |---|---|---|---|
 | ✅ | `GET /deliveries` | `?runId=RUN-VEH022&outletId=OUT083` | deliveries |
-| ✅ | `POST /deliveries` | one delivery record (below) | `{ status:"accepted"\|"duplicate"\|"conflict", delivery?, conflict? }` |
+| ✅ | `POST /deliveries` | one delivery record (below) | `{ status:"accepted"\|"duplicate"\|"conflict", delivery?, conflict? }`. `status` must be `delivered` or `failed` (400 otherwise). A failed record (DR4) marks the stop `failed`, moves "next" on, sends the store a notice with the reason, and with `goods:"return"` sets the order to `failed` for re-planning (`goods:"retry"` keeps it on the truck). When every stop is delivered or failed the run becomes `done` |
 
 A **delivery record** (made on the phone, may be sent hours later):
 ```json
 { "clientId": "VEH022-1727600000000-ab12", "runId": "RUN-VEH022", "stopSeq": 3, "orderId": "ORD41803",
   "outletId": "OUT083", "status": "delivered", "signedBy": "Sunil Perera", "recordedAt": "2026-09-29T08:52:00+05:30" }
 ```
+A failed record adds `"status": "failed", "issue": "store_closed"|"refused"|"damaged"|"cant_reach_dock"|"other", "note", "goods": "retry"|"return", "waitedMinutes"`.
+
 `clientId` is made on the phone and makes sending twice safe (the second time is a `duplicate`).
 
 ## Sync [Backend B] {#sync}
 
 | | Method and path | Body / query | Returns |
 |---|---|---|---|
-| ✅ | `POST /sync` | `{ deviceId, records:[delivery records] }` | `{ accepted:[clientId], duplicates:[clientId], conflicts:[conflict] }` |
+| ✅ | `POST /sync` | `{ deviceId, records:[delivery records] }` | `{ accepted:[clientId], duplicates:[clientId], conflicts:[conflict], errors:[{ clientId, error }] }`. Records are applied oldest first; the same `clientId` twice is saved once; a bad record (e.g. unknown order) only lands in `errors` and the rest still sync. Errored records stay on the phone |
 | ✅ | `GET /sync/conflicts` | `?runId=RUN-VEH022&status=open` | conflicts |
 | ✅ | `POST /sync/resolve` | `{ conflictId, choice:"phone"\|"server", by }` | the conflict. `phone` = delivery kept and deferral reversed. Publishes `sync.resolved` |
 
@@ -105,7 +107,7 @@ The server emits `"event"` with `{ id, type, at, payload }`. In React use `useAp
 | `deferral.reversed` | the deferral | DP6 |
 | `load.shortfall` | the shortfall + `outletName`, `runId` | DP1, LD, DR1, DR2, SM5 |
 | `load.completed` | `{ runId, shortfalls }` | DP1, LD1 |
-| `delivery.recorded` | `{ orderId, outletName, runId, status, recordedAt }` | DP1, DR1, SM1 |
+| `delivery.recorded` | `{ orderId, outletName, runId, status:"delivered"\|"failed", issue?, goods?, recordedAt }` | DP1, DR1, SM1 |
 | `sync.conflict` | `{ id, orderId, outletName }` | DP1, DR6 |
 | `sync.resolved` | `{ conflictId, orderId, choice, by }` | DP1, DR6, SM5 |
 | `vehicle.position` / `vehicle.offline` / `vehicle.online` | position | DP5 |

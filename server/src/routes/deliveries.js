@@ -3,6 +3,7 @@ import { Router } from "express";
 import { db, save, newId, nowIso } from "../db.js";
 import { publish } from "../events.js";
 import { detectConflict } from "../logic/conflict.js";
+import { applyStopResult, failureNotice, STOP_RESULTS } from "../logic/stops.js";
 import { httpError, wrap, outletName } from "./_util.js";
 
 const r = Router();
@@ -15,6 +16,8 @@ export function applyDelivery(rec) {
   const d = db();
   if (!rec.clientId || !rec.orderId || !rec.runId)
     throw httpError(400, "clientId, runId and orderId are required");
+  if (rec.status && !STOP_RESULTS.includes(rec.status))
+    throw httpError(400, `status must be one of: ${STOP_RESULTS.join(", ")}`);
   const existing = d.deliveries.find((x) => x.clientId === rec.clientId);
   if (existing) return { status: "duplicate", delivery: existing };
 
@@ -45,13 +48,27 @@ export function applyDelivery(rec) {
 
   const delivery = { id: newId("DLV"), ...rec, status: rec.status || "delivered", syncedAt: nowIso() };
   d.deliveries.push(delivery);
-  order.status = delivery.status === "delivered" ? "delivered" : order.status;
+  if (delivery.status === "delivered") order.status = "delivered";
+  // Failed: "retry" keeps the order on the truck (driver comes back later), "return" sends it back for re-planning.
+  if (delivery.status === "failed" && rec.goods === "return") order.status = "failed";
+
   const run = d.runs.find((x) => x.id === rec.runId);
-  const stop = run?.stops.find((s) => s.orderId === rec.orderId);
-  if (stop) stop.status = delivery.status;
   if (run) {
-    const next = run.stops.find((s) => s.status === "pending");
-    if (next && !run.stops.some((s) => s.status === "next")) next.status = "next";
+    const { stops, runDone } = applyStopResult(run.stops, rec.orderId, delivery.status);
+    run.stops = stops;
+    if (runDone) run.status = "done";
+  }
+
+  if (delivery.status === "failed") {
+    const n = failureNotice(rec);
+    d.notices.unshift({
+      id: newId("NT"),
+      outletId: order.outletId,
+      type: "failed",
+      ...n,
+      at: nowIso(),
+      read: false,
+    });
   }
   save();
   publish("delivery.recorded", {
@@ -59,6 +76,8 @@ export function applyDelivery(rec) {
     outletName: outletName(d, order.outletId),
     runId: rec.runId,
     status: delivery.status,
+    issue: rec.issue,
+    goods: rec.goods,
     recordedAt: rec.recordedAt,
   });
   return { status: "accepted", delivery };
