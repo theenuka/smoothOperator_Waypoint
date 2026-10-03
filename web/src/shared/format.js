@@ -32,7 +32,7 @@ export function describe(ev) {
     case "load.completed":
       return `Truck sealed for ${p.runId} (${p.shortfalls} shortfall)`;
     case "delivery.recorded":
-      return `Delivered to ${p.outletName}`;
+      return p.status === "failed" ? `Couldn't deliver to ${p.outletName}` : `Delivered to ${p.outletName}`;
     case "sync.conflict":
       return `Needs a decision: ${p.outletName} (phone and office disagree)`;
     case "sync.resolved":
@@ -49,11 +49,16 @@ export function describe(ev) {
       return ev.type;
   }
 }
-export const tone = (type) =>
-  /shortfall|conflict|offline/.test(type)
+// Badge colour for an event. Accepts the type string (tone(e.type)) or the whole event (tone(e)).
+// Pass the whole event so a failed delivery shows red instead of green.
+export const tone = (evOrType) => {
+  const type = typeof evOrType === "string" ? evOrType : evOrType?.type || "";
+  if (type === "delivery.recorded" && evOrType?.payload?.status === "failed") return "bad";
+  return /shortfall|conflict|offline/.test(type)
     ? "bad"
     : /recorded|resolved|completed|online/.test(type)
       ? "ok"
       : /deferral/.test(type)
         ? "now"
         : "";
+};
