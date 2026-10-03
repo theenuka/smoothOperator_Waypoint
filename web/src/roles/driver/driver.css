@@ -215,3 +215,112 @@ button.dr-line {
   right: 4px;
   min-height: 44px;
 }
+
+/* DR5: the signal bar. Offline = ink with hazard tape on the edge (the workflow is degraded). */
+.dr-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 40px 12px 16px;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+}
+.dr-bar.off {
+  background: var(--ink);
+  color: var(--paper);
+}
+.dr-bar.off > svg {
+  color: var(--dock-red);
+  flex: none;
+}
+.dr-bar.off .small {
+  color: var(--dock-text-2);
+}
+.dr-bar.off::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 14px;
+  background: var(--hazard);
+}
+.dr-bar.on {
+  background: var(--green-soft);
+  color: var(--green-text);
+}
+.dr-bar.on > svg {
+  flex: none;
+}
+
+.dr-checks {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.dr-checks li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.dr-checks svg {
+  color: var(--green);
+  flex: none;
+}
+
+/* DR6: both versions side by side. Neither side is coloured as "right": the driver decides. */
+.dr-versus {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--paper);
+  overflow: hidden;
+}
+.dr-side {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px;
+}
+.dr-side + .dr-side {
+  border-left: 1px solid var(--line);
+  background: var(--paper-2);
+}
+.dr-side-what {
+  font-size: 17px;
+}
+.dr-versus-foot {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-top: 1px solid var(--line);
+  color: var(--text-2);
+}
+.dr-proof-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--paper);
+}
+.dr-proof-card img {
+  flex: none;
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: var(--r-md);
+  background: var(--paper-2);
+}
+.dr-proof-card img.sig {
+  object-fit: contain;
+  border: 1px solid var(--line);
+}

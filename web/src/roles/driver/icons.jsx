@@ -10,6 +10,10 @@ export const icon = {
   flag: "M5 21V4M5 4h11l-2 4 2 4H5",
   circle: "M12 3a9 9 0 100 18 9 9 0 000-18z",
   camera: "M3 8h4l2-3h6l2 3h4v11H3zM12 17a4 4 0 100-8 4 4 0 000 8z",
+  noSignal:
+    "M3 3l18 18M2 9a15 15 0 015-3M10 5.5A15 15 0 0122 9M5 12.5a10 10 0 014-2.3M15 10.5a10 10 0 014 2M8.5 16a5 5 0 017 0M12 20h.01",
+  lock: "M6 11h12v9H6zM8.5 11V8a3.5 3.5 0 017 0v3",
+  sync: "M4 12a8 8 0 0114-5.3L20 9M20 4v5h-5M20 12a8 8 0 01-14 5.3L4 15M4 20v-5h5",
 };
 
 export const Icon = ({ d, size = 22 }) => (
