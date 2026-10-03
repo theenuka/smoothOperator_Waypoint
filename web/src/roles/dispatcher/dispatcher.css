@@ -1012,3 +1012,37 @@
   border-radius: 4px;
   border: 1px dashed var(--line);
 }
+
+/* DP1 Conflict Arrival Flash & Banner styles */
+@keyframes conflictPulse {
+  0% {
+    background-color: var(--yellow-soft);
+    box-shadow: 0 0 0 3px var(--red);
+  }
+  50% {
+    background-color: var(--red-soft);
+    box-shadow: 0 0 0 5px var(--yellow);
+  }
+  100% {
+    background-color: var(--card);
+    box-shadow: none;
+  }
+}
+
+.dp-conflict-flash {
+  animation: conflictPulse 1.2s ease-in-out 3;
+}
+
+.dp-conflict-banner {
+  border-left: 4px solid var(--red);
+  background: var(--red-soft);
+  color: var(--ink);
+  padding: 12px 16px;
+  border-radius: var(--r-md);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  box-shadow: 0 2px 10px rgba(200, 52, 30, 0.15);
+}
