@@ -196,3 +196,200 @@
   flex-wrap: wrap;
   margin-top: 2px;
 }
+
+/* DP2 Orders styles */
+.dp-filter-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.dp-search-box {
+  flex: 1;
+  min-width: 240px;
+  max-width: 380px;
+}
+
+.dp-chips-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dp-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 0 14px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--line-2);
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 120ms var(--ease);
+}
+
+.dp-chip:hover {
+  border-color: var(--ink);
+}
+
+.dp-chip.active {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+
+.dp-totals-bar {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 12px 16px;
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.dp-total-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dp-total-val {
+  font-family: var(--f-mono);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.dp-orders-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  align-items: start;
+  transition: grid-template-columns 200ms var(--ease);
+}
+
+.dp-orders-layout.has-panel {
+  grid-template-columns: minmax(0, 1.4fr) minmax(360px, 1fr);
+}
+
+@media (max-width: 1024px) {
+  .dp-orders-layout.has-panel {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dp-table-row {
+  cursor: pointer;
+  transition: background 120ms var(--ease);
+}
+
+.dp-table-row:hover {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.dp-table-row.is-selected {
+  background: var(--yellow-soft) !important;
+}
+
+.dp-side-panel {
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--card);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: sticky;
+  top: 16px;
+}
+
+/* Full-width container override for dispatcher desktop pages */
+.shell .main .page {
+  max-width: 100%;
+}
+
+/* DP2 Left Filters Sidebar matching design */
+.dp2-page-layout {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  margin-top: 14px;
+  width: 100%;
+}
+
+@media (max-width: 900px) {
+  .dp2-page-layout {
+    flex-direction: column;
+  }
+}
+
+.dp2-sidebar {
+  width: 210px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding: 4px 0;
+}
+
+.dp2-sidebar-sec {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.dp2-sidebar-title {
+  font-family: var(--f-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+
+.dp2-sidebar-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.dp2-sidebar-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dp2-checkbox {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--ink);
+  cursor: pointer;
+  margin: 0;
+}
+
+.dp2-sidebar-count {
+  font-family: var(--f-mono);
+  font-size: 12px;
+  color: var(--text-2);
+}
+
+.dp2-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
