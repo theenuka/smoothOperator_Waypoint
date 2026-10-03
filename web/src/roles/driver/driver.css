@@ -271,3 +271,56 @@ button.dr-line {
   color: var(--green);
   flex: none;
 }
+
+/* DR6: both versions side by side. Neither side is coloured as "right": the driver decides. */
+.dr-versus {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--paper);
+  overflow: hidden;
+}
+.dr-side {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px;
+}
+.dr-side + .dr-side {
+  border-left: 1px solid var(--line);
+  background: var(--paper-2);
+}
+.dr-side-what {
+  font-size: 17px;
+}
+.dr-versus-foot {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-top: 1px solid var(--line);
+  color: var(--text-2);
+}
+.dr-proof-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--paper);
+}
+.dr-proof-card img {
+  flex: none;
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: var(--r-md);
+  background: var(--paper-2);
+}
+.dr-proof-card img.sig {
+  object-fit: contain;
+  border: 1px solid var(--line);
+}
