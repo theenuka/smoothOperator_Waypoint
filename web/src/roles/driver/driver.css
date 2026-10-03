@@ -324,3 +324,131 @@ button.dr-line {
   object-fit: contain;
   border: 1px solid var(--line);
 }
+
+/* DR1: the route line. Solid = done, dotted = still to drive (the Waypoint logo idea). */
+.dr-route {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+.dr-stop {
+  position: relative;
+  display: grid;
+  grid-template-columns: 46px 36px 1fr;
+  gap: 10px;
+  padding-bottom: 18px;
+}
+.dr-stop::before {
+  content: "";
+  position: absolute;
+  left: 73px;
+  top: 34px;
+  bottom: 0;
+  border-left: 2px dotted var(--line-2);
+}
+.dr-stop.done::before {
+  border-left: 2px solid var(--ink);
+}
+.dr-stop:last-child::before {
+  display: none;
+}
+.dr-stop-eta {
+  padding-top: 6px;
+  font-size: 13px;
+  color: var(--text-2);
+}
+.dr-stop-dot {
+  z-index: 1;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+  background: var(--paper);
+  font-family: var(--f-stencil);
+  font-weight: 800;
+  font-size: 17px;
+}
+.dr-stop.done .dr-stop-dot {
+  background: var(--ink);
+  color: var(--paper);
+}
+.dr-stop.next .dr-stop-dot {
+  background: var(--yellow);
+}
+.dr-stop-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  min-height: 48px;
+  color: var(--ink);
+  text-decoration: none;
+}
+.dr-stop-body b {
+  font-size: 16px;
+}
+.dr-stop.done .dr-stop-body b {
+  color: var(--text-2);
+}
+
+/* DR2: where the stop is */
+.dr-place {
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--paper);
+  overflow: hidden;
+}
+.dr-map {
+  display: block;
+  width: 100%;
+  height: 130px;
+  background: var(--paper-2);
+  border-bottom: 1px solid var(--line);
+}
+.dr-map .road {
+  stroke: var(--paper);
+  stroke-width: 10;
+  fill: none;
+}
+.dr-map .road.main {
+  stroke-width: 16;
+}
+.dr-map .route {
+  stroke: var(--ink);
+  stroke-width: 3;
+  fill: none;
+}
+.dr-map .truck {
+  fill: var(--ink);
+}
+.dr-map .pin {
+  fill: var(--yellow);
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+.dr-map .map-label {
+  font-family: var(--f-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  fill: var(--text-3);
+}
+.dr-list-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--line);
+}
+.dr-notice {
+  gap: 10px;
+  align-items: flex-start;
+}
+.dr-notice svg {
+  flex: none;
+  margin-top: 1px;
+}
