@@ -81,9 +81,9 @@ const call = async (mw, { method = "GET", path = "/orders", auth } = {}) => {
   return { ...out, user: req.user };
 };
 
-test("auth is off when SUPABASE_URL is not set: everything passes", async () => {
-  assert.equal(makeTokenCheck({ url: "" }), null);
-  assert.equal((await call(requireAuth({ url: "" }))).passed, true);
+test("there is no open mode: without SUPABASE_URL the server refuses to start", () => {
+  assert.throws(() => makeTokenCheck({ url: "" }), /SUPABASE_URL/);
+  assert.throws(() => requireAuth({ url: "" }), /SUPABASE_URL/);
 });
 
 test("auth on: no token 401, wrong role 403, right role passes with req.user", async () => {

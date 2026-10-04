@@ -1,5 +1,5 @@
 // Sign-in (Supabase Auth). Owner: LEAD.  Setup: docs/AUTH.md
-// OFF when VITE_SUPABASE_URL is not set: no login, the role picker works like the demo.
+// Always on. Needs VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in web/.env; without them App shows a setup page.
 //   const { user } = useAuth();   user = { id, email, role, name, outletId } or null
 import { createContext, useContext, useEffect, useState } from "react";
 import { createClient } from "@supabase/supabase-js";

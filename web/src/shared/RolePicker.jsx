@@ -1,9 +1,6 @@
 // Landing page: pick who you are.
 import { Link } from "react-router-dom";
-import { api } from "./api.js";
 import { Logo } from "./shells.jsx";
-import { useToast } from "./ui.jsx";
-import { authOn } from "./auth.jsx";
 
 const ROLES = [
   {
@@ -37,15 +34,6 @@ const ROLES = [
 ];
 
 export default function RolePicker() {
-  const [toast, show] = useToast();
-  const reset = async () => {
-    await api.post("/meta/reset");
-    try {
-      localStorage.removeItem("wp.outbox");
-      localStorage.removeItem("wp.online");
-    } catch {}
-    show("Demo data reset");
-  };
   return (
     <div className="picker">
       <div className="hazard" style={{ borderRadius: 0 }} />
@@ -56,20 +44,14 @@ export default function RolePicker() {
             <Logo tile={96} word={104} />
           </h1>
           <p className="lead" style={{ fontSize: 18 }}>
-            Explain the decision. Execute the run. Never lose the truth in between. Pick a role to open its
-            app. Open two roles side by side to watch a change reach the other screen live.
+            Explain the decision. Execute the run. Never lose the truth in between. Pick a role to sign in to
+            its app in a new tab. Open two roles side by side to watch a change reach the other screen live.
           </p>
         </div>
         <div className="roles">
           {ROLES.map((r) => (
-            // With sign-in on, each role opens in a new tab that signs in on its own (see App.jsx).
-            <Link
-              key={r.to}
-              to={r.to}
-              className="role"
-              target={authOn ? "_blank" : undefined}
-              rel={authOn ? "noreferrer" : undefined}
-            >
+            // Each role opens in a new tab that signs in on its own (see App.jsx).
+            <Link key={r.to} to={r.to} className="role" target="_blank" rel="noreferrer">
               <span className="device">{r.device}</span>
               <b>{r.role}</b>
               <span className="small">{r.name}</span>
@@ -77,33 +59,7 @@ export default function RolePicker() {
             </Link>
           ))}
         </div>
-        <section className="card demo-controls" aria-label="Demo controls">
-          <div className="row wrap between">
-            <div className="col" style={{ gap: 2 }}>
-              <span className="label">Demo controls</span>
-              <span className="small muted">
-                Demo day: Tuesday 29 September 2026. Planning for Wednesday 30 September.
-              </span>
-            </div>
-            {authOn ? (
-              <span className="small muted">Sign in as the dispatcher to reset the demo data.</span>
-            ) : (
-              <button className="btn secondary" onClick={reset}>
-                Reset demo data
-              </button>
-            )}
-          </div>
-          <div className="row wrap" style={{ gap: 8 }}>
-            <span className="small muted">Open each role in its own window:</span>
-            {ROLES.map((r) => (
-              <a key={r.to} className="btn ghost small" href={r.to} target="_blank" rel="noreferrer">
-                {r.role} ↗
-              </a>
-            ))}
-          </div>
-        </section>
       </div>
-      {toast}
     </div>
   );
 }

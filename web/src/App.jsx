@@ -1,6 +1,6 @@
 // Routes for the whole app.
 // Each role app owns everything under its own path.
-// With sign-in on (docs/AUTH.md) each role tab signs in first, then opens its app.
+// Each role opens in its own tab, signs in (docs/AUTH.md), then shows its app.
 import { Routes, Route, Navigate } from "react-router-dom";
 import RolePicker from "./shared/RolePicker.jsx";
 import Login from "./shared/Login.jsx";
@@ -14,14 +14,14 @@ import StoreApp from "./roles/store/StoreApp.jsx";
 
 const APPS = { dispatcher: DispatcherApp, loader: LoaderApp, driver: DriverApp, store: StoreApp };
 
-// The role app, after a sign-in with that role (straight away when sign-in is off).
+// The role app, only after a sign-in with that role.
 function RoleRoute({ role }) {
   const { user } = useAuth();
-  if (authOn && user?.role !== role) return <Login role={role} />;
+  if (user?.role !== role) return <Login role={role} />;
   const RoleApp = APPS[role];
   return (
     <>
-      <AccountBar role={role} />
+      <AccountBar />
       <RoleApp />
     </>
   );
@@ -29,6 +29,18 @@ function RoleRoute({ role }) {
 
 export default function App() {
   const { ready } = useAuth();
+  if (!authOn)
+    return (
+      <div className="picker">
+        <div className="card login">
+          <b>Sign-in is not set up on this computer.</b>
+          <p className="muted">
+            Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to web/.env (see docs/AUTH.md), then restart npm
+            run dev.
+          </p>
+        </div>
+      </div>
+    );
   if (!ready) return <Loading />;
   return (
     <Routes>

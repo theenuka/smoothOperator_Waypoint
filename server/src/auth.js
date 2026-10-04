@@ -1,6 +1,6 @@
 // Sign-in check for the API and live events (Supabase Auth). Owner: LEAD.
-// OFF when SUPABASE_URL is not set: every request passes, exactly like the demo build.
-// ON: every /api call needs "Authorization: Bearer <Supabase access token>".
+// Always on. The server will not start without SUPABASE_URL (server/.env, see docs/AUTH.md).
+// Every /api call needs "Authorization: Bearer <Supabase access token>".
 // The user's role, name and outlet come from Supabase app_metadata (only an admin can set it):
 //   { "role": "dispatcher" | "loader" | "driver" | "store", "name": "Kavindi Perera", "outletId": "OUT014" }
 import crypto from "node:crypto";
@@ -79,12 +79,12 @@ export const userFrom = (claims) => {
   };
 };
 
-// Returns check(token) -> user, or null when auth is off. Public keys are cached and refetched for a new key id.
+// Returns check(token) -> user. Public keys are cached and refetched for a new key id.
 export function makeTokenCheck({
   url = process.env.SUPABASE_URL,
   secret = process.env.SUPABASE_JWT_SECRET,
 } = {}) {
-  if (!url) return null;
+  if (!url) throw new Error("SUPABASE_URL is not set. Add it to server/.env (see docs/AUTH.md).");
   const issuer = `${url.replace(/\/$/, "")}/auth/v1`;
   let jwks = [];
   let fetchedAt = 0;
@@ -109,7 +109,6 @@ export function makeTokenCheck({
 // Express middleware for app.use("/api", requireAuth()).
 export function requireAuth(options) {
   const check = makeTokenCheck(options);
-  if (!check) return (req, res, next) => next();
   return async (req, res, next) => {
     if (req.path === "/health") return next();
     const token = (req.headers.authorization || "").replace(/^Bearer\s+/i, "");
@@ -131,7 +130,6 @@ export function requireAuth(options) {
 export function socketAuth(options) {
   const check = makeTokenCheck(options);
   return async (socket, next) => {
-    if (!check) return next();
     try {
       socket.user = await check(socket.handshake.auth?.token);
       next();

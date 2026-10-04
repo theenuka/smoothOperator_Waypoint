@@ -1,11 +1,11 @@
 # Sign-in and database (Supabase)
 
-Sign-in and the Supabase database are **off by default**. With no keys set, the app works exactly like the demo: the role picker, no login. Turn it on with two small `.env` files.
+Sign-in and the Supabase database are **always on**, in development too. There is no open mode: without the keys the server refuses to start and the web app shows a setup page. Ask the Lead for the two `.env` files.
 
-## What it does when on
+## What it does
 
 - The role picker stays. Each role card opens a **new tab** with a sign-in page for that role; after sign-in the tab continues into the role app. Each tab keeps its own sign-in (sessionStorage), so all four roles can be open side by side.
-- "Reset demo data" moves to the dispatcher's bar (the picker tab is not signed in).
+- "Reset to seed data" is in the dispatcher's bar.
 - A bar above every role app shows the name, the role, the outlet (store managers) and **Sign out**.
 - Every `/api` call must carry the Supabase access token (`Authorization: Bearer ...`). No token or an expired one gets `401`. A role calling something it may not use gets `403` (the table is `ACCESS` in `server/src/auth.js`). `/api/health` stays open.
 - Live events (Socket.IO) only reach signed-in users.
@@ -14,14 +14,14 @@ Sign-in and the Supabase database are **off by default**. With no keys set, the 
 
 ## Database
 
-With `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` in `server/.env` the data lives in Supabase Postgres instead of `server/data/db.json`.
+The data lives in Supabase Postgres (`SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` in `server/.env`). `server/data/db.json` is no longer used.
 
 - Create the tables once: SQL Editor > paste `server/supabase/schema.sql` > Run. Row Level Security is on with no policies, so the public anon key can read nothing; only the server (service role key) reaches the tables.
-- On its first start the server fills the empty tables from `seed.json`. "Reset demo data" and `npm run reset-data` reset the tables too.
+- On its first start the server fills the empty tables from `seed.json`. "Reset to seed data" and `npm run reset-data` put the seed back in the tables.
 - Each list (orders, runs, deferrals, ...) is a table of `{ id, pos, data }` rows; `meta`, `history`, `loads`, `positions` are rows in `app_state`. Routes did not change: `db()` and `save()` work as before, and `save()` sends only the rows that changed.
 - Limit: the data is loaded into memory, so run one server instance (as today). Moving routes to real queries is the next step for scaling out.
 
-## Turn it on (local)
+## Set up (local)
 
 1. Create a project at supabase.com. Authentication > Sign In / Providers: keep **Email** on.
 2. Project Settings > API: copy the Project URL, the `anon` key and the `service_role` key.
@@ -37,11 +37,13 @@ With `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` in `server/.env` the data li
 
 The server checks tokens with Supabase's public signing keys (`/auth/v1/.well-known/jwks.json`). Older projects that still use the legacy JWT secret: set `SUPABASE_JWT_SECRET` in `server/.env` as well.
 
-## Turn it on (Cloud Run)
+## Set up (Cloud Run)
 
-- Server: `gcloud run services update waypoint --region asia-southeast1 --update-env-vars SUPABASE_URL=https://<ref>.supabase.co` (kept across deploys).
-- Web: the `VITE_` values are baked in at build time. Put them in `web/.env.production` (they are public, so this file may be committed).
-- The deploy smoke test calls `/api/runs`, which needs a token once sign-in is on. Point it at `/api/health` in `.github/workflows/deploy.yml` at the same time.
+Do this **before** merging: the server will not start on Cloud Run without these.
+
+- Server: `gcloud run services update waypoint --region asia-southeast1 --update-env-vars SUPABASE_URL=https://<ref>.supabase.co,SUPABASE_SERVICE_ROLE_KEY=<key>` (kept across deploys; Secret Manager is better for the key).
+- Web: the `VITE_` values are baked in at build time from `web/.env.production` (committed; the values are public).
+- The deploy smoke test now calls `/api/health` (everything else needs sign-in).
 
 ## Not done yet
 
