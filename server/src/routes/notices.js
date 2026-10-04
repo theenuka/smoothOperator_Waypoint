@@ -1,4 +1,4 @@
-// Store notices API. Owner: BACKEND A.  Contract: docs/API_CONTRACT.md#notices
+// Store notices API.  Contract: docs/API_CONTRACT.md#notices
 import { Router } from "express";
 import { db, save, newId, nowIso } from "../db.js";
 import { publish } from "../events.js";
@@ -25,7 +25,7 @@ r.post("/:id/read", (req, res, next) => {
 
 export default r;
 
-// Store problem reports (SM7). Mounted by the Lead in index.js: app.use("/api/issues", issues)
+// Store problem reports (SM7). Mounted in index.js at /api/issues
 export const issues = Router();
 
 // POST /api/issues  { outletId, deliveryId, sku, problem, note, qty?, fix?, receivedBy? }

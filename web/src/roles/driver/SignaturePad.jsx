@@ -1,4 +1,4 @@
-// Signature pad for proof of delivery. Owner: DRIVER FRONTEND.
+// Signature pad for proof of delivery.
 // A plain <canvas> with pointer events, so it works with a finger, a pen or a mouse.
 // onChange(dataUrl) is called after every stroke, and onChange(null) after "Clear".
 import { useEffect, useRef, useState } from "react";

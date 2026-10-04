@@ -1,10 +1,6 @@
 # Design guide
 
-Every screen was already designed in the Designathon. Your job is to make the app look like those designs. Open them while you work:
-
-- In the running app: any unbuilt screen shows its design under the TODO list.
-- As files: `web/public/design/<CODE>-<Name>.jpg` (for example `DR3-ProofOfDelivery.jpg`).
-- Give the image to your AI tool together with your prompt ("make this screen look like this image").
+Every screen was designed first and then built to match. The reference designs are in [`docs/design/`](design/), named by screen code (for example `DR3-ProofOfDelivery.jpg`).
 
 ## The design system in five rules
 
@@ -14,9 +10,9 @@ Every screen was already designed in the Designathon. Your job is to make the ap
 4. **Say what happens next.** Every warning tells the person what to do or what will happen: "6 of 10 loaded. The other 4 come on the next delivery." Not just "Shortfall".
 5. **Nothing is silent.** When something changes, the other screens show it live (use `useApi(path, [events])`).
 
-## Building blocks (already in `web/src/shared/`)
+## Building blocks (`web/src/shared/`)
 
-| You want | Use |
+| Need | Use |
 |---|---|
 | Page title | `<PageHead code="DP2" title="Orders for Wednesday" sub="...">buttons</PageHead>` |
 | A box | `<Card title="Runs" action={<Badge>live</Badge>}>...</Card>` |
@@ -30,11 +26,11 @@ Every screen was already designed in the Designathon. Your job is to make the ap
 | Layout | `row`, `col`, `stack`, `grid-2`, `grid-4`, `wrap`, `between`, `fill` |
 | Message after an action | `const [toast, show] = useToast();` then `show("Saved")` and render `{toast}` |
 
-Need a style that isn't there? Make `roles/<your-role>/<your-role>.css`, import it in your screen, and prefix your classes (for example `.dr-signature`). Use the colour variables: `var(--yellow)`, `var(--red)`, `var(--green)`, `var(--blue)`, `var(--ink)`, `var(--line)`, `var(--paper-2)`.
+Screen-specific styles live in `roles/<role>/<role>.css` with a role prefix (for example `.dr-signature`) and use only the colour variables: `var(--yellow)`, `var(--red)`, `var(--green)`, `var(--blue)`, `var(--ink)`, `var(--line)`, `var(--paper-2)`.
 
-## Checking your screen
+## Device targets
 
 - Driver: Chrome DevTools → device toolbar → iPhone 12 Pro (390 × 844).
 - Loader: 1180 × 820 (iPad Air landscape).
 - Dispatcher and store: full desktop window, and once at 1280 px wide.
-- Keyboard: press Tab through the screen. Every button must show the yellow focus ring.
+- Keyboard: press Tab through the screen. Every control shows the yellow focus ring.

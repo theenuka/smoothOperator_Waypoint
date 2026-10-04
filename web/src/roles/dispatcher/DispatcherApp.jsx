@@ -1,4 +1,4 @@
-// Dispatcher app (Kavindi, desktop). Owner: DISPATCHER FRONTEND.  Task file: docs/tasks/04-dispatcher-frontend.md
+// Dispatcher app (Kavindi, desktop).
 // Add a screen: create the file, then add ONE line to `nav` and ONE <Route> below.
 import { Routes, Route, Navigate } from "react-router-dom";
 import { DesktopShell } from "../../shared/shells.jsx";

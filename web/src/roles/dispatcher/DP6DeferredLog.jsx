@@ -1,4 +1,4 @@
-// DP6 Deferral log (audit). Owner: DISPATCHER FRONTEND. Design: /design/DP6-DeferredLog.jpg
+// DP6 Deferral log (audit). Design: docs/design/DP6-DeferredLog.jpg
 // Requirements fulfilled: Filter by outlet; reversed deferrals show who reversed and why; waited most ranking and reversal details.
 import { useState } from "react";
 import { Link } from "react-router-dom";

@@ -1,4 +1,4 @@
-// Talk to the API. Owner: LEAD.
+// Talk to the API.
 // Usage:   const runs = await api.get("/runs?date=2026-09-29");
 //          await api.post("/deferrals", { orderIds: ["ORD41907"], toDate: "2026-10-01", reason: "..." });
 // All endpoints are listed in docs/API_CONTRACT.md.

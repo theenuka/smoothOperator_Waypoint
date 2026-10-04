@@ -1,4 +1,4 @@
-// Dock and load API. Owner: BACKEND B.  Contract: docs/API_CONTRACT.md#loads
+// Dock and load API.  Contract: docs/API_CONTRACT.md#loads
 import { Router } from "express";
 import { db, save, newId, nowIso } from "../db.js";
 import { publish } from "../events.js";

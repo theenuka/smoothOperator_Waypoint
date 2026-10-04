@@ -1,4 +1,4 @@
-// SM6 Check what arrived. Owner: STORE FRONTEND.  Design: /design/SM6-ConfirmReceipt.jpg
+// SM6 Check what arrived.  Design: docs/design/SM6-ConfirmReceipt.jpg
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useApi } from "../../shared/live.js";

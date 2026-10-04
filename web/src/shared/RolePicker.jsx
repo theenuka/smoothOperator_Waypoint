@@ -1,4 +1,4 @@
-// Landing page: pick who you are. Owner: LEAD.
+// Landing page: pick who you are.
 import { Link } from "react-router-dom";
 import { api } from "./api.js";
 import { useToast } from "./ui.jsx";

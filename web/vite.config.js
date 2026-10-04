@@ -1,4 +1,4 @@
-// Owner: LEAD. The dev server runs on :5173 and forwards /api and live events to the API on :4000.
+// The dev server runs on :5173 and forwards /api and live events to the API on :4000.
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 

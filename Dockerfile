@@ -1,4 +1,4 @@
-# One container: the API also serves the built web app. Owner: LEAD. See docs/DEPLOY.md
+# One container: the API also serves the built web app. See docs/DEPLOY.md
 FROM node:20-slim
 WORKDIR /app
 

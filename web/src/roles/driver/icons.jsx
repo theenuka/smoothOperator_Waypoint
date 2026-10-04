@@ -1,4 +1,4 @@
-// Small line icons (24 x 24) for the driver screens, drawn in the current text colour. Owner: DRIVER FRONTEND.
+// Small line icons (24 x 24) for the driver screens, drawn in the current text colour.
 // Usage: <Icon d={icon.check} />
 export const icon = {
   shutter: "M4 4h16M5 4v16h14V4M5 8h14M5 12h14M5 16h14",

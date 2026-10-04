@@ -1,4 +1,4 @@
-// LD2 Load plan: the truck seen from above, last stop goes in first. Owner: LOADER FRONTEND.  Design: /design/LD2-LoadList.jpg
+// LD2 Load plan: the truck seen from above, last stop goes in first.  Design: docs/design/LD2-LoadList.jpg
 import { Link, useParams } from "react-router-dom";
 import { useApi } from "../../shared/live.js";
 import { ErrorNote, Loading } from "../../shared/ui.jsx";

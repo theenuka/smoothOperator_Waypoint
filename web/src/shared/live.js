@@ -1,4 +1,4 @@
-// Live updates ("one fact, every screen"). Owner: LEAD.
+// Live updates ("one fact, every screen").
 // The server publishes an event for every important change. These hooks let a screen react.
 import { useEffect, useRef, useState, useCallback } from "react";
 import { io } from "socket.io-client";

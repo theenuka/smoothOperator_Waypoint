@@ -1,4 +1,4 @@
-// DR7 Trip summary. Owner: DRIVER FRONTEND.  Design: /design/DR7-TripSummary.jpg
+// DR7 Trip summary.  Design: docs/design/DR7-TripSummary.jpg
 // The run in one screen: how many stops, what was handed over, and everything unusual with its time.
 // Anything still on the phone is shown first, because it must be sent before the shift ends.
 import { useState } from "react";

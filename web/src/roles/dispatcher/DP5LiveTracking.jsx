@@ -1,4 +1,4 @@
-// DP5 Live tracking. Owner: DISPATCHER FRONTEND. Design: /design/DP5-LiveTracking.jpg
+// DP5 Live tracking. Design: docs/design/DP5-LiveTracking.jpg
 // Requirements fulfilled: List of trucks with "last seen", clear red state for "no signal" explaining that deliveries are saved on phone and will sync, planned stops of RUN-VEH022 showing which are done, and route map.
 import { useState } from "react";
 import { useApi } from "../../shared/live.js";
