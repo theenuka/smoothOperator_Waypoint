@@ -3,15 +3,9 @@ import { Router } from "express";
 import { db, save, newId, nowIso } from "../db.js";
 import { publish } from "../events.js";
 import { httpError, wrap, outletName } from "./_util.js";
+import { niceDate, alsoWaited } from "../logic/noticeText.js";
 
 const r = Router();
-const niceDate = (ymd) =>
-  new Date(ymd + "T12:00:00+05:30").toLocaleDateString("en-GB", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    timeZone: "Asia/Colombo",
-  });
 
 // GET /api/deferrals?outletId=OUT014   (the deferral log, newest first)
 r.get("/", (req, res) => {
@@ -55,7 +49,7 @@ r.post(
         outletId: o.outletId,
         type: "deferral",
         title: `Your order ${o.id} now arrives ${niceDate(toDate)}`,
-        body: `${reason} You are protected on the next tight day.${waits >= 2 ? " This is not your first wait, so your next order goes to the front of the queue." : ""}`,
+        body: `${reason}${alsoWaited(d.deferrals, def)} You are protected on the next tight day.${waits >= 2 ? " This is not your first wait, so your next order goes to the front of the queue." : ""}`,
         at: def.at,
         read: false,
       });
