@@ -2,9 +2,9 @@
 // Matches design: run cards with segmented stop progress, alerts column, live feed, plus gentle flash & sound on conflict arrival.
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useApi, useEventFeed, useLiveEvent } from "../../shared/live.js";
+import { useApi, useDates, useEventFeed, useLiveEvent } from "../../shared/live.js";
 import { Card, PageHead, Stat, StatusBadge, Badge, Loading } from "../../shared/ui.jsx";
-import { describe, tone, time } from "../../shared/format.js";
+import { describe, tone, time, longDay, weekdayOf, day } from "../../shared/format.js";
 import "./dispatcher.css";
 
 const LIVE = [
@@ -22,8 +22,14 @@ const LIVE = [
 ];
 
 export default function DP1Dashboard() {
-  const runs = useApi("/runs?date=2026-09-29", LIVE);
-  const plan = useApi("/plan?date=2026-09-30", ["deferral.decided", "deferral.reversed", "order.placed"]);
+  const { today, planDate } = useDates();
+  const runs = useApi(today ? `/runs?date=${today}` : null, LIVE);
+  const plan = useApi(planDate ? `/plan?date=${planDate}` : null, [
+    "deferral.decided",
+    "deferral.reversed",
+    "order.placed",
+  ]);
+  const workshop = (plan.data?.reefers || []).filter((v) => v.status === "workshop").map((v) => v.id);
   const conflicts = useApi("/sync/conflicts?status=open", ["sync.conflict", "sync.resolved"]);
   const tracking = useApi("/tracking", ["vehicle.position", "vehicle.offline", "vehicle.online"]);
   const { events, fresh } = useEventFeed(25);
@@ -75,7 +81,7 @@ export default function DP1Dashboard() {
     nav("/dispatcher/decide", {
       state: {
         orderIds: [s.orderId],
-        toDate: "2026-09-30",
+        toDate: planDate,
         reason: `${s.outletName}'s dock closes before the truck can get there today, so this delivery moves to tomorrow morning.`,
       },
     });
@@ -95,12 +101,12 @@ export default function DP1Dashboard() {
   return (
     <>
       <PageHead
-        code="DP1 · Tuesday 29 September · LIVE"
+        code={`DP1 · ${longDay(today)} · LIVE`}
         title="Today's run"
         sub="Everything that changed today, as it happens."
       >
         <Link className="btn now" to="/dispatcher/plan">
-          Plan Wednesday
+          Plan {weekdayOf(planDate)}
         </Link>
       </PageHead>
 
@@ -335,11 +341,15 @@ export default function DP1Dashboard() {
                 {over > 0 && (
                   <div className="dp-alert-item now">
                     <div className="dp-alert-title" style={{ color: "var(--yellow-deep)" }}>
-                      <span>■</span> Wed: {over} chilled orders have no reefer slot
+                      <span>■</span> {day(planDate).split(" ")[0]}: {over} chilled orders have no reefer slot
                     </div>
                     <div className="dp-alert-body">
-                      {plan.data?.chilled.orders || 8} chilled orders for Wednesday, but only{" "}
-                      {plan.data?.chilled.slots || 5} reefer slots available (VEH031 is in the workshop).
+                      {plan.data?.chilled.orders} chilled orders for {weekdayOf(planDate)}, but only{" "}
+                      {plan.data?.chilled.slots} reefer slots available
+                      {workshop.length
+                        ? ` (${workshop.join(", ")} ${workshop.length === 1 ? "is" : "are"} in the workshop)`
+                        : ""}
+                      .
                     </div>
                     <div className="dp-alert-actions">
                       <Link

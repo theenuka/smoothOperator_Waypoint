@@ -2,11 +2,11 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { api } from "../../shared/api.js";
-import { useApi, useEventFeed, useLiveEvent } from "../../shared/live.js";
+import { useApi, useDates, useEventFeed, useLiveEvent } from "../../shared/live.js";
 import { ErrorNote, Loading } from "../../shared/ui.jsx";
+import { longDay } from "../../shared/format.js";
 import "./loader.css";
 
-const DATE = "2026-09-29";
 const MIN_BAYS = 4;
 
 const pad = (n) => String(n).padStart(2, "0");
@@ -50,7 +50,8 @@ function useLoads(runs) {
 }
 
 export default function LD1DockHome() {
-  const runsApi = useApi(`/runs?date=${DATE}`, ["load.completed", "load.shortfall"]);
+  const { today } = useDates();
+  const runsApi = useApi(today ? `/runs?date=${today}` : null, ["load.completed", "load.shortfall"]);
   const runs = runsApi.data ?? [];
   const loads = useLoads(runs);
   const { events } = useEventFeed(30);
@@ -103,7 +104,7 @@ export default function LD1DockHome() {
     <>
       <div className="row between wrap">
         <div className="col" style={{ gap: 4 }}>
-          <span className="label">LD1 · Tuesday 29 September · 04:30 shift</span>
+          <span className="label">LD1 · {longDay(today)} · 04:30 shift</span>
           <h1 className="h-page" style={{ fontSize: 52 }}>
             {runs.length} truck{runs.length === 1 ? "" : "s"} to load, {bayCount} bays
           </h1>

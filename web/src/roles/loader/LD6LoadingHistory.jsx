@@ -1,12 +1,9 @@
 // LD6 Loading history: sealed trucks with loaded vs planned, shortfalls, and who flagged them.  Design: docs/design/LD6-LoadingHistory.jpg
 import { useEffect, useState } from "react";
 import { api } from "../../shared/api.js";
-import { useLiveEvent } from "../../shared/live.js";
+import { useDates, useLiveEvent } from "../../shared/live.js";
 import { Empty, ErrorNote, Loading } from "../../shared/ui.jsx";
 import "./loader.css";
-
-// Same fixed demo day as LD1.
-const TODAY = "2026-09-29";
 
 const addDays = (date, n) => {
   const d = new Date(`${date}T00:00:00Z`);
@@ -21,11 +18,12 @@ const weekDates = (date) => {
 const weekday = (date) =>
   new Date(`${date}T00:00:00Z`).toLocaleDateString("en-GB", { weekday: "short", timeZone: "UTC" });
 
-const RANGES = {
-  today: { label: "Today", noun: "today", dates: [TODAY] },
-  yesterday: { label: "Yesterday", noun: "yesterday", dates: [addDays(TODAY, -1)] },
-  week: { label: "This week", noun: "this week", dates: weekDates(TODAY) },
-};
+// The date ranges for the tabs, counted from today (Sri Lanka date from the server).
+const rangesFor = (today) => ({
+  today: { label: "Today", noun: "today", dates: [today] },
+  yesterday: { label: "Yesterday", noun: "yesterday", dates: [addDays(today, -1)] },
+  week: { label: "This week", noun: "this week", dates: weekDates(today) },
+});
 
 const REASON = {
   short_on_dock: "short",
@@ -110,20 +108,23 @@ function Row({ row, showDay }) {
 }
 
 export default function LD6LoadingHistory() {
+  const { today } = useDates();
+  const RANGES = rangesFor(today || "1970-01-01");
   const [range, setRange] = useState("today");
   const [tick, setTick] = useState(0);
   const [state, setState] = useState(null); // { range, rows, error }
   useLiveEvent(["load.completed", "load.shortfall"], () => setTick((t) => t + 1));
 
   useEffect(() => {
+    if (!today) return;
     let stale = false;
-    fetchRows(RANGES[range].dates)
+    fetchRows(rangesFor(today)[range].dates)
       .then((rows) => !stale && setState({ range, rows, error: null }))
       .catch((error) => !stale && setState({ range, rows: [], error }));
     return () => {
       stale = true;
     };
-  }, [range, tick]);
+  }, [range, tick, today]);
 
   const ready = state && state.range === range;
   const rows = ready ? state.rows : [];

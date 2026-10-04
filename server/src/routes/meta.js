@@ -2,12 +2,16 @@
 import { Router } from "express";
 import { db, reset } from "../db.js";
 import { publish } from "../events.js";
+import { liveDates } from "../logic/seedDates.js";
 const r = Router();
 
 // GET /api/meta  -> company, depots, outlets, vehicles
 r.get("/", (req, res) => {
   const d = db();
-  res.json({ meta: d.meta, depots: d.depots, outlets: d.outlets, vehicles: d.vehicles });
+  // Dates come from the real clock: today in Sri Lanka, and tomorrow as the planning day.
+  const { today, planDate } = liveDates();
+  const meta = { ...d.meta, today, demoDate: today, planDate };
+  res.json({ meta, depots: d.depots, outlets: d.outlets, vehicles: d.vehicles });
 });
 
 // GET /api/meta/events?limit=50  -> newest first (audit log)

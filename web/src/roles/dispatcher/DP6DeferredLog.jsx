@@ -2,12 +2,13 @@
 // Requirements fulfilled: Filter by outlet; reversed deferrals show who reversed and why; waited most ranking and reversal details.
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useApi } from "../../shared/live.js";
+import { useApi, useDates } from "../../shared/live.js";
 import { Card, PageHead, Badge, Loading } from "../../shared/ui.jsx";
 import { day, time } from "../../shared/format.js";
 import "./dispatcher.css";
 
 export default function DP6DeferredLog() {
+  const { today } = useDates();
   const { data, loading } = useApi("/deferrals", ["deferral.decided", "deferral.reversed", "sync.resolved"]);
 
   const [selectedOutlet, setSelectedOutlet] = useState("all");
@@ -146,7 +147,7 @@ export default function DP6DeferredLog() {
                 </thead>
                 <tbody>
                   {filteredDeferrals.map((d) => {
-                    const isToday = d.at && d.at.startsWith("2026-09-29");
+                    const isToday = !!today && d.at && d.at.startsWith(today);
                     return (
                       <tr
                         key={d.id}

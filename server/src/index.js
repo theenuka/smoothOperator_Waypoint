@@ -7,7 +7,8 @@ import path from "node:path";
 import fs from "node:fs";
 import { fileURLToPath } from "node:url";
 import { Server } from "socket.io";
-import { db, init } from "./db.js";
+import { init } from "./db.js";
+import { liveDates } from "./logic/seedDates.js";
 import { attach } from "./events.js";
 import { requireAuth, socketAuth } from "./auth.js";
 
@@ -32,7 +33,7 @@ app.use(express.json({ limit: "5mb" }));
 // Sign-in check. Off until SUPABASE_URL is set (docs/AUTH.md).
 app.use("/api", requireAuth());
 
-app.get("/api/health", (req, res) => res.json({ ok: true, demoDate: db().meta.demoDate }));
+app.get("/api/health", (req, res) => res.json({ ok: true, today: liveDates().today }));
 app.use("/api/meta", meta);
 app.use("/api/orders", orders);
 app.use("/api/plan", planning);

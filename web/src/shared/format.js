@@ -14,6 +14,18 @@ export const day = (isoOrDate) =>
         }
       )
     : "";
+// "2026-09-29" -> "Tuesday 29 September"
+export const longDay = (ymd) =>
+  ymd
+    ? new Date(ymd + "T12:00:00+05:30").toLocaleDateString("en-GB", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        timeZone: TZ,
+      })
+    : "";
+// "2026-09-30" -> "Wednesday"
+export const weekdayOf = (ymd) => longDay(ymd).split(" ")[0];
 export const kg = (n) => `${Number(n || 0).toLocaleString("en-GB")} kg`;
 export const hoursAgo = (iso, from = Date.now()) => Math.round((from - new Date(iso).getTime()) / 3600000);
 

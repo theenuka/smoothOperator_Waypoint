@@ -3,14 +3,19 @@
 // All of it is derived from /plan and /plan/suggest and follows the dispatcher's ticks.
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useApi } from "../../shared/live.js";
+import { useApi, useDates } from "../../shared/live.js";
 import { Card, PageHead, Badge, Loading, ErrorNote } from "../../shared/ui.jsx";
-import { kg, day } from "../../shared/format.js";
+import { kg, day, longDay } from "../../shared/format.js";
 import "./dispatcher.css";
 
 export default function DP3PlanAllocate() {
-  const plan = useApi("/plan?date=2026-09-30", ["deferral.decided", "deferral.reversed", "order.placed"]);
-  const sug = useApi("/plan/suggest?date=2026-09-30", [
+  const { planDate } = useDates();
+  const plan = useApi(planDate ? `/plan?date=${planDate}` : null, [
+    "deferral.decided",
+    "deferral.reversed",
+    "order.placed",
+  ]);
+  const sug = useApi(planDate ? `/plan/suggest?date=${planDate}` : null, [
     "deferral.decided",
     "deferral.reversed",
     "order.placed",
@@ -51,7 +56,7 @@ export default function DP3PlanAllocate() {
   return (
     <>
       <PageHead
-        code="PLANNING WEDNESDAY 30 SEPTEMBER"
+        code={`PLANNING ${longDay(planDate).toUpperCase()}`}
         title="Plan and allocate"
         sub="Protected orders are placed first. What's left is packed by the fairness rule. You make the final call."
       />
