@@ -5,3 +5,8 @@ node_modules/
 web/dist/
 server/data/
 *.log
+# local env files: never uploaded (secrets; the cloud build uses web/.env.production)
+server/.env
+web/.env
+web/.env*.local
+.env

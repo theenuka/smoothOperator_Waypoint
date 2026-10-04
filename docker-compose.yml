@@ -1,16 +1,125 @@
-# One command for judges: docker compose up --build
-# Then open http://localhost:8080
+# One command for judges:  cp .env.example .env  &&  docker compose up --build
+# Then open http://localhost:8080 and sign in with a seeded account (README).
+# The full stack: the app, plus a local Supabase (Postgres, auth, REST API and a gateway). Nothing is called in the cloud.
+# The live site does not use this file: Cloud Run builds the Dockerfile only. See docs/DEPLOY.md
 services:
   waypoint:
-    build: .
+    build:
+      context: .
+      args:
+        # baked into the web app: the browser signs in through the local gateway
+        LOCAL_SUPABASE_URL: http://localhost:8000
+        LOCAL_SUPABASE_ANON_KEY: ${ANON_KEY:?run cp .env.example .env first}
     ports:
       - "8080:8080"
     environment:
       NODE_ENV: production
       PORT: "8080"
+      SUPABASE_URL: http://gateway:8000
+      SUPABASE_JWT_SECRET: ${JWT_SECRET:?run cp .env.example .env first}
+      SUPABASE_SERVICE_ROLE_KEY: ${SERVICE_ROLE_KEY:?run cp .env.example .env first}
+    depends_on:
+      db: { condition: service_healthy }
+      rest: { condition: service_started }
+      gateway: { condition: service_started }
     healthcheck:
-      test: ["CMD", "node", "-e", "fetch('http://localhost:8080/api/runs').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      test: ["CMD", "node", "-e", "fetch('http://localhost:8080/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
       interval: 10s
       timeout: 3s
       retries: 5
+    restart: unless-stopped # retries until the database answers
+
+  # Creates the four demo accounts (one per role), then exits
+  seed-users:
+    build:
+      context: .
+      args:
+        LOCAL_SUPABASE_URL: http://localhost:8000
+        LOCAL_SUPABASE_ANON_KEY: ${ANON_KEY}
+    command: ["node", "scripts/create-demo-users.mjs"]
+    environment:
+      SUPABASE_URL: http://gateway:8000
+      SUPABASE_SERVICE_ROLE_KEY: ${SERVICE_ROLE_KEY}
+      DEMO_PASSWORD: ${DEMO_PASSWORD:?run cp .env.example .env first}
+    depends_on:
+      auth: { condition: service_healthy }
+      gateway: { condition: service_started }
+    restart: on-failure
+
+  db:
+    image: supabase/postgres:15.8.1.060
+    command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf", "-c", "log_min_messages=fatal"]
+    environment:
+      POSTGRES_HOST: /var/run/postgresql
+      PGPORT: "5432"
+      POSTGRES_PORT: "5432"
+      PGDATABASE: postgres
+      POSTGRES_DB: postgres
+      PGPASSWORD: ${POSTGRES_PASSWORD:?run cp .env.example .env first}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXP: "3600"
+    volumes:
+      - ./docker/supabase/roles.sql:/docker-entrypoint-initdb.d/init-scripts/99-roles.sql:ro
+      - ./server/supabase/schema.sql:/docker-entrypoint-initdb.d/migrations/98-waypoint-schema.sql:ro
+      - ./docker/supabase/grants.sql:/docker-entrypoint-initdb.d/migrations/99-waypoint-grants.sql:ro
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  auth:
+    image: supabase/gotrue:v2.177.0
+    environment:
+      GOTRUE_API_HOST: 0.0.0.0
+      GOTRUE_API_PORT: "9999"
+      API_EXTERNAL_URL: http://localhost:8000
+      GOTRUE_SITE_URL: http://localhost:8080
+      GOTRUE_DB_DRIVER: postgres
+      GOTRUE_DB_DATABASE_URL: postgres://supabase_auth_admin:${POSTGRES_PASSWORD}@db:5432/postgres
+      GOTRUE_JWT_SECRET: ${JWT_SECRET}
+      # must equal the server's SUPABASE_URL + /auth/v1 (server/src/auth.js checks it)
+      GOTRUE_JWT_ISSUER: http://gateway:8000/auth/v1
+      GOTRUE_JWT_AUD: authenticated
+      GOTRUE_JWT_DEFAULT_GROUP_NAME: authenticated
+      GOTRUE_JWT_ADMIN_ROLES: service_role
+      GOTRUE_JWT_EXP: "3600"
+      GOTRUE_EXTERNAL_EMAIL_ENABLED: "true"
+      GOTRUE_MAILER_AUTOCONFIRM: "true"
+      GOTRUE_DISABLE_SIGNUP: "true" # accounts come from seed-users only
+    depends_on:
+      db: { condition: service_healthy }
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:9999/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
     restart: unless-stopped
+
+  rest:
+    image: postgrest/postgrest:v12.2.12
+    environment:
+      PGRST_DB_URI: postgres://authenticator:${POSTGRES_PASSWORD}@db:5432/postgres
+      PGRST_DB_SCHEMAS: public
+      PGRST_DB_ANON_ROLE: anon
+      PGRST_JWT_SECRET: ${JWT_SECRET}
+      PGRST_DB_USE_LEGACY_GUCS: "false"
+    depends_on:
+      db: { condition: service_healthy }
+    restart: unless-stopped
+
+  gateway:
+    image: nginx:1.27-alpine
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./docker/supabase/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      auth: { condition: service_started }
+      rest: { condition: service_started }
+    restart: unless-stopped
+
+volumes:
+  db-data:
