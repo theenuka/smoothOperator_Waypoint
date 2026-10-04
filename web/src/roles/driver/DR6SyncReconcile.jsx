@@ -98,12 +98,16 @@ function Conflict({ c, online, onResolve }) {
         </>
       ) : (
         <>
-          <button className="btn big block" disabled={!online} onClick={() => onResolve(c, "server")}>
+          <button className="btn big block" disabled={!online} onClick={() => onResolve(c, "phone")}>
+            It was not delivered, send my report
+          </button>
+          <button
+            className="btn secondary big block"
+            disabled={!online}
+            onClick={() => onResolve(c, "server")}
+          >
             The office is right, it was delivered
           </button>
-          <span className="small muted">
-            If it really was not delivered, call dispatch. They will correct the office record.
-          </span>
         </>
       )}
     </div>
@@ -125,7 +129,9 @@ export default function DR6SyncReconcile() {
       await api.post("/sync/resolve", { conflictId: c.id, choice, by: DRIVER });
       show(
         choice === "phone"
-          ? `Your delivery stands. Dispatch and ${c.outletName} were told.`
+          ? c.phone.status === "failed"
+            ? `Marked not delivered. Dispatch and ${c.outletName} were told.`
+            : `Your delivery stands. Dispatch and ${c.outletName} were told.`
           : "Kept the office version. Your record is kept in the log."
       );
       reload();
