@@ -2,9 +2,10 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useApi } from "../../shared/live.js";
-import { Card, PageHead, Badge, Loading, ErrorNote, Empty, useToast } from "../../shared/ui.jsx";
+import { Card, PageHead, Badge, Loading, ErrorNote, Empty } from "../../shared/ui.jsx";
 import { time } from "../../shared/format.js";
 import { ALL_ITEMS } from "./products.js";
+import { markReceived } from "./receipts.js";
 import "./store.css";
 
 const LIVE = ["delivery.recorded", "load.shortfall", "sync.resolved"];
@@ -76,7 +77,6 @@ function SignaturePad({ onInk, resetKey }) {
 
 export default function SM6ConfirmReceipt({ outletId }) {
   const navigate = useNavigate();
-  const [toast, show] = useToast();
   const [counts, setCounts] = useState({}); // sku -> counted number (only if changed)
   const [name, setName] = useState(null); // null = use the name from the driver's record
   const [signed, setSigned] = useState(false);
@@ -137,7 +137,13 @@ export default function SM6ConfirmReceipt({ outletId }) {
 
   function submit() {
     if (diffs.length === 0) {
-      show("Thanks. Everything matches what you ordered.");
+      // All lines match: record the check and go back to Today, which shows the message.
+      const receipt = markReceived(delivery.id, receivedBy.trim());
+      navigate("/store/today", {
+        state: {
+          message: `Checked and signed by ${receipt.by} at ${time(receipt.at)}. Everything matches what you ordered.`,
+        },
+      });
       return;
     }
     // Differences become a problem report (SM7)
@@ -252,7 +258,6 @@ export default function SM6ConfirmReceipt({ outletId }) {
           </div>
         </Card>
       </div>
-      {toast}
     </>
   );
 }
