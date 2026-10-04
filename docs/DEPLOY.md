@@ -79,6 +79,6 @@ npm start          # http://localhost:4000
 
 Other laptops on the same Wi-Fi can open `http://<your-laptop-ip>:4000` (find the IP with `ipconfig` on Windows or `ifconfig` on Mac), so the phone and the tablet can be real devices.
 
-## Production architecture
+## Future scaling plan
 
-This build runs as one Node.js service. The production design is AWS serverless in ap-south-1 (API Gateway and Lambda on Node.js, SNS and SQS for events, RDS Postgres with PostGIS, DynamoDB, S3 and CloudFront, Cognito), provisioned with Terraform and deployed by GitHub Actions. The code is split the same way (planning, dock, delivery and sync services behind one API contract), so each route group maps to a Lambda.
+This build runs as one Node.js service, which is enough for the demo. To run it for a real chain, the plan is to move the store to PostgreSQL with PostGIS, run the route groups (planning, dock, delivery, sync) as separate services behind the same API contract, and move live events to a managed queue. The domain logic and the API contract do not change, because data access is isolated in `server/src/db.js` and every rule lives in `server/src/logic/`.
