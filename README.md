@@ -1,5 +1,7 @@
 # Waypoint
 
+[![CI](https://github.com/theenuka/waypoint/actions/workflows/ci.yml/badge.svg)](https://github.com/theenuka/waypoint/actions/workflows/ci.yml) [![Deploy](https://github.com/theenuka/waypoint/actions/workflows/deploy.yml/badge.svg)](https://github.com/theenuka/waypoint/actions/workflows/deploy.yml)
+
 **Explain the decision. Execute the run. Never lose the truth in between.**
 
 Waypoint is a delivery operations platform for a retail chain that supplies its outlets from regional depots. It connects the four people who touch every delivery (the dispatcher, the dock loader, the driver and the store manager) to one live source of truth.
