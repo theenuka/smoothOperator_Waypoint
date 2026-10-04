@@ -1,6 +1,7 @@
 // Landing page: pick who you are.
 import { Link } from "react-router-dom";
 import { api } from "./api.js";
+import { Logo } from "./shells.jsx";
 import { useToast } from "./ui.jsx";
 
 const ROLES = [
@@ -50,8 +51,8 @@ export default function RolePicker() {
       <div className="picker-in">
         <div className="col" style={{ gap: 14 }}>
           <span className="label">Team smoothOperator · Rootcode Tech-Triathlon 2026</span>
-          <h1>
-            <span>Waypoint</span>
+          <h1 className="picker-logo">
+            <Logo tile={96} word={104} />
           </h1>
           <p className="lead" style={{ fontSize: 18 }}>
             Explain the decision. Execute the run. Never lose the truth in between. Pick a role to open its

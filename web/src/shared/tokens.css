@@ -462,6 +462,35 @@ textarea {
   top: 0;
   height: 100vh;
 }
+/* logo lockup (brand guide: mark on a safety-yellow tile + Big Shoulders wordmark) */
+.logo {
+  display: inline-flex;
+  align-items: center;
+}
+.logo-tile {
+  background: var(--yellow);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+.logo-word {
+  font-family: var(--f-display);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: 0.005em;
+  color: var(--ink);
+}
+.logo-suffix {
+  font-family: var(--f-mono);
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--yellow);
+  margin-left: 10px;
+  vertical-align: middle;
+}
 .rail-mark {
   width: 42px;
   height: 42px;
@@ -810,17 +839,21 @@ textarea {
   width: 100%;
 }
 .picker h1 {
-  font-family: var(--f-display);
-  font-weight: 800;
-  font-size: clamp(48px, 9vw, 104px);
-  line-height: 0.85;
   margin: 0;
-  text-transform: uppercase;
+  line-height: 1;
 }
-.picker h1 span {
-  background: var(--yellow);
-  padding: 6px 12px 0;
-  display: inline-block;
+@media (max-width: 640px) {
+  .picker .logo-tile {
+    width: 64px !important;
+    height: 64px !important;
+  }
+  .picker .logo-tile svg {
+    width: 38px;
+    height: 38px;
+  }
+  .picker .logo-word {
+    font-size: 64px !important;
+  }
 }
 .roles {
   display: grid;
