@@ -47,7 +47,7 @@ function Conflict({ c, online, onResolve }) {
         <div className="dr-side">
           <span className="label">From dispatch</span>
           <b className="dr-side-what">
-            {officeMoved ? `Moved to ${day(c.server.toDate).split(" ")[0]}` : "Already delivered"}
+            {officeMoved ? `Moved to ${day(c.server.toDate).split(",")[0]}` : "Already delivered"}
           </b>
           <span className="mono small">{time(c.server.changedAt)}</span>
           <span className="small muted">
@@ -92,7 +92,7 @@ function Conflict({ c, online, onResolve }) {
             onClick={() => onResolve(c, "server")}
           >
             {officeMoved
-              ? `Dispatch is right, keep it for ${day(c.server.toDate).split(" ")[0]}`
+              ? `Dispatch is right, keep it for ${day(c.server.toDate).split(",")[0]}`
               : "Dispatch is right"}
           </button>
         </>
