@@ -8,7 +8,7 @@ Waypoint is a delivery operations platform for a retail chain that supplies its 
 
 Team **smoothOperator** · Rootcode Tech-Triathlon 2026
 
-**Live demo:** [waypoint.theenuka.in](https://waypoint.theenuka.in) · open a role in two windows (for example `/dispatcher` and `/driver`) to watch updates arrive live.
+**Live demo:** [waypoint.theenuka.in](https://waypoint.theenuka.in) (backup: [waypoint-618048768001.asia-southeast1.run.app](https://waypoint-618048768001.asia-southeast1.run.app)). Accounts are in [Seeded accounts](#seeded-accounts).
 
 ![Waypoint on the dispatcher's desktop, the dock tablet and the driver's phone](docs/screenshots/hero.jpg)
 
@@ -66,82 +66,102 @@ What is coming and why it changed, in plain language.
 
 ```mermaid
 flowchart LR
-  subgraph Clients
+  subgraph Clients[Browsers]
     D[Dispatcher<br/>desktop]
-    L[Loader<br/>tablet]
+    L[Loader<br/>dock tablet]
     R[Driver<br/>phone + offline outbox]
     S[Store manager<br/>desktop]
   end
-  subgraph Server[Node.js service]
-    API[REST API<br/>Express]
-    BUS[Event bus]
-    WS[Socket.IO]
+  subgraph Run[Google Cloud Run: one Node.js service]
+    WEB[Built React app]
+    API[REST API<br/>Express + role check]
     LOGIC[Domain logic<br/>fairness · cutoff · back-order<br/>sync batch · conflicts]
-    DB[(Data store)]
+    BUS[Event bus] --> WS[Socket.IO]
+    DB[db.js<br/>in-memory state + row sync]
   end
-  D & L & S -->|HTTPS| API
-  R -->|sync batch| API
-  API --> LOGIC --> DB
-  API --> BUS --> WS -->|live events| D & L & R & S
+  subgraph SB[Supabase]
+    AUTH[Auth<br/>4 role accounts]
+    PG[(Postgres<br/>RLS on)]
+  end
+  D & L & R & S -->|sign in| AUTH
+  D & L & S -->|HTTPS + token| API
+  R -->|sync batch + token| API
+  API --> LOGIC --> DB -->|service role| PG
+  API --> BUS
+  WS -->|live events| D & L & R & S
 ```
 
-- **Domain logic is pure and tested.** Every rule (fairness, cutoff, back-orders, stop results, sync batching, conflict detection, order validation) lives in `server/src/logic/` with no I/O, and is covered by unit tests.
+- **Domain logic is pure and tested.** Every rule (fairness, cutoff, back-orders, stop results, sync batching, conflict detection, order validation) lives in `server/src/logic/` with no I/O and is covered by unit tests.
 - **One contract.** All endpoints and live events are documented in [docs/API_CONTRACT.md](docs/API_CONTRACT.md).
-- **Data access is isolated** in `server/src/db.js`. This build uses a file-backed store so the demo is reproducible; [docs/DEPLOY.md](docs/DEPLOY.md) describes how it scales to a real database and separate services.
+- **Sign-in and data on Supabase.** Each role signs in with its own account; the server checks the token and the role on every call. Data lives in Supabase Postgres and only the server can reach it.
+
+More detail: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) and [docs/DATA_MODEL.md](docs/DATA_MODEL.md).
 
 ## Tech stack
 
-Node.js 20, Express, Socket.IO, React 18, Vite, React Router, Node's built-in test runner, Prettier, GitHub Actions, Docker, Google Cloud Run.
+Node.js 20, Express, Socket.IO, React 18, Vite, React Router, Leaflet with OpenStreetMap, Supabase (Postgres and Auth), Node's built-in test runner, Prettier, Docker Compose, GitHub Actions, Google Cloud Run.
 
 ## Run it (judges start here)
 
-The live demo is at [waypoint.theenuka.in](https://waypoint.theenuka.in). To run the full stack on a clean machine you only need Docker:
+### Seeded accounts
+
+One account per role. The sign-in page fills in the email for the role you pick.
+
+| Role | Email | Live site password | Local (Docker) password |
+|---|---|---|---|
+| Dispatcher | kavindi@waypoint.demo | `Waypoint-nD8yI_TT` | `Waypoint-local-demo` |
+| Loader | ruwan@waypoint.demo | `Waypoint-nD8yI_TT` | `Waypoint-local-demo` |
+| Driver | chamara@waypoint.demo | `Waypoint-nD8yI_TT` | `Waypoint-local-demo` |
+| Store manager (OUT014 Dehiwala) | nadeeka@waypoint.demo | `Waypoint-nD8yI_TT` | `Waypoint-local-demo` |
+
+### Run the full stack locally
+
+You only need Docker. One command starts the app and a local Supabase (Postgres, auth, REST API and a gateway), creates the tables, loads the demo data and creates the four accounts. Nothing is called in the cloud.
 
 ```bash
 git clone https://github.com/theenuka/waypoint.git
 cd waypoint
-cp .env.example .env
-docker compose up --build
+docker compose up
 ```
 
-Open http://localhost:8080 when the log says the server is listening. Compose starts the app and a local Supabase (Postgres, auth, REST API and a gateway on port 8000), so nothing is called in the cloud. The first start downloads about 1 GB of images, creates the tables, fills them with the demo data and creates the four accounts below. The `.env` values are local-only demo keys.
+Open http://localhost:8080 when the log says `Waypoint API on http://localhost:8080`. The first start downloads about 1 GB of images and takes a few minutes. Ports 8080 and 8000 must be free.
 
-| Role | Email | Password (local) |
-|---|---|---|
-| Dispatcher | kavindi@waypoint.demo | `Waypoint-local-demo` |
-| Loader | ruwan@waypoint.demo | `Waypoint-local-demo` |
-| Driver | chamara@waypoint.demo | `Waypoint-local-demo` |
-| Store manager (OUT014) | nadeeka@waypoint.demo | `Waypoint-local-demo` |
+Configuration: `docker-compose.yml` has local-only defaults for every value, listed in [`.env.example`](.env.example). To change one, `cp .env.example .env` and edit it. Stop with `Ctrl+C`; the data is kept between starts, and `docker compose down -v` deletes it so the next start begins from the seeded scenario.
 
-Stop with `Ctrl+C`. The data is kept between starts; `docker compose down -v` deletes it, and the next start begins from the seeded scenario again.
+### Judge walkthrough (about 3 minutes)
 
-**Judge walkthrough (3 minutes):**
+The demo morning is Tuesday 29 September: the Kandy truck (VEH022) is on the road and Wednesday is being planned.
 
-1. Open http://localhost:8080 and pick **Loader**. In another window pick **Dispatcher**, and a third as **Store**.
-2. Loader: open run VEH022, then the Kandy City stop, count 4 of 5 Rice and flag the shortfall.
-3. Dispatcher: the shortfall appears in the live feed with no refresh. Store (OUT072 Kandy City): the notice appears with the reason.
-4. Press **Reset demo data** on the home page to start over.
+1. On the home page, open **Loader**, **Dispatcher** and **Store manager**. Each opens in its own tab; sign in with the account above. All three stay signed in side by side.
+2. **Loader:** open VEH022, then stop 5 **Kandy City**, tap **Rice, 5 kg bag**, count 4 of 5, pick a reason and **Flag 1 short and keep loading**. The truck is not blocked.
+3. **Dispatcher:** the shortfall appears in the live feed with no refresh. Open **Plan**: 8 chilled orders for 5 reefer slots. Open **Decide**, keep the three suggested waits, write the reason and **Confirm 3 deferrals**.
+4. **Store manager:** switch the outlet to **OUT072 Kandy City** to read the shortfall notice, then to an outlet that waits to read why.
+5. **Driver** (phone size, open from the home page): the route shows the short item at Kandy City. Turn the network off in DevTools, deliver a stop with signature, turn it back on and watch it sync.
+6. **Dispatcher:** **Reset to seed data** in the top bar puts the scenario back.
 
 The full five minute script is in [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md).
 
-## Changes from the Day 5 design
+## Changes from the Designathon submission
 
-The screens follow the Day 5 design submission: the same four roles, personas, depots and outlets, and the same screen set (DP1-DP6, LD1-LD6, DR1-DR7, SM1-SM7). The design covered the experience only, so the build added the parts it did not specify:
+The screens follow the Day 5 Designathon submission: the same four roles, personas, depots and outlets, and the same screen set (DP1-DP6, LD1-LD6, DR1-DR7, SM1-SM7). The design covered the experience only. Significant changes and additions in the build:
 
-- **Architecture.** One Node.js server with the domain rules in `server/src/logic/`, split into route groups (planning, dock, delivery, sync) behind one [API contract](docs/API_CONTRACT.md), with Socket.IO pushing every change to the other roles live.
-- **Data.** A file-backed store seeded with the design's scenario, so every run of the demo starts from the same morning. Data access is isolated in `server/src/db.js`, so it can move to a real database without touching the domain logic.
-- **Deployment.** Docker for local runs, Google Cloud Run for the live demo, and GitHub Actions that test every change and deploy `main` after CI passes. See [docs/DEPLOY.md](docs/DEPLOY.md).
+- **Sign-in per role.** The design had no sign-in. Each role now has its own account, and one browser can be signed in as all four roles at once for the demo. The loader signs in with email and password instead of the PIN on the shared dock tablet in the design.
+- **Live map.** Dispatcher live tracking (DP5) uses an interactive OpenStreetMap map with a fleet selector instead of the drawn route map in the design.
+- **Data and architecture.** Not part of the design. The build is one Node.js service with the domain rules in `server/src/logic/`, data in Supabase Postgres, and Socket.IO pushing every change to the other roles live. See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+- **Deployment.** Docker Compose for local runs, Google Cloud Run for the live site, and GitHub Actions that test every change and deploy `main` after the tests pass. See [docs/DEPLOY.md](docs/DEPLOY.md).
 
-## Getting started
+## Development
 
-Requires Node.js 20 or newer.
+Requires Node.js 20 or newer and Docker.
 
 ```bash
 npm install
+docker compose up db auth rest gateway seed-users   # local Supabase only
+cp server/.env.example server/.env && cp web/.env.example web/.env   # fill with the local values, see docs/AUTH.md
 npm run dev          # API on :4000, web app on http://localhost:5173
 ```
 
-Open the app, pick a role, and open a second role in another window to watch changes arrive live.
+Never point a local server at the live Supabase project: it would change the live demo data.
 
 | Command | |
 |---|---|
@@ -152,14 +172,13 @@ Open the app, pick a role, and open a second role in another window to watch cha
 | `npm run format` | Format the code base |
 | `npm run sim` | Drive VEH022 along the A1 so the live map moves |
 
-**Reset demo data** on the home page restores the scenario: Tuesday 29 September, planning Wednesday 30 September, the Kandy run already on the road.
-
 ## Project structure
 
 ```
 server/src/
   index.js            API server, routes and live events
-  db.js, seed.json    data store and demo scenario
+  db.js, seed.json    data access (Supabase) and demo scenario
+  auth.js             token and role check
   events.js           event bus (audit log + Socket.IO broadcast)
   logic/              pure domain rules (unit tested in server/test/)
   routes/             orders, planning, deferrals, notices, issues,
@@ -170,13 +189,18 @@ web/src/
   roles/loader/       LD1-LD6
   roles/driver/       DR1-DR7 and the offline outbox
   roles/store/        SM1-SM7
-docs/                 API contract, data model, design system, deployment, demo
+docs/                 architecture, data model, API contract, AI disclosure,
+                      design system, deployment, demo
+docker-compose.yml    full local stack (app + local Supabase)
 ```
 
 ## Documentation
 
-- [API contract](docs/API_CONTRACT.md)
+- [Architecture](docs/ARCHITECTURE.md)
 - [Data model](docs/DATA_MODEL.md)
+- [API contract](docs/API_CONTRACT.md)
+- [Sign-in and database](docs/AUTH.md)
+- [AI tool disclosure](docs/AI_DISCLOSURE.md)
 - [Design system](docs/DESIGN_GUIDE.md) and the reference designs in [docs/design](docs/design)
 - [Deployment](docs/DEPLOY.md)
 - [Demo walkthrough](docs/DEMO_SCRIPT.md)

@@ -1,6 +1,6 @@
 # Sign-in and database (Supabase)
 
-Sign-in and the Supabase database are **always on**, in development too. There is no open mode: without the keys the server refuses to start and the web app shows a setup page. Ask the Lead for the two `.env` files.
+Sign-in and the Supabase database are **always on**, in development too. There is no open mode: without the keys the server refuses to start and the web app shows a setup page. For local work, `docker compose up` starts a local Supabase with the demo accounts (see the README); never point a local server at the live project.
 
 ## What it does
 
