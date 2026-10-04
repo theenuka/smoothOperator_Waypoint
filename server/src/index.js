@@ -1,4 +1,5 @@
 // Waypoint API server.
+import "./env.js"; // first: loads server/.env (Supabase keys) when it exists
 import express from "express";
 import cors from "cors";
 import http from "node:http";
@@ -6,7 +7,7 @@ import path from "node:path";
 import fs from "node:fs";
 import { fileURLToPath } from "node:url";
 import { Server } from "socket.io";
-import { db } from "./db.js";
+import { db, init } from "./db.js";
 import { attach } from "./events.js";
 import { requireAuth, socketAuth } from "./auth.js";
 
@@ -23,10 +24,6 @@ import sync from "./routes/sync.js";
 import tracking from "./routes/tracking.js";
 // Reference data and demo controls
 import meta from "./routes/meta.js";
-
-// Settings (Supabase keys) from server/.env when it exists. See docs/AUTH.md.
-const envFile = path.join(path.dirname(fileURLToPath(import.meta.url)), "..", ".env");
-if (fs.existsSync(envFile)) process.loadEnvFile(envFile);
 
 const app = express();
 app.use(cors());
@@ -67,6 +64,9 @@ const io = new Server(server, { cors: { origin: "*" } });
 io.use(socketAuth());
 attach(io);
 io.on("connection", (socket) => socket.emit("hello", { at: new Date().toISOString() }));
+
+// Load the data (Supabase or the JSON file) before taking requests.
+await init();
 
 const PORT = process.env.PORT || 4000;
 server.listen(PORT, () => console.log(`Waypoint API on http://localhost:${PORT}`));

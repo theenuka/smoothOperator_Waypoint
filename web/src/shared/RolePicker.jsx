@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { api } from "./api.js";
 import { Logo } from "./shells.jsx";
 import { useToast } from "./ui.jsx";
+import { authOn } from "./auth.jsx";
 
 const ROLES = [
   {
@@ -61,7 +62,14 @@ export default function RolePicker() {
         </div>
         <div className="roles">
           {ROLES.map((r) => (
-            <Link key={r.to} to={r.to} className="role">
+            // With sign-in on, each role opens in a new tab that signs in on its own (see App.jsx).
+            <Link
+              key={r.to}
+              to={r.to}
+              className="role"
+              target={authOn ? "_blank" : undefined}
+              rel={authOn ? "noreferrer" : undefined}
+            >
               <span className="device">{r.device}</span>
               <b>{r.role}</b>
               <span className="small">{r.name}</span>
@@ -77,9 +85,13 @@ export default function RolePicker() {
                 Demo day: Tuesday 29 September 2026. Planning for Wednesday 30 September.
               </span>
             </div>
-            <button className="btn secondary" onClick={reset}>
-              Reset demo data
-            </button>
+            {authOn ? (
+              <span className="small muted">Sign in as the dispatcher to reset the demo data.</span>
+            ) : (
+              <button className="btn secondary" onClick={reset}>
+                Reset demo data
+              </button>
+            )}
           </div>
           <div className="row wrap" style={{ gap: 8 }}>
             <span className="small muted">Open each role in its own window:</span>

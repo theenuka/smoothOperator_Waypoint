@@ -6,7 +6,8 @@ import { createClient } from "@supabase/supabase-js";
 
 const url = import.meta.env.VITE_SUPABASE_URL;
 const key = import.meta.env.VITE_SUPABASE_ANON_KEY;
-const supabase = url && key ? createClient(url, key) : null;
+// sessionStorage: each browser tab keeps its own sign-in, so four roles can be open side by side.
+const supabase = url && key ? createClient(url, key, { auth: { storage: window.sessionStorage } }) : null;
 export const authOn = !!supabase;
 
 // The current access token, read by api.js and live.js on every call.
