@@ -49,6 +49,13 @@ test("longest gap is served next, and exactly 3 outlets wait", () => {
   assert.deepEqual(waiting, ["OUT022", "OUT036", "OUT067"]);
 });
 
+test("wait rows say when the order goes instead (the next day); serve rows do not", () => {
+  for (const r of run()) {
+    if (r.suggestion === "wait") assert.equal(r.waitsUntil, "2026-10-01", r.outletId);
+    else assert.equal(r.waitsUntil, undefined, r.outletId);
+  }
+});
+
 test("a reversed deferral does not count", () => {
   const deferrals = seed.deferrals.map((d) => (d.outletId === "OUT045" ? { ...d, reversed: true } : d));
   const r = rankForSlots({
