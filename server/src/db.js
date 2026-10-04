@@ -28,8 +28,12 @@ export async function init() {
     );
   remote = supabaseStore({ url, key });
   ({ state, saved } = await remote.load());
-  if (!state) {
-    console.log("Supabase is empty: loading the data from seed.json");
+  if (!state || isStale()) {
+    console.log(
+      state
+        ? "Demo data is from an earlier day: loading today's scenario"
+        : "Supabase is empty: loading the data from seed.json"
+    );
     state = seed();
     await flush();
   }
@@ -44,8 +48,16 @@ export function reset() {
   return state;
 }
 
+// The demo scenario is a single day. On a new day (Sri Lanka date) it starts again from the seed,
+// moved to today, so anyone opening the app later still sees a truck on the road and tomorrow to plan.
+const isStale = () => state?.meta?.demoDate && state.meta.demoDate !== todayInColombo();
+
 export function db() {
   if (!state) throw new Error("db() was called before init()");
+  if (isStale()) {
+    console.log(`New day: demo data moved from ${state.meta.demoDate} to ${todayInColombo()}`);
+    reset();
+  }
   return state;
 }
 
