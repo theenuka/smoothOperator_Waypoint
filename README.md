@@ -93,6 +93,33 @@ flowchart LR
 
 Node.js 20, Express, Socket.IO, React 18, Vite, React Router, Node's built-in test runner, Prettier, GitHub Actions, Docker, Google Cloud Run.
 
+## Run it (judges start here)
+
+The live demo is at [waypoint.theenuka.in](https://waypoint.theenuka.in). To run the full stack on a clean machine you only need Docker:
+
+```bash
+git clone https://github.com/theenuka/waypoint.git
+cd waypoint
+docker compose up --build
+```
+
+Open http://localhost:8080 when the log says the server is listening. The API, live events and web app all run from that one container, and the demo data is created on first start. Stop with `Ctrl+C`; `docker compose down` removes the container, and the next start begins from the seeded scenario again.
+
+**Judge walkthrough (3 minutes):**
+
+1. Open http://localhost:8080 and pick **Loader**. In another window pick **Dispatcher**, and a third as **Store**.
+2. Loader: open run VEH022, then the Kandy City stop, count 4 of 5 Rice and flag the shortfall.
+3. Dispatcher: the shortfall appears in the live feed with no refresh. Store (OUT072 Kandy City): the notice appears with the reason.
+4. Press **Reset demo data** on the home page to start over.
+
+The full five minute script is in [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md).
+
+## Changes from the Day 5 design
+
+- **One service, not many.** The design split planning, dock, delivery and sync into separate services on AWS (Lambda, RDS Postgres with PostGIS). The build runs them as route groups in one Node.js server so a judge can start it with one command. The route split and the API contract are unchanged, so each group can still be deployed alone.
+- **File-backed store instead of PostgreSQL.** Data access is isolated in `server/src/db.js`, so swapping the store does not touch the domain logic. Demo data resets on every restart or deploy.
+- **Hosting moved to Google Cloud Run (Singapore)** with GitHub Actions deploying `main` after CI passes, instead of AWS ap-south-1 with Terraform. See [docs/DEPLOY.md](docs/DEPLOY.md).
+
 ## Getting started
 
 Requires Node.js 20 or newer.
