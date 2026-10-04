@@ -24,6 +24,8 @@ The agreement between frontend and backend. **If it's not written here, it doesn
 | ✅ | `GET /orders/:id` | | order + `outletName`, `deferrals[]`, `deliveries[]`, `shortfalls[]` |
 | 🟡 | `POST /orders` | `{ outletId, deliveryDate, chilled, lines:[{ sku, name, qty, unit }] }` | the new order (201). TODO: 16:00 cutoff check. Publishes `order.placed` |
 
+`POST /orders` answers 400 `{ error }` with a plain message for an unknown `outletId`, no lines, a line without `sku`, or `qty <= 0`.
+
 ## Planning [Backend A] {#planning}
 
 | | Method and path | Body / query | Returns |
