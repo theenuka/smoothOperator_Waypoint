@@ -9,7 +9,7 @@ Open four browser windows, arranged so the judges see them:
 1. Dispatcher: `/dispatcher/dashboard` (big, left)
 2. Driver: `/driver/route` (phone size on the right; the app draws a phone frame on wide screens)
 3. Loader: `/loader/home`
-4. Store: `/store/today` (switch the outlet with the dropdown when told)
+4. Store: `/store/today`, signed in as Nadeeka (OUT014 Dehiwala)
 
 Optional: run `npm run sim` in another terminal so VEH022 moves along the A1 on the dispatcher's Live screen (DP5).
 
@@ -23,15 +23,15 @@ Optional: run `npm run sim` in another terminal so VEH022 moves along the A1 on 
 2. Open stop 5 **Kandy City**, tap **Rice, 5 kg bag**, count 4 of 5 → on the shortfall screen pick **Damaged** → **Flag 1 short and keep loading**.
 3. Say: "The truck is not blocked."
 4. **Dispatcher** (point at it): the live feed already shows "Short at the dock: 4 of 5 Rice, 5 kg bag for Kandy City" and Dock shortfalls went up. No refresh.
-5. **Store:** switch to `OUT072 Kandy City` → Notices: "1 Rice, 5 kg bag arrive on the next delivery", with the reason.
+5. Say: "Kandy City's manager gets a notice right now: 1 Rice, 5 kg bag arrives on the next delivery, with the reason. The missing bag is already on their next order."
 6. **Driver:** the Kandy City stop shows "Short: 4/5 Rice".
 
 ## 2. Fair chilled planning (75 s)
 
-1. **Dispatcher:** **Plan Wednesday**. "8 chilled orders, 5 reefer slots, because VEH031 is in the workshop."
+1. **Dispatcher:** **Plan** tomorrow. "8 chilled orders, 5 reefer slots, because VEH031 is in the workshop."
 2. Point at the rule and the table: "Negombo and Nugegoda waited yesterday, Dehiwala waited twice in two weeks, so they are protected. Kelaniya has the longest gap. Three stores that got chilled goods yesterday wait."
 3. **Decide which 3 wait →** → read the live store preview → **Confirm 3 deferrals**.
-4. **Store:** switch to `OUT022 Borella` → the notice explains why, and says they are protected next time.
+4. **Store** (Dehiwala): Today says "You are protected on the next tight day", because Dehiwala already waited twice. The three stores that wait get a notice with the same reason the dispatcher read.
 5. DP6 log: "Every decision is recorded with who made it and why."
 
 ## 3. No signal: degradation scenario 2 (90 s)
@@ -47,10 +47,10 @@ Optional: run `npm run sim` in another terminal so VEH022 moves along the A1 on 
 
 ## 4. Close (30 s)
 
-"What's real today: live updates across every role, an offline outbox that never loses a delivery, conflict detection with a human decision, and a fairness rule covered by tests. Next: the AWS serverless deployment from our design document, route optimisation, and a real map. Waypoint: explain the decision, execute the run, never lose the truth in between."
+"What's real today: live updates across every role, an offline outbox that never loses a delivery, conflict detection with a human decision, and a fairness rule covered by tests. Next: real queries per route so it can run as several instances, route optimisation, and a PIN sign-in for the shared dock tablet. Waypoint: explain the decision, execute the run, never lose the truth in between."
 
 ## If something breaks on stage
 
-- A screen looks wrong: press **Reset demo data** on the home page, reload the tabs, continue from the section you were in.
-- The internet is down: run it locally (`npm start` on the laptop, open http://localhost:4000).
+- A screen looks wrong: in the dispatcher's top bar press **Reset to seed data**, reload the tabs, continue from the section you were in.
+- The internet is down: run it locally with `docker compose up` (start it before the demo once, so the images are already downloaded) and open http://localhost:8080.
 - Total failure: play the backup video (record one the night before).

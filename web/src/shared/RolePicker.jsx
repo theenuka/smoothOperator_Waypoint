@@ -1,6 +1,11 @@
 // Landing page: pick who you are.
 import { Link } from "react-router-dom";
 import { Logo } from "./shells.jsx";
+import { longDay } from "./format.js";
+
+// Today and tomorrow in Sri Lanka, the same dates the server uses for the demo scenario.
+const colombo = (offsetDays = 0) =>
+  new Date(Date.now() + (5.5 * 60 + offsetDays * 24 * 60) * 60 * 1000).toISOString().slice(0, 10);
 
 const ROLES = [
   {
@@ -75,8 +80,8 @@ export default function RolePicker() {
         </ol>
 
         <footer className="picker-foot mono small">
-          <span>Demo day Tuesday 29 September 2026</span>
-          <span>Planning Wednesday 30 September</span>
+          <span>Today {longDay(colombo())}</span>
+          <span>Planning {longDay(colombo(1))}</span>
           <span>Every change reaches every screen live</span>
         </footer>
       </div>
