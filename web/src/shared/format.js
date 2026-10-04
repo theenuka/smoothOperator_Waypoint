@@ -40,6 +40,7 @@ export function describe(ev) {
     case "deferral.reversed":
       return `Deferral reversed for ${p.outletName || p.orderId}`;
     case "load.shortfall":
+      if (p.cleared) return `Dock correction: all ${p.planned} ${p.name} loaded for ${p.outletName}`;
       return `Short at the dock: ${p.loaded} of ${p.planned} ${p.name} for ${p.outletName}`;
     case "load.completed":
       return `Truck sealed for ${p.runId} (${p.shortfalls} shortfall)`;
@@ -66,6 +67,7 @@ export function describe(ev) {
 export const tone = (evOrType) => {
   const type = typeof evOrType === "string" ? evOrType : evOrType?.type || "";
   if (type === "delivery.recorded" && evOrType?.payload?.status === "failed") return "bad";
+  if (evOrType?.payload?.cleared) return "ok";
   return /shortfall|conflict|offline/.test(type)
     ? "bad"
     : /recorded|resolved|completed|online/.test(type)

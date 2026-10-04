@@ -298,11 +298,12 @@ export default function LD3ItemCheck() {
                     onClick={() => pick(l)}
                   >
                     <Tick />
+                    <span className="ld-tick-edit">Edit</span>
                   </button>
                 )}
                 {state === "short" && (
                   <button className="btn secondary ld-act-btn" onClick={() => pick(l)}>
-                    Check
+                    Recount
                   </button>
                 )}
                 {state === "todo" && (

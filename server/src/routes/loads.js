@@ -7,6 +7,20 @@ import { planBackorder } from "../logic/backorder.js";
 
 const r = Router();
 
+// Takes back a shortfall flagged by mistake: removes it, its store notice and the back-ordered quantity.
+function undoShortfall(d, l, sf) {
+  l.shortfalls = l.shortfalls.filter((x) => x.id !== sf.id);
+  d.notices = d.notices.filter((n) => n.id !== sf.noticeId);
+  const bo = d.orders.find((o) => o.lines.some((x) => x.fromShortfall === sf.id));
+  if (!bo) return;
+  const gone = bo.lines.find((x) => x.fromShortfall === sf.id);
+  bo.lines = bo.lines.filter((x) => x !== gone);
+  bo.kg = Math.max((bo.kg || 0) - (gone?.qty || 0) * 10, 0);
+  if (bo.backorder && !bo.lines.length) d.orders = d.orders.filter((o) => o !== bo);
+}
+
+const sameLine = (orderId, sku) => (x) => x.orderId === orderId && x.sku === sku;
+
 function getLoad(runId) {
   const l = db().loads[runId];
   if (!l) throw httpError(404, "No load for this run");
@@ -28,7 +42,24 @@ r.post(
     if (!line) throw httpError(404, "Line not found");
     line.loaded = Number(req.body.loaded);
     line.checked = true;
+    // Counted again and it is all there: the earlier shortfall was a mistake, so take it back.
+    const d = db();
+    const wrong = line.loaded >= line.planned ? l.shortfalls.filter(sameLine(line.orderId, line.sku)) : [];
+    for (const sf of wrong) undoShortfall(d, l, sf);
     save();
+    if (wrong.length) {
+      const order = d.orders.find((o) => o.id === line.orderId);
+      publish("load.shortfall", {
+        cleared: true,
+        runId: req.params.runId,
+        orderId: line.orderId,
+        sku: line.sku,
+        name: line.name,
+        loaded: line.loaded,
+        planned: line.planned,
+        outletName: outletName(d, order?.outletId),
+      });
+    }
     res.json(line);
   })
 );
@@ -44,7 +75,10 @@ r.post(
     const { orderId, sku, loaded, reason = "short_on_dock", by = "Loader" } = req.body || {};
     const line = l.lines.find((x) => x.orderId === orderId && x.sku === sku);
     if (!line) throw httpError(404, "Line not found");
+    // Flagging the same line again replaces the earlier flag instead of adding a second one.
+    for (const old of l.shortfalls.filter(sameLine(orderId, sku))) undoShortfall(d, l, old);
     line.loaded = Number(loaded);
+    line.checked = true;
     const order = d.orders.find((o) => o.id === orderId);
     const sf = {
       id: newId("SF"),
@@ -60,8 +94,9 @@ r.post(
     };
     l.shortfalls.push(sf);
     const missing = sf.planned - sf.loaded;
+    sf.noticeId = newId("NT");
     d.notices.unshift({
-      id: newId("NT"),
+      id: sf.noticeId,
       outletId: order.outletId,
       type: "shortfall",
       title: `${missing} ${line.name} arrive on the next delivery`,

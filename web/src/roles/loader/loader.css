@@ -325,12 +325,23 @@
   font-size: 17px;
 }
 .ld-tick {
-  display: grid;
-  place-items: center;
-  width: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 56px;
   height: 56px;
+  padding: 0 12px;
   color: var(--dock-green);
   border-radius: var(--r-md);
+}
+.ld-tick-edit {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--dock-text-2);
+}
+.ld-tick:hover .ld-tick-edit {
+  color: inherit;
 }
 
 /* bottom bar with the fake scanner */

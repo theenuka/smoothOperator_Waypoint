@@ -19,12 +19,12 @@ Optional: run `npm run sim` in another terminal so VEH022 moves along the A1 on 
 
 ## 1. Dock shortfall: degradation scenario 1 (60 s)
 
-1. **Loader:** open VEH022 → load plan. "It's 04:30, Ruwan is loading the Kandy truck."
-2. Open stop 5 **Kandy City**, tap **Rice, 5 kg bag**, count 4 of 5 → on the shortfall screen pick **Damaged** → **Flag 1 short and keep loading**.
-3. Say: "The truck is not blocked."
-4. **Dispatcher** (point at it): the live feed already shows "Short at the dock: 4 of 5 Rice, 5 kg bag for Kandy City" and Dock shortfalls went up. No refresh.
-5. Say: "Kandy City's manager gets a notice right now: 1 Rice, 5 kg bag arrives on the next delivery, with the reason. The missing bag is already on their next order."
-6. **Driver:** the Kandy City stop shows "Short: 4/5 Rice".
+1. **Loader:** the dock home shows VEH037 waiting at bay 02. "Ruwan is loading the Colombo city run. The Kandy truck already left."
+2. **Start loading.** It is loaded last stop first, so Kirulapone (stop 2) goes in against the cab. Tap **Rice, 5 kg bag**, count 3 of 4 → pick **Damaged** → **Flag 1 short and keep loading**.
+3. Say: "The truck is not blocked." Load the remaining lines and **Finish loading**.
+4. **Dispatcher** (point at it): the live feed already shows the shortfall for Kirulapone and the sealed truck, and Dock shortfalls went up. No refresh.
+5. Say: "Kirulapone's manager gets a notice now, and the missing bag is already on their next order."
+6. **Driver:** the Kandy run shows the earlier shortfall at Kegalle (6 of 10 detergent), known before he arrives.
 
 ## 2. Fair chilled planning (75 s)
 

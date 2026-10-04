@@ -561,6 +561,64 @@
       "kg": 186,
       "status": "placed",
       "placedAt": "2026-09-28T15:12:00+05:30"
+    },
+    {
+      "id": "ORD41830",
+      "outletId": "OUT011",
+      "deliveryDate": "2026-09-29",
+      "chilled": false,
+      "lines": [
+        {
+          "sku": "SKU-1101",
+          "name": "Rice, 5 kg bag",
+          "qty": 6,
+          "unit": "bag"
+        },
+        {
+          "sku": "SKU-2207",
+          "name": "Coconut oil, 1 L",
+          "qty": 8,
+          "unit": "bottle"
+        },
+        {
+          "sku": "SKU-5120",
+          "name": "Ceylon tea, 400 g",
+          "qty": 10,
+          "unit": "pack"
+        }
+      ],
+      "kg": 180,
+      "status": "planned",
+      "placedAt": "2026-09-28T14:40:00+05:30"
+    },
+    {
+      "id": "ORD41831",
+      "outletId": "OUT036",
+      "deliveryDate": "2026-09-29",
+      "chilled": false,
+      "lines": [
+        {
+          "sku": "SKU-3305",
+          "name": "Detergent powder, 1 kg",
+          "qty": 8,
+          "unit": "carton"
+        },
+        {
+          "sku": "SKU-4410",
+          "name": "Cream crackers",
+          "qty": 12,
+          "unit": "pack"
+        },
+        {
+          "sku": "SKU-1101",
+          "name": "Rice, 5 kg bag",
+          "qty": 4,
+          "unit": "bag"
+        }
+      ],
+      "kg": 200,
+      "status": "planned",
+      "placedAt": "2026-09-28T15:30:00+05:30"
     }
   ],
   "history": {
@@ -666,7 +724,8 @@
           "eta": "10:10",
           "status": "pending"
         }
-      ]
+      ],
+      "name": "Kandy run (A1)"
     },
     {
       "id": "RUN-VEH014",
@@ -684,7 +743,33 @@
           "eta": "06:00",
           "status": "delivered"
         }
-      ]
+      ],
+      "name": "Colombo South reefer"
+    },
+    {
+      "id": "RUN-VEH037",
+      "vehicleId": "VEH037",
+      "date": "2026-09-29",
+      "driver": "D. Pathirana",
+      "bay": "02",
+      "status": "loading",
+      "stops": [
+        {
+          "seq": 1,
+          "outletId": "OUT011",
+          "orderId": "ORD41830",
+          "eta": "09:35",
+          "status": "pending"
+        },
+        {
+          "seq": 2,
+          "outletId": "OUT036",
+          "orderId": "ORD41831",
+          "eta": "09:55",
+          "status": "pending"
+        }
+      ],
+      "name": "Colombo city run"
     }
   ],
   "loads": {
@@ -874,6 +959,67 @@
           "planned": 3,
           "loaded": 3,
           "checked": true
+        }
+      ],
+      "shortfalls": []
+    },
+    "RUN-VEH037": {
+      "runId": "RUN-VEH037",
+      "status": "loading",
+      "lines": [
+        {
+          "orderId": "ORD41830",
+          "stopSeq": 1,
+          "sku": "SKU-1101",
+          "name": "Rice, 5 kg bag",
+          "planned": 6,
+          "loaded": 0,
+          "checked": false
+        },
+        {
+          "orderId": "ORD41830",
+          "stopSeq": 1,
+          "sku": "SKU-2207",
+          "name": "Coconut oil, 1 L",
+          "planned": 8,
+          "loaded": 0,
+          "checked": false
+        },
+        {
+          "orderId": "ORD41830",
+          "stopSeq": 1,
+          "sku": "SKU-5120",
+          "name": "Ceylon tea, 400 g",
+          "planned": 10,
+          "loaded": 0,
+          "checked": false
+        },
+        {
+          "orderId": "ORD41831",
+          "stopSeq": 2,
+          "sku": "SKU-3305",
+          "name": "Detergent powder, 1 kg",
+          "planned": 8,
+          "loaded": 0,
+          "checked": false
+        },
+        {
+          "orderId": "ORD41831",
+          "stopSeq": 2,
+          "sku": "SKU-4410",
+          "name": "Cream crackers",
+          "planned": 12,
+          "loaded": 0,
+          "checked": false
+        },
+        {
+          "orderId": "ORD41831",
+          "stopSeq": 2,
+          "sku": "SKU-1101",
+          "name": "Rice, 5 kg bag",
+          "planned": 4,
+          "loaded": 0,
+          "checked": false
         }
       ],
       "shortfalls": []

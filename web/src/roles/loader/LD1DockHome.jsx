@@ -78,6 +78,7 @@ export default function LD1DockHome() {
   });
 
   // The bay being loaded now: a truck that is already part-checked, else the first one waiting.
+  const toLoad = infos.filter((i) => !i.sealed).length;
   const current = infos.find((i) => !i.sealed && i.done > 0) ?? infos.find((i) => !i.sealed);
 
   const bayCount = Math.max(MIN_BAYS, ...runs.map((r) => Number(r.bay) || 0));
@@ -106,7 +107,7 @@ export default function LD1DockHome() {
         <div className="col" style={{ gap: 4 }}>
           <span className="label">LD1 · {longDay(today)} · 04:30 shift</span>
           <h1 className="h-page" style={{ fontSize: 52 }}>
-            {runs.length} truck{runs.length === 1 ? "" : "s"} to load, {bayCount} bays
+            {toLoad} truck{toLoad === 1 ? "" : "s"} to load, {bayCount} bays
           </h1>
         </div>
         <Link className="btn secondary big" to="/loader/history">
