@@ -2,6 +2,7 @@
 import { Router } from "express";
 import { db, save, newId, nowIso } from "../db.js";
 import { publish } from "../events.js";
+import { applyCutoff } from "../logic/cutoff.js";
 import { httpError, wrap, outletName } from "./_util.js";
 import { orderProblem } from "../logic/orderCheck.js";
 
@@ -43,10 +44,14 @@ r.get("/:id", (req, res, next) => {
 r.post(
   "/",
   wrap((req, res) => {
-    const { outletId, deliveryDate, chilled = false, lines = [] } = req.body || {};
-    if (!outletId || !deliveryDate || !lines.length)
+    const { outletId, deliveryDate: wanted, chilled = false, lines = [] } = req.body || {};
+    if (!outletId || !wanted || !lines.length)
       throw httpError(400, "outletId, deliveryDate and lines are required");
-    // TODO (Backend A): reject orders after the 16:00 cutoff for the next day (db().meta.cutoff).
+    // After the cutoff (16:00 Sri Lanka time) a next-day order moves to the day after.
+    const { deliveryDate, cutoffMoved } = applyCutoff({
+      deliveryDate: wanted,
+      cutoff: db().meta.cutoff,
+    });
     const order = {
       id: newId("ORD"),
       outletId,
@@ -65,7 +70,7 @@ r.post(
       outletName: outletName(db(), outletId),
       deliveryDate,
     });
-    res.status(201).json(order);
+    res.status(201).json(cutoffMoved ? { ...order, cutoffMoved } : order);
   })
 );
 
