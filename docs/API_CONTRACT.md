@@ -22,6 +22,7 @@ The agreement between frontend and backend. **If it's not written here, it doesn
 |---|---|---|---|
 | ✅ | `GET /orders` | `?date=2026-09-30&outletId=OUT014&status=placed` (all optional) | orders with `outletName` |
 | ✅ | `GET /orders/:id` | | order + `outletName`, `deferrals[]`, `deliveries[]`, `shortfalls[]` |
+| ✅ | `GET /orders/:id/timeline` | | `[{ step:"placed"\|"planned"\|"loaded"\|"out"\|"delivered"\|"failed"\|"deferred", label, at, done }]` in order. `at` is an ISO time or `null` when unknown. A deferred order stops at `deferred` |
 | ✅ | `POST /orders` | `{ outletId, deliveryDate, chilled, lines:[{ sku, name, qty, unit }] }` | the new order (201). Placed at or after the 16:00 cutoff (Sri Lanka time) for the next day: `deliveryDate` moves one day later and the response adds `"cutoffMoved": true`. Publishes `order.placed` |
 
 `POST /orders` answers 400 `{ error }` with a plain message for an unknown `outletId`, no lines, a line without `sku`, or `qty <= 0`.
@@ -47,7 +48,7 @@ The agreement between frontend and backend. **If it's not written here, it doesn
 |---|---|---|---|
 | ✅ | `GET /notices` | `?outletId=OUT014` | `[{ id, outletId, type:"deferral"\|"shortfall"\|"failed", title, body, at, read }]` newest first |
 | ✅ | `POST /notices/:id/read` | | the notice |
-| 🟡 | `POST /issues` | `{ outletId, deliveryId, sku, problem:"short"|"damaged"|"wrong_item"|"past_date", note, qty?, fix?:"fix"|"credit", receivedBy? }` | the issue (201): `{ id, outletId, deliveryId, orderId, sku, problem, qty, fix, note, receivedBy, status:"open", at }`, stored in `db().issues`. 400 `{ error }` for unknown store, problem type or delivery. Publishes `issue.reported`. Router is `issues` exported from `routes/notices.js`; waiting for the Lead to mount it at `/api/issues` |
+| 🟡 | `POST /issues` | `{ outletId, deliveryId, sku, problem:"short"\|"damaged"\|"wrong_item"\|"past_date", note, qty?, fix?:"fix"\|"credit", receivedBy? }` | the issue (201): `{ id, outletId, deliveryId, orderId, sku, problem, qty, fix, note, receivedBy, status:"open", at }`, stored in `db().issues`. 400 `{ error }` for unknown store, problem type or delivery. Publishes `issue.reported`. Router is `issues` exported from `routes/notices.js`; waiting for the Lead to mount it at `/api/issues` |
 
 ## Runs [Backend B] {#runs}
 

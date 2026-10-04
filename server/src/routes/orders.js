@@ -5,6 +5,7 @@ import { publish } from "../events.js";
 import { applyCutoff } from "../logic/cutoff.js";
 import { httpError, wrap, outletName } from "./_util.js";
 import { orderProblem } from "../logic/orderCheck.js";
+import { orderTimeline } from "../logic/timeline.js";
 
 const r = Router();
 
@@ -38,6 +39,13 @@ r.get("/:id", (req, res, next) => {
       .flatMap((l) => l.shortfalls)
       .filter((s) => s.orderId === o.id),
   });
+});
+
+// GET /api/orders/:id/timeline  -> [{ step, label, at, done }] for SM4
+r.get("/:id/timeline", (req, res, next) => {
+  const o = db().orders.find((x) => x.id === req.params.id);
+  if (!o) return next(httpError(404, "Order not found"));
+  res.json(orderTimeline(o, db()));
 });
 
 // POST /api/orders  { outletId, deliveryDate, chilled, lines:[{sku,name,qty,unit}] }
