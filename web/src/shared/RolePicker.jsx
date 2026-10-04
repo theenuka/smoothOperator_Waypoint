@@ -61,7 +61,8 @@ export default function RolePicker() {
         </div>
         <div className="roles">
           {ROLES.map((r) => (
-            <Link key={r.to} to={r.to} className="role">
+            // Each role opens in its own tab, so the home page (and Reset demo data) stays open.
+            <Link key={r.to} to={r.to} className="role" target="_blank" rel="noreferrer">
               <span className="device">{r.device}</span>
               <b>{r.role}</b>
               <span className="small">{r.name}</span>
