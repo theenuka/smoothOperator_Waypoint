@@ -24,7 +24,10 @@ export const Logo = ({ tile = 32, word = 24, dark = false, suffix }) => (
   </span>
 );
 
-/** nav = [{ to: "dashboard", code: "DP1", label: "Today" }, ...] (paths relative to the role) */
+/**
+ * nav = [{ to: "dashboard", code: "DP1", label: "Today" }, ...] (paths relative to the role)
+ * The menu shows the label only. `code` (the design screen code) is kept in the list for reference.
+ */
 export function DesktopShell({ person, nav, title, children }) {
   return (
     <div className="shell">
@@ -34,7 +37,6 @@ export function DesktopShell({ person, nav, title, children }) {
         </Link>
         {nav.map((n) => (
           <NavLink key={n.to} to={n.to} className={({ isActive }) => (isActive ? "active" : "")}>
-            <span className="code">{n.code}</span>
             <span>{n.label}</span>
           </NavLink>
         ))}
