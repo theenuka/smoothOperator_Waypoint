@@ -69,14 +69,27 @@ export default function RolePicker() {
             </Link>
           ))}
         </div>
-        <div className="row wrap">
-          <button className="btn secondary" onClick={reset}>
-            Reset demo data
-          </button>
-          <span className="small muted">
-            Demo day: Tuesday 29 September 2026. Planning for Wednesday 30 September.
-          </span>
-        </div>
+        <section className="card demo-controls" aria-label="Demo controls">
+          <div className="row wrap between">
+            <div className="col" style={{ gap: 2 }}>
+              <span className="label">Demo controls</span>
+              <span className="small muted">
+                Demo day: Tuesday 29 September 2026. Planning for Wednesday 30 September.
+              </span>
+            </div>
+            <button className="btn secondary" onClick={reset}>
+              Reset demo data
+            </button>
+          </div>
+          <div className="row wrap" style={{ gap: 8 }}>
+            <span className="small muted">Open each role in its own window:</span>
+            {ROLES.map((r) => (
+              <a key={r.to} className="btn ghost small" href={r.to} target="_blank" rel="noreferrer">
+                {r.role} ↗
+              </a>
+            ))}
+          </div>
+        </section>
       </div>
       {toast}
     </div>
