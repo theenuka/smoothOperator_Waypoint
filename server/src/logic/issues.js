@@ -1,4 +1,4 @@
-// Store "report a problem" (SM7). Owner: BACKEND A.
+// Store "report a problem" (SM7).
 // Pure functions: they read the db object they are given, they never save.
 
 export const PROBLEMS = ["short", "damaged", "wrong_item", "past_date"];

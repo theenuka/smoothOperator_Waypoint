@@ -1,4 +1,4 @@
-// Process one offline sync batch. Owner: BACKEND B.
+// Process one offline sync batch.
 // Pure function: the database work is passed in as `apply`, so this is easy to test
 // (see server/test/syncBatch.test.js).
 //

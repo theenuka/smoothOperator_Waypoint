@@ -1,4 +1,4 @@
-// Tiny JSON "database". Owner: LEAD. Do not change the shape without telling the team (see docs/DATA_MODEL.md).
+// Tiny JSON "database". Shape documented in docs/DATA_MODEL.md.
 // Data lives in server/data/db.json (git-ignored). It is created from seed.json on first start.
 // Reset to the demo seed any time with:  npm run reset-data
 import fs from "node:fs";

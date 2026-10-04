@@ -1,4 +1,4 @@
-// Formatting helpers. Owner: LEAD. Sri Lanka time (Asia/Colombo) everywhere.
+// Formatting helpers. Sri Lanka time (Asia/Colombo) everywhere.
 const TZ = "Asia/Colombo";
 export const time = (iso) =>
   iso ? new Date(iso).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: TZ }) : "";

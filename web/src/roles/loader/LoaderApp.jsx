@@ -1,4 +1,4 @@
-// Loader app (Ruwan, shared dock tablet, dark). Owner: LOADER FRONTEND.  Task file: docs/tasks/05-loader-frontend.md
+// Loader app (Ruwan, shared dock tablet, dark).
 import { Routes, Route, Navigate } from "react-router-dom";
 import { DockShell } from "../../shared/shells.jsx";
 import LD1DockHome from "./LD1DockHome.jsx";

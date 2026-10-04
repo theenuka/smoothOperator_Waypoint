@@ -1,4 +1,4 @@
-// Page frames for each device. Owner: LEAD.
+// Page frames for each device.
 // DesktopShell: dispatcher + store manager.  DockShell: loader tablet (dark).  PhoneShell: driver.
 import { NavLink, Link } from "react-router-dom";
 

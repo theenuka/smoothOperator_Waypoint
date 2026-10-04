@@ -1,4 +1,4 @@
-// Offline outbox for the driver phone. Owner: DRIVER FRONTEND.
+// Offline outbox for the driver phone.
 // Every delivery is saved on the phone FIRST (localStorage), then sent when there is signal.
 // "Simulate no signal" lets you demo the A1 dead zone without really losing the network.
 import { useSyncExternalStore } from "react";

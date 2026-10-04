@@ -1,4 +1,4 @@
-// Why a delivery could not be made (DR4). Owner: DRIVER FRONTEND.
+// Why a delivery could not be made (DR4).
 // The id is saved in the record as `issue`; the label is what the driver reads (DR4, DR5, DR7).
 import { icon } from "./icons.jsx";
 

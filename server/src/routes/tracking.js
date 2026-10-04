@@ -1,4 +1,4 @@
-// Live tracking API. Owner: BACKEND B.  Contract: docs/API_CONTRACT.md#tracking
+// Live tracking API.  Contract: docs/API_CONTRACT.md#tracking
 import { Router } from "express";
 import { db, save, nowIso } from "../db.js";
 import { publish } from "../events.js";

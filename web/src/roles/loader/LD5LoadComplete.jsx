@@ -1,4 +1,4 @@
-// LD5 Load complete: seal the truck, then hand over the manifest. Owner: LOADER FRONTEND.  Design: /design/LD5-LoadComplete.jpg
+// LD5 Load complete: seal the truck, then hand over the manifest.  Design: docs/design/LD5-LoadComplete.jpg
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { api } from "../../shared/api.js";

@@ -1,4 +1,4 @@
-// Checks a new order before it is saved. Owner: BACKEND A.
+// Checks a new order before it is saved.
 // Pure function: returns a plain-English problem, or null when the order is fine.
 
 // orderProblem({ outletId, deliveryDate, lines }, db().outlets)

@@ -1,4 +1,4 @@
-// SM3 Orders. Owner: STORE FRONTEND.  Design: /design/SM3-OrderQueue.jpg
+// SM3 Orders.  Design: docs/design/SM3-OrderQueue.jpg
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useApi } from "../../shared/live.js";

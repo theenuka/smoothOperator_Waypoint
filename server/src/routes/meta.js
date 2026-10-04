@@ -1,4 +1,4 @@
-// Reference data + demo controls. Owner: LEAD.
+// Reference data + demo controls.
 import { Router } from "express";
 import { db, reset } from "../db.js";
 import { publish } from "../events.js";

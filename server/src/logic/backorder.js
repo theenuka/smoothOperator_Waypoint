@@ -1,4 +1,4 @@
-// Back-orders for dock shortfalls. Owner: BACKEND B.
+// Back-orders for dock shortfalls.
 // Pure function: no database, no Express. Tested in server/test/backorder.test.js.
 //
 // When the dock is short (6 of 10 loaded), the missing 4 must not be forgotten:
