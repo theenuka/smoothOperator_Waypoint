@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useApi, useDates, useEventFeed, useLiveEvent } from "../../shared/live.js";
 import { Card, PageHead, Stat, StatusBadge, Badge, Loading } from "../../shared/ui.jsx";
-import { describe, tone, time, longDay, weekdayOf, day } from "../../shared/format.js";
+import { describe, tone, time, longDay, weekdayOf } from "../../shared/format.js";
 import "./dispatcher.css";
 
 const LIVE = [
@@ -136,7 +136,7 @@ export default function DP1Dashboard() {
           hint={`${runs.data?.length || 0} active runs today`}
         />
         <Stat
-          label="Chilled over capacity (Wed)"
+          label={`Chilled over capacity (${weekdayOf(planDate).slice(0, 3)})`}
           value={over}
           tone={over ? "bad" : "ok"}
           hint={
@@ -182,7 +182,7 @@ export default function DP1Dashboard() {
                   (s) => (s.status === "pending" || s.status === "next") && s.order?.status !== "deferred"
                 );
                 const remainingNames = pendingStops.map((s) => s.outletName).join(", ");
-                const routeName = r.vehicle?.type === "reefer" ? "Colombo S. Reefer" : "Kandy Route (A1)";
+                const routeName = r.name || (r.vehicle?.type === "reefer" ? "Reefer run" : "Dry run");
 
                 return (
                   <div key={r.id} className={`dp-run-card ${isOffline ? "is-offline" : ""}`}>
@@ -343,7 +343,7 @@ export default function DP1Dashboard() {
                 {over > 0 && (
                   <div className="dp-alert-item now">
                     <div className="dp-alert-title" style={{ color: "var(--yellow-deep)" }}>
-                      <span>■</span> {day(planDate).split(" ")[0]}: {over} chilled orders have no reefer slot
+                      <span>■</span> {weekdayOf(planDate)}: {over} chilled orders have no reefer slot
                     </div>
                     <div className="dp-alert-body">
                       {plan.data?.chilled.orders} chilled orders for {weekdayOf(planDate)}, but only{" "}

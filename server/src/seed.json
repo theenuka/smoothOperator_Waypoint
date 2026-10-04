@@ -724,7 +724,8 @@
           "eta": "10:10",
           "status": "pending"
         }
-      ]
+      ],
+      "name": "Kandy run (A1)"
     },
     {
       "id": "RUN-VEH014",
@@ -742,7 +743,8 @@
           "eta": "06:00",
           "status": "delivered"
         }
-      ]
+      ],
+      "name": "Colombo South reefer"
     },
     {
       "id": "RUN-VEH037",
@@ -766,7 +768,8 @@
           "eta": "09:55",
           "status": "pending"
         }
-      ]
+      ],
+      "name": "Colombo city run"
     }
   ],
   "loads": {

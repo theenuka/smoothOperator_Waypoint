@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useApi, useDates } from "../../shared/live.js";
 import { Card, PageHead, Badge, Loading, StatusBadge } from "../../shared/ui.jsx";
-import { time } from "../../shared/format.js";
+import { longDay, time } from "../../shared/format.js";
 import LiveMap from "./LiveMap.jsx";
 import "./dispatcher.css";
 
