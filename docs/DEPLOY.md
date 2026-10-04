@@ -12,13 +12,26 @@ gcloud projects list                       # pick your project id
 gcloud config set project <PROJECT_ID>
 gcloud services enable run.googleapis.com cloudbuild.googleapis.com artifactregistry.googleapis.com
 
-gcloud run deploy waypoint --source . --region asia-south1 --allow-unauthenticated \
+gcloud run deploy waypoint --source . --region asia-southeast1 --allow-unauthenticated \
   --max-instances 1 --session-affinity --timeout 3600 --memory 512Mi
 ```
 
 - `--max-instances 1` matters: the demo database is a JSON file inside the container, so there must be only one copy.
 - When nobody uses it for a while Cloud Run scales to zero, and the next visit starts with fresh demo data.
+- The region is Singapore (`asia-southeast1`) because Cloud Run custom domains are not offered in Mumbai.
 - Deploy again after merging new PRs: `git checkout main && git pull`, then the same `gcloud run deploy` command.
+
+## Custom domain
+
+The live demo runs at https://waypoint.theenuka.in.
+
+```bash
+gcloud domains verify theenuka.in          # adds a TXT record at the DNS provider
+gcloud beta run domain-mappings create --service waypoint \
+  --domain waypoint.theenuka.in --region asia-southeast1
+```
+
+Then add the DNS record it prints (`CNAME waypoint -> ghs.googlehosted.com`). Google issues the HTTPS certificate on its own, usually within an hour.
 
 ## Quick public link from a laptop
 

@@ -6,6 +6,8 @@ Waypoint is a delivery operations platform for a retail chain that supplies its 
 
 Team **smoothOperator** · Rootcode Tech-Triathlon 2026
 
+**Live demo:** [waypoint.theenuka.in](https://waypoint.theenuka.in) · open a role in two windows (for example `/dispatcher` and `/driver`) to watch updates arrive live.
+
 ![Waypoint on the dispatcher's desktop, the dock tablet and the driver's phone](docs/screenshots/hero.jpg)
 
 ## The problem
