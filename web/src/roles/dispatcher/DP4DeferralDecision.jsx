@@ -1,5 +1,7 @@
 // DP4 Deferral decision: write the reason the store will read. Design: docs/design/DP4-DeferralDecision.jpg
 // Matches design: Interactive decision table, live preview of the store notice (styled like SM5), and confirmation panel.
+// Everything shown comes from the API: the plan date and capacity (/plan), the ranking (/plan/suggest) and the exact
+// notice the store will get (/deferrals/preview, built by the same server code that sends it).
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { api } from "../../shared/api.js";
@@ -8,20 +10,18 @@ import { Card, PageHead, Badge, Loading, useToast } from "../../shared/ui.jsx";
 import { kg, day } from "../../shared/format.js";
 import "./dispatcher.css";
 
-const DEFAULT_REASON =
-  "One of our refrigerated trucks is in for a brake service on Wednesday. Your last chilled delivery was recent, so your order moves to Thursday 1 October in the same window, and it won't be moved again.";
-
 export default function DP4DeferralDecision() {
   const { state } = useLocation();
   const nav = useNavigate();
   const [toast, show] = useToast();
 
-  const orders = useApi("/orders?date=2026-09-30");
-  const suggest = useApi("/plan/suggest?date=2026-09-30");
+  const suggest = useApi("/plan/suggest"); // the server's plan date when none is given
+  const date = suggest.data?.date;
+  const plan = useApi(date ? `/plan?date=${date}` : null);
 
   const [selectedIds, setSelectedIds] = useState(state?.orderIds || []);
-  const [reason, setReason] = useState(state?.reason || DEFAULT_REASON);
-  const [toDate, setToDate] = useState(state?.toDate || "2026-10-01");
+  const [reason, setReason] = useState(state?.reason ?? null); // null = use the suggested wording
+  const [chosenDate, setToDate] = useState(state?.toDate || null);
   const [busy, setBusy] = useState(false);
 
   // If no IDs passed from state, default to suggested waiting orders
@@ -34,10 +34,9 @@ export default function DP4DeferralDecision() {
     }
   }, [suggest.data, selectedIds.length]);
 
-  if (orders.loading || suggest.loading) return <Loading />;
-
-  const allOrders = orders.data || [];
   const rows = suggest.data?.rows || [];
+  // Default new date: the day the fairness rule says waiting orders go (the next day).
+  const toDate = chosenDate || rows.find((r) => r.waitsUntil)?.waitsUntil || "";
 
   // Toggle order between serve and wait
   const setDecision = (orderId, shouldWait) => {
@@ -52,17 +51,20 @@ export default function DP4DeferralDecision() {
 
   const selectedRows = rows.filter((r) => selectedIds.includes(r.orderId));
   const previewOrder = selectedRows[0] || rows.find((r) => r.suggestion === "wait") || rows[0];
+  const preview = useApi(
+    previewOrder && toDate ? `/deferrals/preview?orderId=${previewOrder.orderId}&toDate=${toDate}` : null
+  );
+  const text = reason ?? preview.data?.suggestedReason ?? "";
+  const chilled = plan.data?.chilled;
+  const used = chilled ? chilled.orders - selectedIds.length : 0;
+  const workshop = (plan.data?.reefers || []).filter((v) => v.status === "workshop").map((v) => v.id);
 
   const send = async () => {
     if (!selectedIds.length) return;
     setBusy(true);
     try {
-      await api.post("/deferrals", {
-        orderIds: selectedIds,
-        toDate,
-        reason,
-        decidedBy: "Kavindi Perera",
-      });
+      // The server records the signed-in dispatcher as the one who decided.
+      await api.post("/deferrals", { orderIds: selectedIds, toDate, reason: text });
       show("Sent. The stores were told the reason.");
       setTimeout(() => nav("/dispatcher/deferrals"), 900);
     } catch (e) {
@@ -71,12 +73,18 @@ export default function DP4DeferralDecision() {
     }
   };
 
+  if (suggest.loading || plan.loading) return <Loading />;
+
   return (
     <>
       <PageHead
-        code="WEDNESDAY 30 SEPTEMBER · COLOMBO CHILLED"
+        code={`${day(date).toUpperCase()} · CHILLED`}
         title={`${selectedIds.length} chilled order${selectedIds.length === 1 ? "" : "s"} have to wait a day`}
-        sub="16 reefer slots for 19 chilled orders while VEH031 is in the workshop. Waypoint suggests who waits by fairness, not by who ordered last. You make the call."
+        sub={`${chilled?.slots} reefer slots for ${chilled?.orders} chilled orders${
+          workshop.length
+            ? ` while ${workshop.join(", ")} ${workshop.length === 1 ? "is" : "are"} in the workshop`
+            : ""
+        }. Waypoint suggests who waits by fairness, not by who ordered last. You make the call.`}
       >
         <Link to="/dispatcher/plan" className="btn secondary">
           Back to the plan
@@ -136,7 +144,7 @@ export default function DP4DeferralDecision() {
                             <Badge tone="ink">🔒 Protected</Badge>
                           ) : (
                             <Badge tone={r.suggestion === "wait" ? "now" : "ok"}>
-                              {r.suggestion === "wait" ? "Wait, served today" : "Serve, longest gap"}
+                              {r.suggestion === "wait" ? "Wait" : "Serve"}
                             </Badge>
                           )}
                         </td>
@@ -186,6 +194,7 @@ export default function DP4DeferralDecision() {
                   className="input"
                   type="date"
                   value={toDate}
+                  min={date}
                   onChange={(e) => setToDate(e.target.value)}
                 />
               </label>
@@ -195,7 +204,7 @@ export default function DP4DeferralDecision() {
                 <textarea
                   className="textarea"
                   rows={4}
-                  value={reason}
+                  value={text}
                   onChange={(e) => setReason(e.target.value)}
                   placeholder="Explain why this order moves to tomorrow in calm, clear words..."
                 />
@@ -222,13 +231,19 @@ export default function DP4DeferralDecision() {
               <div className="dp4-confirm-point">
                 <span>🔒</span>
                 <span>
-                  Their Thursday orders are <b>protected</b>, so none of them can wait twice in a row.
+                  Their orders are <b>protected</b> on the next two runs, so none of them can wait twice in a
+                  row.
                 </span>
               </div>
               <div className="dp4-confirm-point">
                 <span>❄</span>
                 <span>
-                  <b>Reefers on Wednesday: 16 of 16 slots used</b>. Nothing is overloaded.
+                  <b>
+                    Reefers on {day(date)}: {used} of {chilled?.slots} slots used
+                  </b>
+                  {used > chilled?.slots
+                    ? `. Still ${used - chilled.slots} over: choose more orders to wait.`
+                    : ". Nothing is overloaded."}
                 </span>
               </div>
             </div>
@@ -236,49 +251,51 @@ export default function DP4DeferralDecision() {
 
           {/* Live Store Notice Preview (SM5 Style) */}
           <Card title="Live store notice preview" action={<Badge tone="now">SM5 Preview</Badge>}>
-            <div className="dp4-preview-box">
-              <div className="row between">
-                <span className="label">DELIVERY NOTICE · {previewOrder?.orderId || "ORD41901"}</span>
-                <Badge tone="now">Deferral</Badge>
-              </div>
+            {preview.data ? (
+              <div className="dp4-preview-box">
+                <div className="row between">
+                  <span className="label">DELIVERY NOTICE · {preview.data.orderId}</span>
+                  <Badge tone="now">Deferral</Badge>
+                </div>
 
-              <div>
-                <span className="label" style={{ display: "block", marginBottom: 6 }}>
-                  Store: {previewOrder?.outletName || "Store Manager"}
-                </span>
-                <p className="dp4-preview-quote">“{reason}”</p>
-                <div className="small muted" style={{ marginTop: 6 }}>
-                  — Kavindi Perera, dispatch lead, Peliyagoda
-                </div>
-              </div>
-
-              <div className="dp4-preview-tiles">
-                <div className="dp4-preview-tile">
-                  <span className="label">Your Order</span>
-                  <span className="val">Carried forward, not cancelled</span>
-                </div>
-                <div className="dp4-preview-tile">
-                  <span className="label">New Delivery</span>
-                  <span className="val">{day(toDate)}, 05:30–08:00</span>
-                </div>
-                <div className="dp4-preview-tile">
-                  <span className="label">After This</span>
-                  <span className="val" style={{ color: "var(--green-text)" }}>
-                    Protected on next tight day
+                <div>
+                  <span className="label" style={{ display: "block", marginBottom: 6 }}>
+                    Store: {preview.data.outletName}
                   </span>
+                  <p className="dp4-preview-quote">“{text}”</p>
+                  <div className="small muted" style={{ marginTop: 6 }}>
+                    — {preview.data.signedBy}
+                  </div>
+                </div>
+
+                <div className="dp4-preview-tiles">
+                  {preview.data.tiles.map((t) => (
+                    <div key={t.label} className="dp4-preview-tile">
+                      <span className="label">{t.label}</span>
+                      <span
+                        className="val"
+                        style={t.tone === "ok" ? { color: "var(--green-text)" } : undefined}
+                      >
+                        {t.value}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="small muted" style={{ borderTop: "1px dashed var(--line-2)", paddingTop: 8 }}>
+                  {preview.data.footnote}
                 </div>
               </div>
-
-              <div className="small muted" style={{ borderTop: "1px dashed var(--line-2)", paddingTop: 8 }}>
-                🔒 This is your wait in 14 days. Your next order goes to the front of the queue on any tight
-                day.
+            ) : (
+              <div className="small muted">
+                Choose an order and a new date to see what the store will read.
               </div>
-            </div>
+            )}
 
             <div className="stack" style={{ gap: 10, marginTop: 16 }}>
               <button
                 className="btn now big block"
-                disabled={busy || !selectedIds.length || reason.trim().length < 15}
+                disabled={busy || !selectedIds.length || !toDate || text.trim().length < 15}
                 onClick={send}
               >
                 {busy
