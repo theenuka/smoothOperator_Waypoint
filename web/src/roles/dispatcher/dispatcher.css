@@ -825,7 +825,8 @@
   border-radius: var(--r-lg);
   background: #faf8f3;
   overflow: hidden;
-  position: relative;
+  position: sticky;
+  top: 16px;
   display: flex;
   flex-direction: column;
 }
@@ -835,6 +836,205 @@
   height: 490px;
   background: #faf8f3;
   display: block;
+}
+
+.dp5-map-container-relative {
+  position: relative;
+  width: 100%;
+  height: 500px;
+  background: #fbf9f4;
+}
+
+.dp5-leaflet-map {
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.dp5-leaflet-map .leaflet-tile-pane {
+  filter: saturate(0.85) contrast(0.96) brightness(1.01);
+}
+
+.dp5-map-overlay-controls {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 1000;
+  display: flex;
+  gap: 8px;
+}
+
+/* Custom Depot Marker */
+.wp-map-depot-marker-wrap {
+  background: transparent;
+  border: none;
+}
+.wp-map-depot-marker {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.94);
+  padding: 3px 8px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--line-2);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  width: max-content;
+}
+.wp-map-depot-sq {
+  width: 12px;
+  height: 12px;
+  background: var(--ink);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+.wp-map-depot-marker.dest .wp-map-depot-sq {
+  background: var(--yellow);
+  border: 1px solid var(--ink);
+}
+.wp-map-depot-label {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+.wp-map-depot-label b {
+  font-size: 11px;
+  color: var(--ink);
+}
+.wp-map-depot-label small {
+  font-size: 9px;
+  color: var(--text-3);
+}
+
+/* Custom Stop Pin */
+.wp-map-stop-wrap {
+  background: transparent;
+  border: none;
+}
+.wp-map-stop-pin {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 10px;
+  font-family: var(--f-mono);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  border: 2px solid #ffffff;
+}
+.wp-map-stop-pin.delivered {
+  background: var(--green);
+  color: #ffffff;
+}
+.wp-map-stop-pin.next {
+  background: var(--yellow);
+  color: var(--ink);
+  border-color: var(--ink);
+  animation: wp-stop-pulse 2s infinite;
+}
+.wp-map-stop-pin.pending {
+  background: #ffffff;
+  color: var(--ink);
+  border-color: var(--line-2);
+}
+
+@keyframes wp-stop-pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.7);
+  }
+  70% {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 8px rgba(250, 204, 21, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(250, 204, 21, 0);
+  }
+}
+
+/* Custom Vehicle Marker */
+.wp-map-vehicle-wrap {
+  background: transparent;
+  border: none;
+}
+.wp-map-vehicle-marker {
+  position: relative;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.wp-map-vehicle-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2.5px solid #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  z-index: 2;
+  flex-shrink: 0;
+}
+.wp-map-vehicle-marker.online .wp-map-vehicle-dot {
+  background: var(--green);
+}
+.wp-map-vehicle-marker.offline .wp-map-vehicle-dot {
+  background: var(--red);
+}
+
+.wp-map-vehicle-pulse {
+  position: absolute;
+  left: -4px;
+  top: -4px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: wp-pulse 1.8s infinite;
+}
+.wp-map-vehicle-marker.online .wp-map-vehicle-pulse {
+  background: rgba(47, 122, 74, 0.4);
+}
+.wp-map-vehicle-marker.offline .wp-map-vehicle-pulse {
+  background: rgba(200, 52, 30, 0.4);
+}
+
+@keyframes wp-pulse {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+
+.wp-map-vehicle-tag {
+  margin-left: 6px;
+  background: var(--ink);
+  color: #ffffff;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  font-family: var(--f-mono);
+}
+.wp-map-vehicle-marker.selected .wp-map-vehicle-tag {
+  background: var(--yellow);
+  color: var(--ink);
+  font-weight: 700;
+}
+.wp-map-vehicle-tag .status-indicator {
+  font-size: 9px;
+  opacity: 0.85;
+}
+.wp-map-vehicle-marker.offline .wp-map-vehicle-tag {
+  background: var(--red);
+  color: #ffffff;
 }
 
 .dp5-map-legend {
@@ -847,6 +1047,131 @@
   font-size: 12px;
   color: var(--text-2);
   flex-wrap: wrap;
+}
+
+/* DP5 Fleet Quick-Selector Bar (Above the fold) */
+.dp5-fleet-bar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.dp5-fleet-chip {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 10px 14px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: all 140ms var(--ease);
+  position: relative;
+  text-align: left;
+}
+
+.dp5-fleet-chip:hover {
+  border-color: var(--line-2);
+  background: var(--paper-2);
+}
+
+.dp5-fleet-chip.active {
+  border-color: var(--ink);
+  background: #ffffff;
+  box-shadow: 0 0 0 2px var(--ink);
+}
+
+.dp5-fleet-chip.offline {
+  border-color: var(--red);
+  background: var(--red-soft);
+}
+
+.dp5-fleet-chip.offline.active {
+  box-shadow: 0 0 0 2px var(--red);
+}
+
+.dp5-fleet-chip-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dp5-fleet-chip-mid {
+  font-size: 12px;
+  color: var(--ink-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dp5-fleet-chip-bot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--text-3);
+  padding-top: 5px;
+  border-top: 1px dashed var(--line);
+}
+
+/* DP5 Tabs Header & Scroll Area */
+.dp5-card-tabbed {
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--paper);
+  overflow: hidden;
+}
+
+.dp5-tabs-header {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  background: var(--paper-2);
+}
+
+.dp5-tab-btn {
+  flex: 1;
+  padding: 11px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-2);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 120ms var(--ease);
+}
+
+.dp5-tab-btn:hover {
+  color: var(--ink);
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.dp5-tab-btn.active {
+  color: var(--ink);
+  background: var(--paper);
+  border-bottom-color: var(--yellow);
+}
+
+.dp5-scroll-area {
+  max-height: 380px;
+  overflow-y: auto;
+  padding: 12px 14px;
+}
+
+.dp5-scroll-area::-webkit-scrollbar {
+  width: 5px;
+}
+
+.dp5-scroll-area::-webkit-scrollbar-thumb {
+  background: var(--line-2);
+  border-radius: 4px;
 }
 
 .dp5-inspector {
