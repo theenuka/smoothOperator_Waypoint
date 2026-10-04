@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useApi } from "../../shared/live.js";
 import { Card, PageHead, Badge, Loading, StatusBadge } from "../../shared/ui.jsx";
 import { time } from "../../shared/format.js";
+import LiveMap from "./LiveMap.jsx";
 import "./dispatcher.css";
 
 export default function DP5LiveTracking() {
@@ -18,6 +19,7 @@ export default function DP5LiveTracking() {
 
   const [activeVehicleId, setActiveVehicleId] = useState("VEH022");
   const [filter, setFilter] = useState("all"); // "all" | "exceptions" | "chilled"
+  const [activeTab, setActiveTab] = useState("stops"); // "stops" | "vehicles"
 
   if (trackingApi.loading || runsApi.loading) return <Loading />;
 
@@ -106,149 +108,52 @@ export default function DP5LiveTracking() {
         </div>
       </PageHead>
 
+      {/* Fleet Quick-Selector Bar (Immediately visible and accessible without scrolling) */}
+      <div className="dp5-fleet-bar">
+        {filteredTrucks.map((t) => {
+          const isSelected = activeVehicleId === t.vehicleId;
+          const isOffline = t.isOffline;
+          return (
+            <div
+              key={t.vehicleId}
+              className={`dp5-fleet-chip ${isSelected ? "active" : ""} ${isOffline ? "offline" : ""}`}
+              onClick={() => setActiveVehicleId(t.vehicleId)}
+            >
+              <div className="dp5-fleet-chip-top">
+                <b className="mono">{t.vehicleId}</b>
+                {isOffline ? (
+                  <span className="badge bad" style={{ padding: "2px 6px", fontSize: 10 }}>
+                    <span className="dot" /> No signal
+                  </span>
+                ) : (
+                  <span className="badge ok" style={{ padding: "2px 6px", fontSize: 10 }}>
+                    <span className="dot" /> Online
+                  </span>
+                )}
+              </div>
+              <div className="dp5-fleet-chip-mid">
+                <b>{t.route}</b> · {t.driver.split(" ")[0]}
+              </div>
+              <div className="dp5-fleet-chip-bot">
+                <span>
+                  {t.deliveredCount} of {t.totalStops} stops
+                </span>
+                <span>{t.at ? time(t.at) : "now"}</span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
       <div className="dp5-layout">
-        {/* Left: Route Map with Kadugannawa Pass and live vehicles */}
+        {/* Left: Interactive OpenStreetMap with live vehicles and route */}
         <div className="dp5-map-wrap">
-          <svg className="dp5-map-svg" viewBox="0 0 620 480">
-            {/* Terrain Contours & Coast */}
-            <path d="M 60,0 C 80,120 120,260 110,480" fill="none" stroke="#e2ded4" strokeWidth="2" />
-            <path d="M 280,120 C 340,160 480,220 580,260" fill="none" stroke="#ece7dc" strokeWidth="1.5" />
-            <path d="M 320,160 C 400,200 500,280 600,320" fill="none" stroke="#ece7dc" strokeWidth="1.5" />
-
-            <text
-              x="30"
-              y="380"
-              transform="rotate(-90 30 380)"
-              fill="#b0aba0"
-              fontSize="10"
-              letterSpacing="2"
-              fontFamily="var(--f-mono)"
-            >
-              INDIAN OCEAN
-            </text>
-
-            <text x="420" y="320" fill="#b8b2a6" fontSize="10" letterSpacing="1.5" fontFamily="var(--f-mono)">
-              HILL COUNTRY · PATCHY COVERAGE
-            </text>
-
-            {/* A1 Highway Route (Peliyagoda -> Kandy) */}
-            <path
-              d="M 120,380 L 175,340 L 220,290 L 320,220 L 400,180"
-              fill="none"
-              stroke="#1b1a17"
-              strokeWidth="3.5"
-            />
-            <path
-              d="M 400,180 L 490,175 L 535,160"
-              fill="none"
-              stroke="#1b1a17"
-              strokeWidth="2.5"
-              strokeDasharray="4 4"
-            />
-
-            {/* Other routes */}
-            <path d="M 120,380 L 110,230" fill="none" stroke="#c8c3b7" strokeWidth="1.5" />
-            <path
-              d="M 220,290 L 280,140"
-              fill="none"
-              stroke="#c8c3b7"
-              strokeWidth="1.5"
-              strokeDasharray="3 3"
-            />
-            <path d="M 220,290 L 280,390" fill="none" stroke="#c8c3b7" strokeWidth="1.5" />
-
-            {/* Depots */}
-            <rect x="112" y="372" width="16" height="16" fill="#1b1a17" rx="2" />
-            <text x="134" y="388" fontSize="11" fontWeight="700" fill="#1b1a17">
-              Peliyagoda depot
-            </text>
-            <text x="134" y="401" fontSize="9.5" fill="#6b675e">
-              PLG Main Depot
-            </text>
-
-            <rect
-              x="528"
-              y="152"
-              width="14"
-              height="14"
-              fill="#facc15"
-              stroke="#1b1a17"
-              strokeWidth="2"
-              rx="2"
-            />
-            <text x="490" y="144" fontSize="11" fontWeight="700" fill="#1b1a17">
-              Kandy depot
-            </text>
-
-            {/* Stops */}
-            <circle cx="175" cy="340" r="4.5" fill="#1b1a17" />
-            <text x="182" y="336" fontSize="10" fill="#34322d">
-              Kadawatha
-            </text>
-
-            <circle cx="220" cy="290" r="4.5" fill="#1b1a17" />
-            <text x="228" y="294" fontSize="10" fill="#34322d">
-              Nittambuwa
-            </text>
-
-            <circle cx="320" cy="220" r="4.5" fill="#1b1a17" />
-            <text x="310" y="240" fontSize="10" fill="#34322d">
-              Kegalle
-            </text>
-
-            <circle cx="490" cy="175" r="4" fill="#1b1a17" />
-            <text x="470" y="196" fontSize="10" fill="#34322d">
-              Peradeniya
-            </text>
-
-            <circle cx="280" cy="390" r="4" fill="#34322d" />
-            <text x="292" y="394" fontSize="10" fill="#56534b">
-              Avissawella
-            </text>
-
-            {/* Kadugannawa Pass (VEH022 location) */}
-            <g transform="translate(400, 180)">
-              {selectedTruck?.isOffline ? (
-                <>
-                  <circle cx="0" cy="0" r="14" fill="#f8e1da" stroke="#c8341e" strokeWidth="2.5" />
-                  <line x1="-8" y1="-8" x2="8" y2="8" stroke="#c8341e" strokeWidth="2.5" />
-                  <rect x="-65" y="18" width="130" height="34" rx="4" fill="#1b1a17" />
-                  <text
-                    x="0"
-                    y="32"
-                    textAnchor="middle"
-                    fill="#facc15"
-                    fontSize="9.5"
-                    fontWeight="700"
-                    fontFamily="var(--f-mono)"
-                  >
-                    LAST SEEN {selectedTruck.at ? time(selectedTruck.at) : "09:40"}
-                  </text>
-                  <text
-                    x="0"
-                    y="45"
-                    textAnchor="middle"
-                    fill="#ffffff"
-                    fontSize="9"
-                    fontFamily="var(--f-mono)"
-                  >
-                    Kadugannawa pass, A1
-                  </text>
-                </>
-              ) : (
-                <circle cx="0" cy="0" r="7" fill="#2f7a4a" stroke="#ffffff" strokeWidth="2" />
-              )}
-            </g>
-            <text
-              x="355"
-              y="165"
-              fontSize="11"
-              fontWeight="700"
-              fill={selectedTruck?.isOffline ? "#c8341e" : "#2f7a4a"}
-            >
-              VEH022 · {selectedTruck?.isOffline ? "no signal" : "online"}
-            </text>
-          </svg>
+          <LiveMap
+            trucks={filteredTrucks}
+            selectedTruckId={activeVehicleId}
+            selectedRun={selectedRun}
+            onSelectVehicle={setActiveVehicleId}
+          />
 
           {/* Map Legend */}
           <div className="dp5-map-legend">
@@ -363,111 +268,122 @@ export default function DP5LiveTracking() {
             </div>
           </div>
 
-          {/* Planned Stops of Selected Vehicle (RUN-VEH022) */}
-          <Card
-            title={`Planned stops of ${selectedRun?.id || selectedTruck?.vehicleId}`}
-            action={
-              <span className="small muted">
-                {selectedTruck?.deliveredCount} of {selectedTruck?.totalStops} delivered
-              </span>
-            }
-          >
-            {selectedTruck?.stops?.length === 0 ? (
-              <p className="small muted">No planned stops for this vehicle.</p>
-            ) : (
-              <div className="dp5-stops-timeline">
-                {selectedTruck.stops.map((s) => {
-                  const isDone = s.status === "delivered";
-                  const isNext = s.status === "next";
-                  const hasShortfall = (s.shortfalls || []).length > 0;
-                  const isDeferred = s.order?.status === "deferred";
+          {/* Tabs: Planned Stops & Fleet List */}
+          <div className="dp5-card-tabbed">
+            <div className="dp5-tabs-header">
+              <button
+                type="button"
+                className={`dp5-tab-btn ${activeTab === "stops" ? "active" : ""}`}
+                onClick={() => setActiveTab("stops")}
+              >
+                Planned stops ({selectedTruck?.stops?.length || 0})
+              </button>
+              <button
+                type="button"
+                className={`dp5-tab-btn ${activeTab === "vehicles" ? "active" : ""}`}
+                onClick={() => setActiveTab("vehicles")}
+              >
+                All vehicles ({filteredTrucks.length})
+              </button>
+            </div>
 
-                  return (
-                    <div
-                      key={s.seq}
-                      className={`dp5-stop-card ${isDone ? "delivered" : isNext ? "next" : "pending"}`}
-                    >
-                      <div className="dp5-stop-left">
-                        <span className="dp5-stop-num mono">#{s.seq}</span>
-                        <div>
-                          <div>
-                            <b>{s.outletName}</b> <span className="small muted mono">({s.outletId})</span>
+            <div className="dp5-scroll-area">
+              {activeTab === "stops" ? (
+                selectedTruck?.stops?.length === 0 ? (
+                  <p className="small muted" style={{ margin: "16px 8px" }}>
+                    No planned stops for this vehicle.
+                  </p>
+                ) : (
+                  <div className="dp5-stops-timeline" style={{ marginTop: 0 }}>
+                    {selectedTruck.stops.map((s) => {
+                      const isDone = s.status === "delivered";
+                      const isNext = s.status === "next";
+                      const hasShortfall = (s.shortfalls || []).length > 0;
+                      const isDeferred = s.order?.status === "deferred";
+
+                      return (
+                        <div
+                          key={s.seq}
+                          className={`dp5-stop-card ${isDone ? "delivered" : isNext ? "next" : "pending"}`}
+                        >
+                          <div className="dp5-stop-left">
+                            <span className="dp5-stop-num mono">#{s.seq}</span>
+                            <div>
+                              <div>
+                                <b>{s.outletName}</b> <span className="small muted mono">({s.outletId})</span>
+                              </div>
+                              <div className="small muted">
+                                ETA {s.eta} · {s.orderId}
+                                {hasShortfall && (
+                                  <span style={{ color: "var(--red-text)", marginLeft: 6, fontWeight: 600 }}>
+                                    (Shortfall flagged)
+                                  </span>
+                                )}
+                                {isDeferred && (
+                                  <span
+                                    style={{ color: "var(--yellow-deep)", marginLeft: 6, fontWeight: 600 }}
+                                  >
+                                    (Moved to tomorrow)
+                                  </span>
+                                )}
+                              </div>
+                            </div>
                           </div>
-                          <div className="small muted">
-                            ETA {s.eta} · {s.orderId}
-                            {hasShortfall && (
-                              <span style={{ color: "var(--red-text)", marginLeft: 6, fontWeight: 600 }}>
-                                (Shortfall flagged)
-                              </span>
-                            )}
-                            {isDeferred && (
-                              <span style={{ color: "var(--yellow-deep)", marginLeft: 6, fontWeight: 600 }}>
-                                (Moved to tomorrow)
-                              </span>
+
+                          <div>
+                            {isDone ? (
+                              <span className="badge ok">✔ Delivered</span>
+                            ) : isNext ? (
+                              <span className="badge now">● Next stop</span>
+                            ) : isDeferred ? (
+                              <span className="badge now">Deferred</span>
+                            ) : (
+                              <span className="badge">Pending</span>
                             )}
                           </div>
                         </div>
-                      </div>
-
-                      <div>
-                        {isDone ? (
-                          <span className="badge ok">✔ Delivered</span>
-                        ) : isNext ? (
-                          <span className="badge now">● Next stop</span>
-                        ) : isDeferred ? (
-                          <span className="badge now">Deferred</span>
-                        ) : (
-                          <span className="badge">Pending</span>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </Card>
-
-          {/* List of Trucks on the Road */}
-          <Card
-            title="All vehicles"
-            action={<span className="small muted">exceptions first</span>}
-            className="pad-0"
-          >
-            <div className="col" style={{ gap: 0 }}>
-              {filteredTrucks.map((t) => {
-                const isSelected = activeVehicleId === t.vehicleId;
-                const isOffline = t.isOffline;
-                return (
-                  <div
-                    key={t.vehicleId}
-                    className={`dp5-truck-item ${isOffline ? "dp5-row-offline" : ""} ${isSelected ? "selected" : ""}`}
-                    onClick={() => setActiveVehicleId(t.vehicleId)}
-                  >
-                    <div className="col" style={{ gap: 2 }}>
-                      <div className="row">
-                        <b className="mono">{t.vehicleId}</b>
-                        <span className="small">{t.route}</span>
-                      </div>
-                      <span className="small muted">
-                        {t.driver.split(" ")[0]} · {t.deliveredCount} of {t.totalStops} stops · last seen{" "}
-                        {t.at ? time(t.at) : "now"}
-                      </span>
-                    </div>
-
-                    <div>
-                      {isOffline ? (
-                        <span className="badge bad" style={{ fontWeight: 700 }}>
-                          ■ No signal · saved on phone
-                        </span>
-                      ) : (
-                        <span className="badge ok">● Online</span>
-                      )}
-                    </div>
+                      );
+                    })}
                   </div>
-                );
-              })}
+                )
+              ) : (
+                <div className="col" style={{ gap: 0 }}>
+                  {filteredTrucks.map((t) => {
+                    const isSelected = activeVehicleId === t.vehicleId;
+                    const isOffline = t.isOffline;
+                    return (
+                      <div
+                        key={t.vehicleId}
+                        className={`dp5-truck-item ${isOffline ? "dp5-row-offline" : ""} ${isSelected ? "selected" : ""}`}
+                        onClick={() => setActiveVehicleId(t.vehicleId)}
+                      >
+                        <div className="col" style={{ gap: 2 }}>
+                          <div className="row">
+                            <b className="mono">{t.vehicleId}</b>
+                            <span className="small">{t.route}</span>
+                          </div>
+                          <span className="small muted">
+                            {t.driver.split(" ")[0]} · {t.deliveredCount} of {t.totalStops} stops · last seen{" "}
+                            {t.at ? time(t.at) : "now"}
+                          </span>
+                        </div>
+
+                        <div>
+                          {isOffline ? (
+                            <span className="badge bad" style={{ fontWeight: 700 }}>
+                              ■ No signal
+                            </span>
+                          ) : (
+                            <span className="badge ok">● Online</span>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
-          </Card>
+          </div>
         </div>
       </div>
     </>
