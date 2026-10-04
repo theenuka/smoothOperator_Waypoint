@@ -5,6 +5,7 @@ import { Logo } from "./shells.jsx";
 const ROLES = [
   {
     to: "/dispatcher",
+    step: "Plan",
     name: "Kavindi Perera",
     role: "Dispatcher",
     device: "Desktop · depot office",
@@ -12,6 +13,7 @@ const ROLES = [
   },
   {
     to: "/loader",
+    step: "Load",
     name: "Ruwan Jayasinghe",
     role: "Loader",
     device: "Shared tablet · dock",
@@ -19,6 +21,7 @@ const ROLES = [
   },
   {
     to: "/driver",
+    step: "Drive",
     name: "Chamara Wickramasinghe",
     role: "Driver",
     device: "Own phone · on the road",
@@ -26,6 +29,7 @@ const ROLES = [
   },
   {
     to: "/store",
+    step: "Receive",
     name: "Nadeeka Fernando",
     role: "Store manager",
     device: "Desktop · OUT014 Dehiwala",
@@ -36,29 +40,45 @@ const ROLES = [
 export default function RolePicker() {
   return (
     <div className="picker">
-      <div className="hazard" style={{ borderRadius: 0 }} />
       <div className="picker-in">
-        <div className="col" style={{ gap: 14 }}>
+        <header className="picker-head">
           <span className="label">Team smoothOperator · Rootcode Tech-Triathlon 2026</span>
           <h1 className="picker-logo">
             <Logo tile={96} word={104} />
           </h1>
-          <p className="lead" style={{ fontSize: 18 }}>
-            Explain the decision. Execute the run. Never lose the truth in between. Pick a role to sign in to
-            its app in a new tab. Open two roles side by side to watch a change reach the other screen live.
+          <p className="picker-tagline">Plan tomorrow's runs. Load them. Drive them. Know what arrives.</p>
+          <p className="lead">
+            One live truth for the depot office, the dock, the truck and the store. Pick a role to sign in to
+            its app in a new tab, and open two side by side to watch a change arrive on the other screen.
           </p>
-        </div>
-        <div className="roles">
-          {ROLES.map((r) => (
-            // Each role opens in a new tab that signs in on its own (see App.jsx).
-            <Link key={r.to} to={r.to} className="role" target="_blank" rel="noreferrer">
-              <span className="device">{r.device}</span>
-              <b>{r.role}</b>
-              <span className="small">{r.name}</span>
-              <span className="small muted">{r.line}</span>
-            </Link>
+        </header>
+
+        {/* The four roles as stops on one run: the route line from the logo joins them. */}
+        <ol className="roles">
+          {ROLES.map((r, i) => (
+            <li key={r.to}>
+              <Link to={r.to} className="role" target="_blank" rel="noreferrer">
+                <span className="role-stop" aria-hidden="true">
+                  <span className="role-num">{String(i + 1).padStart(2, "0")}</span>
+                  <span className="role-step">{r.step}</span>
+                </span>
+                <span className="device">{r.device}</span>
+                <b>{r.role}</b>
+                <span className="small">{r.name}</span>
+                <span className="small muted fill">{r.line}</span>
+                <span className="role-open">
+                  Open {r.role.toLowerCase()} app <span aria-hidden="true">↗</span>
+                </span>
+              </Link>
+            </li>
           ))}
-        </div>
+        </ol>
+
+        <footer className="picker-foot mono small">
+          <span>Demo day Tuesday 29 September 2026</span>
+          <span>Planning Wednesday 30 September</span>
+          <span>Every change reaches every screen live</span>
+        </footer>
       </div>
     </div>
   );

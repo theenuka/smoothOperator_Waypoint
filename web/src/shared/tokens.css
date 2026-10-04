@@ -867,27 +867,113 @@ textarea {
   padding: 0 12px;
   font-size: 13px;
 }
+.picker-head {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.picker-tagline {
+  margin: 8px 0 0;
+  max-width: 32ch;
+  font-family: var(--f-display);
+  font-weight: 800;
+  font-size: clamp(26px, 3.2vw, 40px);
+  line-height: 1.05;
+  color: var(--ink);
+  text-wrap: balance;
+}
+.picker .lead {
+  font-size: 17px;
+  line-height: 1.55;
+}
+
+/* The four roles as stops on one run. On wide screens the route line from the logo joins them:
+   hollow where the run starts, filled where it arrives, dotted road in between. */
 .roles {
+  list-style: none;
+  margin: 0;
+  padding: 0;
   display: grid;
   gap: 14px;
   grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
 }
+.roles > li {
+  display: flex;
+}
+@media (min-width: 980px) {
+  .roles {
+    grid-template-columns: repeat(4, 1fr);
+    position: relative;
+    padding-top: 30px;
+  }
+  .roles::before {
+    content: "";
+    position: absolute;
+    top: 9px;
+    left: 29px;
+    /* ends at the last dot: one column (4 columns, three 14px gaps) minus the dot's position */
+    right: calc((100% - 42px) / 4 - 29px);
+    border-top: 2px dotted var(--line-2);
+  }
+  .roles > li {
+    position: relative;
+  }
+  .roles > li::before {
+    content: "";
+    position: absolute;
+    top: -29px;
+    left: 20px;
+    width: 18px;
+    height: 18px;
+    box-sizing: border-box;
+    border: 2px solid var(--ink);
+    border-radius: 50%;
+    background: var(--paper);
+  }
+  .roles > li:last-child::before {
+    background: var(--ink);
+  }
+}
 .role {
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  padding: 20px;
+  padding: 22px;
   border: 1px solid var(--line);
   border-radius: var(--r-lg);
   text-decoration: none;
+  color: var(--ink);
   background: var(--paper);
   transition:
     border-color 160ms var(--ease),
+    box-shadow 160ms var(--ease),
     transform 160ms var(--ease);
 }
-.role:hover {
+.role:hover,
+.role:focus-visible {
   border-color: var(--ink);
+  box-shadow: inset 0 4px 0 var(--yellow);
   transform: translateY(-2px);
+}
+.role-stop {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+.role-num {
+  font-family: var(--f-stencil);
+  font-weight: 800;
+  font-size: 40px;
+  line-height: 1;
+}
+.role-step {
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-2);
 }
 .role .device {
   font-family: var(--f-mono);
@@ -897,7 +983,32 @@ textarea {
   color: var(--text-3);
 }
 .role b {
-  font-size: 18px;
+  font-size: 19px;
+}
+.role-open {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+  font-size: 14px;
+  font-weight: 600;
+}
+.picker-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 24px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+  color: var(--text-3);
+}
+@media (prefers-reduced-motion: reduce) {
+  .role {
+    transition: none;
+  }
+  .role:hover,
+  .role:focus-visible {
+    transform: none;
+  }
 }
 
 /* account bar above every role app, and the sign-in card (shared/AccountBar.jsx, shared/Login.jsx) */
