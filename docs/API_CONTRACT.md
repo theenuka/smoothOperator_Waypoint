@@ -21,6 +21,7 @@ The contract between the web app and the API. Any change to an endpoint is made 
 |---|---|---|
 | `GET /orders` | `?date=2026-09-30&outletId=OUT014&status=placed` (all optional) | orders with `outletName` |
 | `GET /orders/:id` | | order + `outletName`, `deferrals[]`, `deliveries[]`, `shortfalls[]` |
+| `GET /orders/:id/timeline` | | `[{ step:"placed"\|"planned"\|"loaded"\|"out"\|"delivered"\|"failed"\|"deferred", label, at, done }]` in order. `at` is an ISO time or `null` when unknown. A deferred order stops at `deferred` |
 | `POST /orders` | `{ outletId, deliveryDate, chilled, lines:[{ sku, name, qty, unit }] }` | the new order (201). Placed at or after the 16:00 cutoff (Sri Lanka time) for the next day: `deliveryDate` moves one day later and the response adds `"cutoffMoved": true`. Publishes `order.placed` |
 
 `POST /orders` answers 400 `{ error }` with a plain message for an unknown `outletId`, no lines, a line without `sku`, or `qty <= 0`.
