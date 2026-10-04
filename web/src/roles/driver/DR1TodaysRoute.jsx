@@ -1,4 +1,4 @@
-// DR1 Today's route. Owner: DRIVER FRONTEND.  Design: /design/DR1-TodaysRoute.jpg
+// DR1 Today's route.  Design: docs/design/DR1-TodaysRoute.jpg
 // The whole run on one screen: stops in order on a route line (solid = done, dotted = still to drive).
 import { Link } from "react-router-dom";
 import { useApi } from "../../shared/live.js";

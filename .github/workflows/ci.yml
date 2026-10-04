@@ -1,5 +1,5 @@
 # Runs on every pull request: install, test the backend, build the web app.
-# A red X means something is broken. The Lead does not merge red PRs.
+# A red X blocks the merge.
 name: CI
 on:
   pull_request:

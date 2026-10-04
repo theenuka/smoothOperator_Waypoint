@@ -1,4 +1,4 @@
-// Deferrals API. Owner: BACKEND A.  Contract: docs/API_CONTRACT.md#deferrals
+// Deferrals API.  Contract: docs/API_CONTRACT.md#deferrals
 import { Router } from "express";
 import { db, save, newId, nowIso } from "../db.js";
 import { publish } from "../events.js";

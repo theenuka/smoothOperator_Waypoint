@@ -1,4 +1,4 @@
-// DP4 Deferral decision: write the reason the store will read. Owner: DISPATCHER FRONTEND. Design: /design/DP4-DeferralDecision.jpg
+// DP4 Deferral decision: write the reason the store will read. Design: docs/design/DP4-DeferralDecision.jpg
 // Matches design: Interactive decision table, live preview of the store notice (styled like SM5), and confirmation panel.
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";

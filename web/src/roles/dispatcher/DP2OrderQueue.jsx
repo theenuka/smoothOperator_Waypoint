@@ -1,4 +1,4 @@
-// DP2 Orders for Wednesday. Owner: DISPATCHER FRONTEND. Design: /design/DP2-OrderQueue.jpg
+// DP2 Orders for Wednesday. Design: docs/design/DP2-OrderQueue.jpg
 // Matches design: Brand / Temperature / District / Status filter sidebar, search, totals, and order lines side panel.
 import { useState } from "react";
 import { Link } from "react-router-dom";

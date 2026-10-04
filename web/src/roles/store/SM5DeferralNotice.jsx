@@ -1,4 +1,4 @@
-// SM5 Notices: deferrals and shortfalls, with the reason. Owner: STORE FRONTEND.  Design: /design/SM5-DeferralNotice.jpg
+// SM5 Notices: deferrals and shortfalls, with the reason.  Design: docs/design/SM5-DeferralNotice.jpg
 import { useState } from "react";
 import { api } from "../../shared/api.js";
 import { useApi } from "../../shared/live.js";

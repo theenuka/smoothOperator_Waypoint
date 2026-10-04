@@ -1,4 +1,4 @@
-// Order cutoff rule. Owner: BACKEND A.
+// Order cutoff rule.
 // Orders placed at or after the cutoff (Sri Lanka time) for the next day move to the day after.
 // Pure function: no db, no clock of its own, so it is easy to test.
 

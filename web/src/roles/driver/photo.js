@@ -1,4 +1,4 @@
-// Shrink a photo from the phone camera so it fits in the offline outbox. Owner: DRIVER FRONTEND.
+// Shrink a photo from the phone camera so it fits in the offline outbox.
 // A phone photo is often 3 to 5 MB. Scaled to 800 px it is about 100 KB, small enough for localStorage.
 export function shrinkPhoto(file, maxSize = 800) {
   return new Promise((resolve, reject) => {

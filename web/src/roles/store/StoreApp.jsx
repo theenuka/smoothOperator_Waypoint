@@ -1,4 +1,4 @@
-// Store manager app (Nadeeka, desktop). Owner: STORE FRONTEND.  Task file: docs/tasks/07-store-frontend.md
+// Store manager app (Nadeeka, desktop).
 import { Routes, Route, Navigate } from "react-router-dom";
 import { DesktopShell } from "../../shared/shells.jsx";
 import { useOutlet, OUTLETS } from "./outlet.js";

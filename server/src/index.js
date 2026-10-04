@@ -1,4 +1,4 @@
-// Waypoint API server. Owner: LEAD. Members add code in routes/ and logic/, not here.
+// Waypoint API server.
 import express from "express";
 import cors from "cors";
 import http from "node:http";
@@ -9,18 +9,18 @@ import { Server } from "socket.io";
 import { db } from "./db.js";
 import { attach } from "./events.js";
 
-// Backend A (orders, planning, deferrals, notices)
+// Planning side: orders, planning, deferrals, notices, store issues
 import orders from "./routes/orders.js";
 import planning from "./routes/planning.js";
 import deferrals from "./routes/deferrals.js";
-import notices from "./routes/notices.js";
-// Backend B (runs, loads, deliveries, sync, tracking)
+import notices, { issues } from "./routes/notices.js";
+// Execution side: runs, dock loads, deliveries, offline sync, tracking
 import runs from "./routes/runs.js";
 import loads from "./routes/loads.js";
 import deliveries from "./routes/deliveries.js";
 import sync from "./routes/sync.js";
 import tracking from "./routes/tracking.js";
-// Shared (lead)
+// Reference data and demo controls
 import meta from "./routes/meta.js";
 
 const app = express();
@@ -33,6 +33,7 @@ app.use("/api/orders", orders);
 app.use("/api/plan", planning);
 app.use("/api/deferrals", deferrals);
 app.use("/api/notices", notices);
+app.use("/api/issues", issues);
 app.use("/api/runs", runs);
 app.use("/api/loads", loads);
 app.use("/api/deliveries", deliveries);

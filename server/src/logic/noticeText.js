@@ -1,4 +1,4 @@
-// Text helpers for store notices. Owner: BACKEND A. Pure functions.
+// Text helpers for store notices. Pure functions.
 
 // "2026-09-25" -> "Friday 25 September"
 export const niceDate = (ymd) =>

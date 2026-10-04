@@ -1,4 +1,4 @@
-// Runs API (a run = one vehicle's route for a day). Owner: BACKEND B.  Contract: docs/API_CONTRACT.md#runs
+// Runs API (a run = one vehicle's route for a day).  Contract: docs/API_CONTRACT.md#runs
 import { Router } from "express";
 import { db } from "../db.js";
 import { httpError, outletName } from "./_util.js";

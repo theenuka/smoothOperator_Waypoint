@@ -1,4 +1,4 @@
-// SM2 Place order. Owner: STORE FRONTEND.  Design: /design/SM2-PlaceOrder.jpg
+// SM2 Place order.  Design: docs/design/SM2-PlaceOrder.jpg
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { api } from "../../shared/api.js";

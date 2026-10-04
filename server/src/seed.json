@@ -824,6 +824,59 @@
           "at": "2026-09-29T05:38:00+05:30"
         }
       ]
+    },
+    "RUN-VEH014": {
+      "runId": "RUN-VEH014",
+      "status": "sealed",
+      "sealedAt": "2026-09-29T05:05:00+05:30",
+      "lines": [
+        {
+          "orderId": "ORD41822",
+          "stopSeq": 1,
+          "sku": "SKU-7001",
+          "name": "Fresh milk 1 L, crate of 12",
+          "planned": 8,
+          "loaded": 8,
+          "checked": true
+        },
+        {
+          "orderId": "ORD41822",
+          "stopSeq": 1,
+          "sku": "SKU-7010",
+          "name": "Set yoghurt 80 g, tray of 24",
+          "planned": 6,
+          "loaded": 6,
+          "checked": true
+        },
+        {
+          "orderId": "ORD41822",
+          "stopSeq": 1,
+          "sku": "SKU-7101",
+          "name": "Chicken 1 kg, carton of 10",
+          "planned": 4,
+          "loaded": 4,
+          "checked": true
+        },
+        {
+          "orderId": "ORD41822",
+          "stopSeq": 1,
+          "sku": "SKU-8001",
+          "name": "Carrots 1 kg, box of 10",
+          "planned": 5,
+          "loaded": 5,
+          "checked": true
+        },
+        {
+          "orderId": "ORD41822",
+          "stopSeq": 1,
+          "sku": "SKU-1150",
+          "name": "Rice, samba 5 kg",
+          "planned": 3,
+          "loaded": 3,
+          "checked": true
+        }
+      ],
+      "shortfalls": []
     }
   },
   "deliveries": [

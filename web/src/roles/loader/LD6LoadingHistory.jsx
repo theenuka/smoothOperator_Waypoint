@@ -1,4 +1,4 @@
-// LD6 Loading history: sealed trucks with loaded vs planned, shortfalls, and who flagged them. Owner: LOADER FRONTEND.  Design: /design/LD6-LoadingHistory.jpg
+// LD6 Loading history: sealed trucks with loaded vs planned, shortfalls, and who flagged them.  Design: docs/design/LD6-LoadingHistory.jpg
 import { useEffect, useState } from "react";
 import { api } from "../../shared/api.js";
 import { useLiveEvent } from "../../shared/live.js";

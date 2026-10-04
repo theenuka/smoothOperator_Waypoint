@@ -1,4 +1,4 @@
-// LD4 Flag shortfall (degradation scenario 1). Owner: LOADER FRONTEND.  Design: /design/LD4-FlagShortfall.jpg
+// LD4 Flag shortfall (degradation scenario 1).  Design: docs/design/LD4-FlagShortfall.jpg
 // The truck still leaves; the store, driver and dispatch are told at once.
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
