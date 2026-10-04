@@ -24,9 +24,12 @@ const write = (k, v) => {
   } catch {}
 };
 
+const startOnline = read(ONLINE, true);
 let state = {
-  online: read(ONLINE, true),
-  offlineSince: read(SINCE, null), // when the signal was lost (ISO time), null while online
+  online: startOnline,
+  // When the signal was lost (ISO time), null while online. "Reset demo data" clears wp.online but
+  // not this, so an old time is only kept if the phone really starts in No signal.
+  offlineSince: startOnline ? null : read(SINCE, null),
   outbox: read(KEY, []),
   syncing: false,
   last: null,
