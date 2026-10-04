@@ -4,6 +4,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useApi, useDates } from "../../shared/live.js";
+import { api } from "../../shared/api.js";
 import { Card, PageHead, Badge, Loading, ErrorNote } from "../../shared/ui.jsx";
 import { kg, day, longDay } from "../../shared/format.js";
 import "./dispatcher.css";
@@ -14,6 +15,7 @@ export default function DP3PlanAllocate() {
     "deferral.decided",
     "deferral.reversed",
     "order.placed",
+    "plan.released",
   ]);
   const sug = useApi(planDate ? `/plan/suggest?date=${planDate}` : null, [
     "deferral.decided",
@@ -21,6 +23,7 @@ export default function DP3PlanAllocate() {
     "order.placed",
   ]);
   const [waiting, setWaiting] = useState([]);
+  const [sending, setSending] = useState(false);
   const nav = useNavigate();
 
   // Initialize with server's suggested deferrals
@@ -100,14 +103,39 @@ export default function DP3PlanAllocate() {
             </div>
           </div>
 
-          <button
-            type="button"
-            className="btn now"
-            disabled={!waiting.length}
-            onClick={() => nav("/dispatcher/decide", { state: { orderIds: waiting } })}
-          >
-            Decide which {waiting.length} wait →
-          </button>
+          {c.over > 0 ? (
+            <button
+              type="button"
+              className="btn now"
+              disabled={!waiting.length}
+              onClick={() => nav("/dispatcher/decide", { state: { orderIds: waiting } })}
+            >
+              Decide which {waiting.length} wait →
+            </button>
+          ) : !plan.data.unsent && plan.data.runs.length ? (
+            <span className="badge ok">
+              On the dock: {plan.data.runs.length} truck{plan.data.runs.length === 1 ? "" : "s"} loading
+            </span>
+          ) : (
+            <button
+              type="button"
+              className="btn now"
+              disabled={sending || !plan.data.unsent}
+              onClick={async () => {
+                setSending(true);
+                try {
+                  await api.post("/plan/release", { date: planDate });
+                  plan.reload();
+                } finally {
+                  setSending(false);
+                }
+              }}
+            >
+              {sending
+                ? "Sending…"
+                : `Send ${plan.data.unsent} order${plan.data.unsent === 1 ? "" : "s"} to the dock →`}
+            </button>
+          )}
         </div>
       </div>
 

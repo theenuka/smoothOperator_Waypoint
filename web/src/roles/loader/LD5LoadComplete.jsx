@@ -8,7 +8,7 @@ import { time } from "../../shared/format.js";
 import "./loader.css";
 
 const sum = (list, key) => list.reduce((n, x) => n + (Number(x[key]) || 0), 0);
-const hhmm = (v) => (typeof v === "string" && v.includes("T") ? v.slice(11, 16) : null);
+const hhmm = (v) => (typeof v === "string" && v.includes("T") ? time(v) : null);
 const dayLabel = (date) =>
   date
     ? new Date(`${date}T00:00:00Z`)

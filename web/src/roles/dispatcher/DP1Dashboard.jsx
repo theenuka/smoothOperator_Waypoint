@@ -15,6 +15,7 @@ const LIVE = [
   "deferral.decided",
   "deferral.reversed",
   "load.completed",
+  "plan.released",
   "vehicle.offline",
   "vehicle.online",
   "vehicle.position",

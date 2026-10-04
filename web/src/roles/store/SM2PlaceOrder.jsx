@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { api } from "../../shared/api.js";
 import { useApi } from "../../shared/live.js";
 import { Card, PageHead, Loading, Badge, useToast } from "../../shared/ui.jsx";
+import { longDay } from "../../shared/format.js";
 import { GROUPS, ALL_ITEMS } from "./products.js";
 import "./store.css";
 
@@ -85,8 +86,17 @@ export default function SM2PlaceOrder({ outletId }) {
       <>
         <PageHead code={`SM2 · ${outletId}`} title="Order placed" />
         <div className="notice ok">
-          <b className="mono">{placed.id}</b> is booked for {weekday} {rest}. You can change it until {cutoff}{" "}
-          today.
+          {placed.deliveryDate && placed.deliveryDate !== planDate ? (
+            <>
+              <b className="mono">{placed.id}</b> is booked for {longDay(placed.deliveryDate)}. It was placed
+              after the {cutoff} cutoff, so it goes on the day after.
+            </>
+          ) : (
+            <>
+              <b className="mono">{placed.id}</b> is booked for {weekday} {rest}. You can change it until{" "}
+              {cutoff} today.
+            </>
+          )}
         </div>
         <div className="row">
           <Link to="/store/orders" className="btn now">

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { api } from "../../shared/api.js";
 import { useApi, useDates, useEventFeed, useLiveEvent } from "../../shared/live.js";
 import { ErrorNote, Loading } from "../../shared/ui.jsx";
-import { longDay } from "../../shared/format.js";
+import { day, longDay, time, weekdayOf } from "../../shared/format.js";
 import "./loader.css";
 
 const MIN_BAYS = 4;
@@ -13,13 +13,7 @@ const pad = (n) => String(n).padStart(2, "0");
 const sum = (list, key) => list.reduce((n, x) => n + (Number(x[key]) || 0), 0);
 // "2026-09-29T06:30:00+05:30" or "06:30" -> "06:30". Anything else -> null.
 const hhmm = (v) =>
-  typeof v === "string"
-    ? v.includes("T")
-      ? v.slice(11, 16)
-      : /^\d{2}:\d{2}/.test(v)
-        ? v.slice(0, 5)
-        : null
-    : null;
+  typeof v === "string" ? (v.includes("T") ? time(v) : /^\d{2}:\d{2}/.test(v) ? v.slice(0, 5) : null) : null;
 const shortName = (name) => {
   if (!name) return "";
   const p = String(name).trim().split(/\s+/);
@@ -50,9 +44,10 @@ function useLoads(runs) {
 }
 
 export default function LD1DockHome() {
-  const { today } = useDates();
-  const runsApi = useApi(today ? `/runs?date=${today}` : null, ["load.completed", "load.shortfall"]);
-  const runs = runsApi.data ?? [];
+  const { today, planDate } = useDates();
+  // Today's trucks, plus tomorrow's once the dispatcher has sent the plan to the dock.
+  const runsApi = useApi(today ? "/runs" : null, ["load.completed", "load.shortfall", "plan.released"]);
+  const runs = (runsApi.data ?? []).filter((r) => r.date === today || r.date === planDate);
   const loads = useLoads(runs);
   const { events } = useEventFeed(30);
   if (runsApi.loading) return <Loading />;
@@ -144,6 +139,7 @@ export default function LD1DockHome() {
                 {vt && <span className={`badge ${cold ? "cold" : ""}`}>{vt}</span>}
               </div>
               <span className="muted small">
+                {r.date === planDate ? `For ${weekdayOf(planDate)} · ` : ""}
                 {r.name ? `${r.name} · ` : ""}
                 {r.stops.length} stop{r.stops.length === 1 ? "" : "s"}
                 {info.items ? ` · ${info.items} items` : ""}
@@ -189,7 +185,7 @@ export default function LD1DockHome() {
               <div className="ld-change" key={ev.id}>
                 <span className="mono muted">{hhmm(ev.at) ?? ""}</span>
                 <span className="fill">
-                  {p.outletName || "An order"} deferred{p.toDate ? ` to ${p.toDate}` : ""}.
+                  {p.outletName || "An order"} deferred{p.toDate ? ` to ${day(p.toDate)}` : ""}.
                   {p.reason ? ` ${p.reason}` : ""}
                 </span>
                 <span className="muted small">{p.decidedBy ? `${p.decidedBy}, dispatch` : "dispatch"}</span>

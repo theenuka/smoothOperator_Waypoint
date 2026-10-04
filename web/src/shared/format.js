@@ -42,6 +42,8 @@ export function describe(ev) {
     case "load.shortfall":
       if (p.cleared) return `Dock correction: all ${p.planned} ${p.name} loaded for ${p.outletName}`;
       return `Short at the dock: ${p.loaded} of ${p.planned} ${p.name} for ${p.outletName}`;
+    case "plan.released":
+      return `Plan sent to the dock: ${p.trucks} truck${p.trucks === 1 ? "" : "s"}, ${p.orders} orders for ${weekdayOf(p.date)}`;
     case "load.completed":
       return `Truck sealed for ${p.runId} (${p.shortfalls} shortfall)`;
     case "delivery.recorded":
@@ -70,7 +72,7 @@ export const tone = (evOrType) => {
   if (evOrType?.payload?.cleared) return "ok";
   return /shortfall|conflict|offline/.test(type)
     ? "bad"
-    : /recorded|resolved|completed|online/.test(type)
+    : /recorded|resolved|completed|online|released/.test(type)
       ? "ok"
       : /deferral/.test(type)
         ? "now"

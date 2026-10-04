@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { api } from "../../shared/api.js";
 import { useDates, useLiveEvent } from "../../shared/live.js";
 import { Empty, ErrorNote, Loading } from "../../shared/ui.jsx";
+import { time as clock } from "../../shared/format.js";
 import "./loader.css";
 
 const addDays = (date, n) => {
@@ -72,7 +73,7 @@ async function fetchRows(dates) {
 }
 
 function Row({ row, showDay }) {
-  const time = row.sealedAt ? row.sealedAt.slice(11, 16) : "--:--";
+  const time = row.sealedAt ? clock(row.sealedAt) : "--:--";
   const { run } = row;
   return (
     <div className="ld-row">
