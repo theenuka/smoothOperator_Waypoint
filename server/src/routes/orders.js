@@ -3,8 +3,16 @@ import { Router } from "express";
 import { db, save, newId, nowIso } from "../db.js";
 import { publish } from "../events.js";
 import { httpError, wrap, outletName } from "./_util.js";
+import { orderProblem } from "../logic/orderCheck.js";
 
 const r = Router();
+
+// POST /api/orders check runs first: unknown store, no items or qty <= 0 get a 400 with a clear message.
+r.post("/", (req, res, next) => {
+  const problem = orderProblem(req.body, db().outlets);
+  if (problem) return next(httpError(400, problem));
+  next();
+});
 
 // GET /api/orders?date=YYYY-MM-DD&outletId=OUT014&status=placed
 r.get("/", (req, res) => {
