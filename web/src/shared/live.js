@@ -3,11 +3,25 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { io } from "socket.io-client";
 import { api } from "./api.js";
+import { getToken } from "./auth.jsx";
 
 let socket = null;
 function getSocket() {
-  if (!socket) socket = io({ path: "/socket.io" });
+  if (!socket) {
+    // auth is read on every (re)connect, so a refreshed sign-in token is used automatically
+    socket = io({ path: "/socket.io", auth: (cb) => cb({ token: getToken() }) });
+    // A refused sign-in stops Socket.IO retrying by itself, so try again shortly with the newest token.
+    socket.on("connect_error", () => {
+      if (!socket.active) setTimeout(() => socket.connect(), 3000);
+    });
+  }
   return socket;
+}
+
+/** Close the live connection (on sign out). The next screen that needs it opens a new one. */
+export function dropLive() {
+  socket?.disconnect();
+  socket = null;
 }
 
 /** Call `handler(event)` whenever one of `types` happens. types = ["delivery.recorded"] or "*" for all. */

@@ -8,6 +8,7 @@ import { fileURLToPath } from "node:url";
 import { Server } from "socket.io";
 import { db } from "./db.js";
 import { attach } from "./events.js";
+import { requireAuth, socketAuth } from "./auth.js";
 
 // Planning side: orders, planning, deferrals, notices, store issues
 import orders from "./routes/orders.js";
@@ -23,9 +24,16 @@ import tracking from "./routes/tracking.js";
 // Reference data and demo controls
 import meta from "./routes/meta.js";
 
+// Settings (Supabase keys) from server/.env when it exists. See docs/AUTH.md.
+const envFile = path.join(path.dirname(fileURLToPath(import.meta.url)), "..", ".env");
+if (fs.existsSync(envFile)) process.loadEnvFile(envFile);
+
 const app = express();
 app.use(cors());
 app.use(express.json({ limit: "5mb" }));
+
+// Sign-in check. Off until SUPABASE_URL is set (docs/AUTH.md).
+app.use("/api", requireAuth());
 
 app.get("/api/health", (req, res) => res.json({ ok: true, demoDate: db().meta.demoDate }));
 app.use("/api/meta", meta);
@@ -56,6 +64,7 @@ app.use((err, req, res, next) => {
 
 const server = http.createServer(app);
 const io = new Server(server, { cors: { origin: "*" } });
+io.use(socketAuth());
 attach(io);
 io.on("connection", (socket) => socket.emit("hello", { at: new Date().toISOString() }));
 
