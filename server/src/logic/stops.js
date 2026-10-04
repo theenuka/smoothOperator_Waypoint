@@ -1,4 +1,4 @@
-// Stop results and failed-delivery wording. Owner: BACKEND B.
+// Stop results and failed-delivery wording.
 // Pure functions: no database, no Express. Tested in server/test/stops.test.js.
 
 export const STOP_RESULTS = ["delivered", "failed"];

@@ -1,4 +1,4 @@
-// DP1 Today's run (dashboard). Owner: DISPATCHER FRONTEND. Design: /design/DP1-Dashboard.jpg
+// DP1 Today's run (dashboard). Design: docs/design/DP1-Dashboard.jpg
 // Matches design: run cards with segmented stop progress, alerts column, live feed, plus gentle flash & sound on conflict arrival.
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";

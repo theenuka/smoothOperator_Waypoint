@@ -1,16 +1,15 @@
-<!-- Title format: feat(driver): DR4 issue screen saves offline -->
+<!-- Title: Conventional Commits, e.g. feat(driver): DR4 issue screen saves offline -->
 
 Closes #
 
-## What works now
-<!-- one or two lines, e.g. "DR4: driver can report a closed store, works offline" -->
+## What changed
+
+## How to test
 
 ## Checklist
-- [ ] I only changed files I own (see AGENTS.md)
-- [ ] `npm run dev` starts with no errors, and I clicked through my screen
-- [ ] `npm test` passes
-- [ ] I ran `npm run format`
-- [ ] It still works after "Reset demo data"
+- [ ] `npm test` and `npm run format` pass
+- [ ] Checked in the browser on the target device size, and after "Reset demo data"
+- [ ] API changes are in `docs/API_CONTRACT.md`
+- [ ] Changes stay inside the area this PR is about
 
 ## Screenshot
-<!-- drag an image here -->

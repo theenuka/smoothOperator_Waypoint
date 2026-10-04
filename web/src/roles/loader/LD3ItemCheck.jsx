@@ -1,5 +1,5 @@
 // LD3 Item check: scan list for one stop. Tap a line (or arrive from LD2) and a big counter opens for it.
-// Owner: LOADER FRONTEND.  Design: /design/LD3-ItemCheck.jpg
+// Design: docs/design/LD3-ItemCheck.jpg
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { api } from "../../shared/api.js";

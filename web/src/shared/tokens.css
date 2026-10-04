@@ -1,12 +1,11 @@
-/* Waypoint design tokens + shared component styles. Owner: LEAD.
+/* Waypoint design tokens + shared component styles.
    Copied from the Designathon design system ("Dock yard"). One colour, one meaning:
      ink ............ structure, text, primary actions
      safety yellow .. attention, "now", the current step (never decoration)
      signal red ..... blocked, short, conflict, offline
      green .......... done: delivered, loaded, synced
      cold blue ...... cold chain only (chilled / reefer)
-   Members: DON'T edit this file. Put styles for your screens in your own role folder
-   (for example roles/driver/driver.css) and import it in your screen. */
+   Screen-specific styles live in each role folder (roles/<role>/<role>.css). */
 
 :root {
   --paper: #ffffff;
@@ -854,28 +853,4 @@ textarea {
 }
 .role b {
   font-size: 18px;
-}
-
-/* ---------- TODO stub (remove when your screen is built) ---------- */
-.todo {
-  border: 2px dashed var(--line-2);
-  border-radius: var(--r-lg);
-  padding: 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  background: var(--paper);
-  color: var(--ink);
-}
-.todo ol {
-  margin: 0;
-  padding-left: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-.todo img {
-  max-width: 100%;
-  border: 1px solid var(--line);
-  border-radius: var(--r-md);
 }

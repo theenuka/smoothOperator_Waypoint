@@ -1,4 +1,4 @@
-// Order timeline for SM4. Owner: BACKEND A.
+// Order timeline for SM4.
 // Pure function: reads the db object it is given, never saves.
 // Each step: { step, label, at, done }. `at` is an ISO time or null when we do not know it (yet).
 

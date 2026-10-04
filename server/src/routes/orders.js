@@ -1,4 +1,4 @@
-// Orders API. Owner: BACKEND A.  Contract: docs/API_CONTRACT.md#orders
+// Orders API.  Contract: docs/API_CONTRACT.md#orders
 import { Router } from "express";
 import { db, save, newId, nowIso } from "../db.js";
 import { publish } from "../events.js";
