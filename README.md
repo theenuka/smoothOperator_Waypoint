@@ -87,7 +87,7 @@ flowchart LR
 
 - **Domain logic is pure and tested.** Every rule (fairness, cutoff, back-orders, stop results, sync batching, conflict detection, order validation) lives in `server/src/logic/` with no I/O, and is covered by unit tests.
 - **One contract.** All endpoints and live events are documented in [docs/API_CONTRACT.md](docs/API_CONTRACT.md).
-- **Data access is isolated** in `server/src/db.js`. This build uses a file-backed store so the demo is reproducible; the production design uses PostgreSQL with PostGIS, with each route group deployable as its own service (see [docs/DEPLOY.md](docs/DEPLOY.md)).
+- **Data access is isolated** in `server/src/db.js`. This build uses a file-backed store so the demo is reproducible; [docs/DEPLOY.md](docs/DEPLOY.md) describes how it scales to a real database and separate services.
 
 ## Tech stack
 
@@ -116,9 +116,11 @@ The full five minute script is in [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md).
 
 ## Changes from the Day 5 design
 
-- **One service, not many.** The design split planning, dock, delivery and sync into separate services on AWS (Lambda, RDS Postgres with PostGIS). The build runs them as route groups in one Node.js server so a judge can start it with one command. The route split and the API contract are unchanged, so each group can still be deployed alone.
-- **File-backed store instead of PostgreSQL.** Data access is isolated in `server/src/db.js`, so swapping the store does not touch the domain logic. Demo data resets on every restart or deploy.
-- **Hosting moved to Google Cloud Run (Singapore)** with GitHub Actions deploying `main` after CI passes, instead of AWS ap-south-1 with Terraform. See [docs/DEPLOY.md](docs/DEPLOY.md).
+The screens follow the Day 5 design submission: the same four roles, personas, depots and outlets, and the same screen set (DP1-DP6, LD1-LD6, DR1-DR7, SM1-SM7). The design covered the experience only, so the build added the parts it did not specify:
+
+- **Architecture.** One Node.js server with the domain rules in `server/src/logic/`, split into route groups (planning, dock, delivery, sync) behind one [API contract](docs/API_CONTRACT.md), with Socket.IO pushing every change to the other roles live.
+- **Data.** A file-backed store seeded with the design's scenario, so every run of the demo starts from the same morning. Data access is isolated in `server/src/db.js`, so it can move to a real database without touching the domain logic.
+- **Deployment.** Docker for local runs, Google Cloud Run for the live demo, and GitHub Actions that test every change and deploy `main` after CI passes. See [docs/DEPLOY.md](docs/DEPLOY.md).
 
 ## Getting started
 
