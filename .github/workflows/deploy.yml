@@ -1,0 +1,45 @@
+# Deploys main to Cloud Run after CI passes. No keys in the repo:
+# GitHub signs in to Google Cloud with Workload Identity Federation.
+# One-time setup is in docs/DEPLOY.md.
+name: Deploy
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+env:
+  PROJECT_ID: waypoint-smoothop
+  REGION: asia-southeast1
+  SERVICE: waypoint
+jobs:
+  deploy:
+    if: github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push')
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://waypoint.theenuka.in
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+      - uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: projects/618048768001/locations/global/workloadIdentityPools/github/providers/waypoint
+          service_account: github-deployer@waypoint-smoothop.iam.gserviceaccount.com
+      - uses: google-github-actions/setup-gcloud@v2
+      - name: Build and deploy
+        run: |
+          gcloud run deploy "$SERVICE" --source . --project "$PROJECT_ID" --region "$REGION" \
+            --allow-unauthenticated --max-instances 1 --session-affinity --timeout 3600 --memory 512Mi --quiet
+      - name: Smoke test
+        run: |
+          URL=$(gcloud run services describe "$SERVICE" --project "$PROJECT_ID" --region "$REGION" --format 'value(status.url)')
+          curl -fsS "$URL/api/runs" > /dev/null
+          echo "Live: $URL"
