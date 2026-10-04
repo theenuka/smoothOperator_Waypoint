@@ -72,6 +72,8 @@ The shape of each record (the `data` column). New optional fields can be added f
 
 ## The demo story in the data
 
+The seed is written for Tuesday 29 September. When it seeds the tables (first start, **Reset to seed data**, or the first request on a new day), the server moves the whole scenario to today's date in Sri Lanka (`server/src/logic/seedDates.js`), so every gap, cutoff and "waited twice in 14 days" stays true. The dates below are the seed's.
+
 - **Today (Tue 29 Sep):** Chamara drives VEH022 from Peliyagoda to Kandy: Kadawatha ✔, Nittambuwa ✔, **Kegalle (next)**, Peradeniya, Kandy City.
 - **Shortfall:** at 05:38 Ruwan loaded only 6 of 10 detergent for Kegalle (`loads.RUN-VEH022.shortfalls[0]`). Kegalle already has a notice.
 - **Tomorrow (Wed 30 Sep):** 8 chilled orders, 5 reefer slots (VEH031 in the workshop). Negombo and Nugegoda waited on Tuesday, Dehiwala waited twice in 14 days, so all three are protected. Borella, Wattala and Kirulapone are suggested to wait.

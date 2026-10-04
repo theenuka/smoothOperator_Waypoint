@@ -1,6 +1,6 @@
 # Waypoint
 
-[![CI](https://github.com/theenuka/waypoint/actions/workflows/ci.yml/badge.svg)](https://github.com/theenuka/waypoint/actions/workflows/ci.yml) [![Deploy](https://github.com/theenuka/waypoint/actions/workflows/deploy.yml/badge.svg)](https://github.com/theenuka/waypoint/actions/workflows/deploy.yml)
+[![CI](https://github.com/theenuka/smoothOperator_Waypoint/actions/workflows/ci.yml/badge.svg)](https://github.com/theenuka/smoothOperator_Waypoint/actions/workflows/ci.yml) [![Deploy](https://github.com/theenuka/smoothOperator_Waypoint/actions/workflows/deploy.yml/badge.svg)](https://github.com/theenuka/smoothOperator_Waypoint/actions/workflows/deploy.yml)
 
 **Explain the decision. Execute the run. Never lose the truth in between.**
 
@@ -119,8 +119,8 @@ One account per role. The sign-in page fills in the email for the role you pick.
 You only need Docker. One command starts the app and a local Supabase (Postgres, auth, REST API and a gateway), creates the tables, loads the demo data and creates the four accounts. Nothing is called in the cloud.
 
 ```bash
-git clone https://github.com/theenuka/waypoint.git
-cd waypoint
+git clone https://github.com/theenuka/smoothOperator_Waypoint.git
+cd smoothOperator_Waypoint
 docker compose up
 ```
 
@@ -130,7 +130,7 @@ Configuration: `docker-compose.yml` has local-only defaults for every value, lis
 
 ### Judge walkthrough (about 3 minutes)
 
-The demo morning is Tuesday 29 September: the Kandy truck (VEH022) is on the road and Wednesday is being planned.
+The scenario always runs on today's date (Sri Lanka time; on a new day the data starts again from the seed): the Kandy truck (VEH022) is on the road and tomorrow is being planned.
 
 1. On the home page, open **Loader**, **Dispatcher** and **Store manager**. Each opens in its own tab; sign in with the account above. All three stay signed in side by side.
 2. **Loader:** open VEH022, then stop 5 **Kandy City**, tap **Rice, 5 kg bag**, count 4 of 5, pick a reason and **Flag 1 short and keep loading**. The truck is not blocked.

@@ -32,7 +32,7 @@ One-time setup:
 ```bash
 PROJECT_ID=waypoint-smoothop
 PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID --format='value(projectNumber)')
-REPO=theenuka/waypoint
+REPO=theenuka/smoothOperator_Waypoint
 SA=github-deployer@$PROJECT_ID.iam.gserviceaccount.com
 
 gcloud services enable iamcredentials.googleapis.com sts.googleapis.com
