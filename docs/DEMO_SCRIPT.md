@@ -20,7 +20,7 @@ Optional: run `npm run sim` in another terminal so VEH022 moves along the A1 on 
 ## 1. Dock shortfall: degradation scenario 1 (60 s)
 
 1. **Loader:** open VEH022 → load plan. "It's 04:30, Ruwan is loading the Kandy truck."
-2. Press **Short** on Rice for Kandy City → set 4 of 5 → reason **Damaged** → **Flag 1 short and keep loading**.
+2. Open stop 5 **Kandy City**, tap **Rice, 5 kg bag**, count 4 of 5 → on the shortfall screen pick **Damaged** → **Flag 1 short and keep loading**.
 3. Say: "The truck is not blocked."
 4. **Dispatcher** (point at it): the live feed already shows "Short at the dock: 4 of 5 Rice, 5 kg bag for Kandy City" and Dock shortfalls went up. No refresh.
 5. **Store:** switch to `OUT072 Kandy City` → Notices: "1 Rice, 5 kg bag arrive on the next delivery", with the reason.
@@ -30,7 +30,7 @@ Optional: run `npm run sim` in another terminal so VEH022 moves along the A1 on 
 
 1. **Dispatcher:** **Plan Wednesday**. "8 chilled orders, 5 reefer slots, because VEH031 is in the workshop."
 2. Point at the rule and the table: "Negombo and Nugegoda waited yesterday, Dehiwala waited twice in two weeks, so they are protected. Kelaniya has the longest gap. Three stores that got chilled goods yesterday wait."
-3. **Review 3 deferrals** → read the message → **Confirm and tell 3 stores**.
+3. **Decide which 3 wait →** → read the live store preview → **Confirm 3 deferrals**.
 4. **Store:** switch to `OUT022 Borella` → the notice explains why, and says they are protected next time.
 5. DP6 log: "Every decision is recorded with who made it and why."
 
@@ -38,11 +38,11 @@ Optional: run `npm run sim` in another terminal so VEH022 moves along the A1 on 
 
 1. **Driver:** tap **Online** at the top to switch to **No signal**. "Chamara is in the Kadugannawa pass. No signal."
 2. **Dispatcher:** the feed shows "VEH022 lost signal". (DP5 Live shows it too.)
-3. **Driver:** Kegalle → **Deliver here** → "Received by Sunil Perera" → **Complete delivery**. It says "saved on phone". Do the same for Peradeniya.
+3. **Driver:** Kegalle → **I've arrived · start handover** → the store manager signs on the screen, received by "Sunil Perera" → **Complete delivery**. It says "saved on phone". Do the same for Peradeniya.
 4. **Dispatcher** meanwhile: on the Runs card press **Move Kandy City to tomorrow** → **Confirm**. "Dispatch thinks Kandy City can't be reached today."
-5. **Driver:** Kandy City → deliver it anyway (he got there in time) → saved on phone.
-6. **Driver:** Saved tab → **Demo: signal is back**. Two records sync silently. "Clean records just go through. No pop-ups."
-7. **Driver:** Sync tab: "1 needs a decision. The phone says delivered, the office moved it to tomorrow." Tap **It was delivered. Keep my record**.
+5. **Driver:** Kandy City → hand it over anyway (he got there in time) → saved on phone.
+6. **Driver:** tap **No signal** at the top to come back online. Two records sync silently. "Clean records just go through. No pop-ups."
+7. **Driver:** Sync tab: "1 needs a decision. The phone says delivered, the office moved it to tomorrow." Tap **It was delivered, send my proof**.
 8. **Dispatcher:** feed shows "Resolved ... kept the driver's delivery", the run is 5 of 5, and DP6 shows the deferral as reversed with the reason.
 
 ## 4. Close (30 s)
