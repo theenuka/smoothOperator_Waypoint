@@ -60,3 +60,42 @@ test("a reversed deferral does not count", () => {
   }).find((x) => x.outletId === "OUT045");
   assert.equal(r.protected, false);
 });
+
+// Small hand-made cases: two outlets, nobody protected.
+const twoOrders = (kgA, kgB, slots) =>
+  rankForSlots({
+    orders: [
+      { id: "A", outletId: "OUT-A", kg: kgA },
+      { id: "B", outletId: "OUT-B", kg: kgB },
+    ],
+    slots,
+    deferrals: [],
+    lastChilled: { "OUT-A": "2026-09-28T08:00:00+05:30", "OUT-B": "2026-09-28T08:00:00+05:30" },
+    planDate: "2026-09-30",
+  });
+
+test("tie on gap: the smaller order waits", () => {
+  for (const [kgA, kgB, waits] of [
+    [40, 120, "OUT-A"],
+    [120, 40, "OUT-B"],
+  ]) {
+    const rows = twoOrders(kgA, kgB, 1);
+    assert.equal(rows[0].gapHours, rows[1].gapHours);
+    assert.deepEqual(
+      rows.filter((r) => r.suggestion === "wait").map((r) => r.outletId),
+      [waits]
+    );
+  }
+});
+
+test("no deferrals needed: when orders fit the slots, everyone is served", () => {
+  assert.ok(twoOrders(40, 120, 2).every((r) => r.suggestion === "serve"));
+  const all = rankForSlots({
+    orders,
+    slots: orders.length,
+    deferrals: seed.deferrals,
+    lastChilled: seed.history.lastChilledDelivery,
+    planDate,
+  });
+  assert.ok(all.every((r) => r.suggestion === "serve"));
+});
