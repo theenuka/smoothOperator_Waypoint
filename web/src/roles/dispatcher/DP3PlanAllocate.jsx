@@ -1,5 +1,6 @@
 // DP3 Plan and allocate. Design: docs/design/DP3-PlanAllocate.jpg
-// Matches design: Capacity bar, 2-column workspace (Unassigned orders vs Peliyagoda Fleet), workshop vehicle visualization, and fairness table with visible reasons.
+// Capacity bar, orders without a reefer slot, the reefer fleet filled in fairness order, and the fairness table.
+// All of it is derived from /plan and /plan/suggest and follows the dispatcher's ticks.
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useApi } from "../../shared/live.js";
@@ -30,47 +31,67 @@ export default function DP3PlanAllocate() {
   const c = plan.data.chilled;
   const toggle = (id) => setWaiting((w) => (w.includes(id) ? w.filter((x) => x !== id) : [...w, id]));
 
+  // Everything below is derived from the API: reefers, their slots, and the current "waits" selection.
+  const reefers = plan.data.reefers;
+  const workshop = reefers.filter((v) => v.status === "workshop");
+  const lostSlots = c.totalSlots - c.slots;
+  const rows = sug.data.rows;
+  const waitingRows = rows.filter((r) => waiting.includes(r.orderId));
+  const going = rows.filter((r) => !waiting.includes(r.orderId)); // already in fairness order
+  const served = going.slice(0, c.slots);
+  const overflow = going.slice(c.slots);
+  let next = 0;
+  const fleet = reefers.map((v) => {
+    if (v.status === "workshop") return { v, orders: [] };
+    const orders = served.slice(next, next + v.slots);
+    next += v.slots;
+    return { v, orders };
+  });
+
   return (
     <>
       <PageHead
         code="PLANNING WEDNESDAY 30 SEPTEMBER"
         title="Plan and allocate"
-        sub="Protected orders are placed first. What's left is packed by route and window."
-      >
-        <button type="button" className="btn secondary" onClick={() => {}}>
-          Undo last move
-        </button>
-        <button type="button" className="btn secondary" onClick={() => {}}>
-          Auto-fill ambient
-        </button>
-      </PageHead>
+        sub="Protected orders are placed first. What's left is packed by the fairness rule. You make the final call."
+      />
 
-      {/* Top Colombo Chilled Capacity Bar Banner matching design */}
+      {/* Chilled capacity: working reefer slots, slots lost to the workshop, orders over capacity */}
       <div className="dp3-capacity-banner">
         <div className="dp3-capacity-top">
           <div className="dp3-capacity-title" style={{ color: "var(--blue)" }}>
             <span>❄ Colombo chilled</span>
           </div>
 
-          {/* Segmented capacity track */}
           <div style={{ flex: 1, minWidth: 260, margin: "0 16px" }}>
             <div className="dp3-cap-bar">
-              {/* 16 active slots */}
-              {Array.from({ length: 16 }).map((_, i) => (
-                <div key={`blue-${i}`} className="dp3-cap-segment active" title={`Slot ${i + 1}: Active`} />
-              ))}
-              {/* 3 over capacity */}
-              {Array.from({ length: 3 }).map((_, i) => (
+              {Array.from({ length: c.slots }).map((_, i) => (
                 <div
-                  key={`red-${i}`}
-                  className="dp3-cap-segment over"
-                  title={`Over capacity slot ${i + 1}`}
+                  key={`slot-${i}`}
+                  className={`dp3-cap-segment${i < served.length ? " active" : ""}`}
+                  title={i < served.length ? `Slot ${i + 1}: ${served[i].outletName}` : `Slot ${i + 1}: free`}
                 />
+              ))}
+              {Array.from({ length: lostSlots }).map((_, i) => (
+                <div
+                  key={`lost-${i}`}
+                  className="dp3-cap-segment lost"
+                  title="Slot lost: vehicle in the workshop"
+                />
+              ))}
+              {Array.from({ length: c.over }).map((_, i) => (
+                <div key={`over-${i}`} className="dp3-cap-segment over" title={`Over capacity ${i + 1}`} />
               ))}
             </div>
             <div className="row between small" style={{ marginTop: 4 }}>
-              <span className="muted">16 reefer slots (VEH031 in the workshop)</span>
-              <span style={{ color: "var(--red-text)", fontWeight: 600 }}>19 chilled orders · 3 over</span>
+              <span className="muted">
+                {c.slots} reefer slots
+                {lostSlots > 0 &&
+                  ` (${lostSlots} lost: ${workshop.map((v) => v.id).join(", ")} in the workshop)`}
+              </span>
+              <span style={{ color: c.over ? "var(--red-text)" : "var(--green-text)", fontWeight: 600 }}>
+                {c.orders} chilled orders · {c.over ? `${c.over} over` : "all fit"}
+              </span>
             </div>
           </div>
 
@@ -85,322 +106,124 @@ export default function DP3PlanAllocate() {
         </div>
       </div>
 
-      {/* Two-Column Planning Workspace matching design image */}
       <div className="dp3-two-col">
-        {/* Left Column: Not on a vehicle yet */}
+        {/* Left: chilled orders without a reefer slot (the current "waits" selection) */}
         <div className="dp3-unassigned-card">
           <div className="dp3-unassigned-head">
             <div className="dp3-unassigned-title">
               <span>Not on a vehicle yet</span>
-              <span className="badge ink">18</span>
+              <span className="badge ink">{waitingRows.length}</span>
             </div>
-            <span className="small muted">drag onto a vehicle</span>
+            <span className="small muted">tick or untick in the table below</span>
           </div>
 
           <div className="dp3-unassigned-list">
-            {/* Chilled orders needing reefer slot */}
-            <div className="dp3-unassigned-item">
-              <span className="dp3-drag-handle">⠿</span>
-              <div className="dp3-item-info">
-                <span className="dp3-item-outlet">OUT067 Wattala</span>
-                <span className="dp3-item-sub">
-                  Fresh · <b style={{ color: "var(--blue)" }}>❄ 198 kg</b>
-                </span>
+            {waitingRows.length === 0 && (
+              <div className="small muted" style={{ padding: "10px 4px" }}>
+                Every chilled order has a reefer slot.
               </div>
-              <span className="badge bad">■ No reefer slot</span>
-            </div>
-
-            <div className="dp3-unassigned-item">
-              <span className="dp3-drag-handle">⠿</span>
-              <div className="dp3-item-info">
-                <span className="dp3-item-outlet">OUT022 Borella</span>
-                <span className="dp3-item-sub">
-                  Fresh · <b style={{ color: "var(--blue)" }}>❄ 224 kg</b>
-                </span>
+            )}
+            {waitingRows.map((r) => (
+              <div key={r.orderId} className="dp3-unassigned-item">
+                <span className="dp3-drag-handle">⠿</span>
+                <div className="dp3-item-info">
+                  <span className="dp3-item-outlet">
+                    {r.outletId} {r.outletName}
+                  </span>
+                  <span className="dp3-item-sub">
+                    {r.orderId} · <b style={{ color: "var(--blue)" }}>❄ {kg(r.kg)}</b>
+                  </span>
+                </div>
+                <span className="badge bad">■ No reefer slot</span>
               </div>
-              <span className="badge bad">■ No reefer slot</span>
-            </div>
-
-            <div className="dp3-unassigned-item">
-              <span className="dp3-drag-handle">⠿</span>
-              <div className="dp3-item-info">
-                <span className="dp3-item-outlet">OUT036 Kirulapone</span>
-                <span className="dp3-item-sub">
-                  Fresh · <b style={{ color: "var(--blue)" }}>❄ 186 kg</b>
-                </span>
-              </div>
-              <span className="badge bad">■ No reefer slot</span>
-            </div>
-
-            {/* Ambient orders */}
-            <div className="dp3-unassigned-item">
-              <span className="dp3-drag-handle">⠿</span>
-              <div className="dp3-item-info">
-                <span className="dp3-item-outlet">OUT133 Gampaha</span>
-                <span className="dp3-item-sub">Style · 260 kg</span>
-              </div>
-              <button type="button" className="btn secondary small" style={{ minHeight: 26, fontSize: 11.5 }}>
-                Fits VEH037
-              </button>
-            </div>
-
-            <div className="dp3-unassigned-item">
-              <span className="dp3-drag-handle">⠿</span>
-              <div className="dp3-item-info">
-                <span className="dp3-item-outlet">OUT140 Ja-Ela</span>
-                <span className="dp3-item-sub">Tech · 90 kg</span>
-              </div>
-              <button type="button" className="btn secondary small" style={{ minHeight: 26, fontSize: 11.5 }}>
-                Fits VEH009
-              </button>
-            </div>
-
-            <div className="dp3-unassigned-item">
-              <span className="dp3-drag-handle">⠿</span>
-              <div className="dp3-item-info">
-                <span className="dp3-item-outlet">OUT126 Kiribathgoda</span>
-                <span className="dp3-item-sub">Fresh · 330 kg</span>
-              </div>
-              <button type="button" className="btn secondary small" style={{ minHeight: 26, fontSize: 11.5 }}>
-                Fits VEH041
-              </button>
-            </div>
-
-            <div className="dp3-unassigned-item">
-              <span className="dp3-drag-handle">⠿</span>
-              <div className="dp3-item-info">
-                <span className="dp3-item-outlet">OUT118 Moratuwa</span>
-                <span className="dp3-item-sub">Fresh · -</span>
-              </div>
-              <span className="badge now">Not ordered</span>
-            </div>
+            ))}
           </div>
-
-          <div className="small muted" style={{ borderTop: "1px solid var(--line)", paddingTop: 10 }}>
-            + 11 more ambient orders, all fit current routes
-          </div>
+          {overflow.length > 0 && (
+            <div
+              className="small"
+              style={{ borderTop: "1px solid var(--line)", paddingTop: 10, color: "var(--red-text)" }}
+            >
+              {overflow.length} more order(s) are marked to go but there is no slot left. Tick them as
+              waiting.
+            </div>
+          )}
         </div>
 
-        {/* Right Column: Peliyagoda Fleet */}
+        {/* Right: the reefer fleet, filled in fairness order */}
         <div className="dp3-fleet-section">
           <div className="dp3-fleet-head">
             <div className="row">
               <h3 className="h-sec" style={{ margin: 0 }}>
-                Peliyagoda fleet
+                Peliyagoda reefers
               </h3>
-              <span className="small muted">42 vehicles · 6 shown</span>
+              <span className="small muted">
+                {reefers.length} vehicles · {c.slots} working slots
+              </span>
             </div>
-
             <div className="row small" style={{ gap: 16 }}>
               <div className="row" style={{ gap: 4 }}>
                 <span style={{ width: 10, height: 10, background: "var(--blue)", borderRadius: 2 }} />
-                <span>Chilled stop</span>
-              </div>
-              <div className="row" style={{ gap: 4 }}>
-                <span style={{ width: 10, height: 10, background: "var(--ink)", borderRadius: 2 }} />
-                <span>Ambient stop</span>
-              </div>
-              <span className="muted">kg loaded / capacity</span>
-            </div>
-          </div>
-
-          <div className="dp3-fleet-list">
-            {/* 1. VEH014 Reefer */}
-            <div className="dp3-vehicle-row">
-              <div className="dp3-vehicle-meta">
-                <div className="dp3-vehicle-left">
-                  <span className="mono" style={{ fontWeight: 700 }}>
-                    VEH014
-                  </span>
-                  <Badge tone="cold">❄ Reefer</Badge>
-                  <span>Colombo South</span>
-                  <span className="muted">S. Kumara</span>
-                </div>
-                <div className="dp3-vehicle-right">
-                  <span className="muted">05:10–08:40</span>
-                  <span>
-                    <b>966</b> / 1,100
-                  </span>
-                  <span style={{ fontWeight: 700 }}>88%</span>
-                </div>
-              </div>
-              <div className="dp3-truck-track">
-                <div className="dp3-stop-block chilled" style={{ width: "44%" }}>
-                  OUT014 · 486
-                </div>
-                <div className="dp3-stop-block chilled" style={{ width: "25%" }}>
-                  OUT058 · 270
-                </div>
-                <div className="dp3-stop-block chilled" style={{ width: "19%" }}>
-                  OUT024 · 210
-                </div>
-                <div className="dp3-empty-track" />
-              </div>
-            </div>
-
-            {/* 2. VEH019 Reefer */}
-            <div className="dp3-vehicle-row">
-              <div className="dp3-vehicle-meta">
-                <div className="dp3-vehicle-left">
-                  <span className="mono" style={{ fontWeight: 700 }}>
-                    VEH019
-                  </span>
-                  <Badge tone="cold">❄ Reefer</Badge>
-                  <span>Colombo Central</span>
-                  <span className="muted">R. Silva</span>
-                </div>
-                <div className="dp3-vehicle-right">
-                  <span className="muted">05:20–09:10</span>
-                  <span>
-                    <b>970</b> / 1,100
-                  </span>
-                  <span style={{ fontWeight: 700 }}>88%</span>
-                </div>
-              </div>
-              <div className="dp3-truck-track">
-                <div className="dp3-stop-block chilled" style={{ width: "20%" }}>
-                  OUT011 · 220
-                </div>
-                <div className="dp3-stop-block chilled" style={{ width: "18%" }}>
-                  OUT029 · 190
-                </div>
-                <div className="dp3-stop-block chilled" style={{ width: "24%" }}>
-                  OUT040 · 260
-                </div>
-                <div className="dp3-stop-block chilled" style={{ width: "26%" }}>
-                  OUT017 · 300
-                </div>
-                <div className="dp3-empty-track" />
-              </div>
-            </div>
-
-            {/* 3. VEH026 Reefer */}
-            <div className="dp3-vehicle-row">
-              <div className="dp3-vehicle-meta">
-                <div className="dp3-vehicle-left">
-                  <span className="mono" style={{ fontWeight: 700 }}>
-                    VEH026
-                  </span>
-                  <Badge tone="cold">❄ Reefer</Badge>
-                  <span>Gampaha</span>
-                  <span className="muted">K. Dias</span>
-                </div>
-                <div className="dp3-vehicle-right">
-                  <span className="muted">05:30–09:30</span>
-                  <span>
-                    <b>1,022</b> / 1,100
-                  </span>
-                  <span style={{ fontWeight: 700 }}>93%</span>
-                </div>
-              </div>
-              <div className="dp3-truck-track">
-                <div className="dp3-stop-block chilled" style={{ width: "28%" }}>
-                  OUT045 · 312
-                </div>
-                <div className="dp3-stop-block chilled" style={{ width: "22%" }}>
-                  OUT031 · 240
-                </div>
-                <div className="dp3-stop-block chilled" style={{ width: "16%" }}>
-                  OUT052 · 180
-                </div>
-                <div className="dp3-stop-block chilled" style={{ width: "27%" }}>
-                  OUT049 · 290
-                </div>
-                <div className="dp3-empty-track" />
-              </div>
-            </div>
-
-            {/* 4. VEH031 Reefer - WORKSHOP TRUCK */}
-            <div className="dp3-vehicle-row">
-              <div className="dp3-vehicle-meta">
-                <div className="dp3-vehicle-left">
-                  <span className="mono" style={{ fontWeight: 700 }}>
-                    VEH031
-                  </span>
-                  <Badge tone="cold">❄ Reefer</Badge>
-                  <span style={{ color: "var(--red-text)", fontWeight: 600 }}>Workshop until Thu</span>
-                </div>
-                <div className="dp3-vehicle-right">
-                  <span className="muted">brake service, back Thu 1 Oct</span>
-                </div>
-              </div>
-              <div className="dp3-truck-track">
-                <div className="dp3-stop-block workshop" />
-              </div>
-            </div>
-
-            {/* 5. VEH022 Dry */}
-            <div className="dp3-vehicle-row">
-              <div className="dp3-vehicle-meta">
-                <div className="dp3-vehicle-left">
-                  <span className="mono" style={{ fontWeight: 700 }}>
-                    VEH022
-                  </span>
-                  <Badge>Dry</Badge>
-                  <span>Kandy run</span>
-                  <span className="muted">C. Wickramasinghe</span>
-                </div>
-                <div className="dp3-vehicle-right">
-                  <span className="muted">06:30–13:30</span>
-                  <span>
-                    <b>980</b> / 1,400
-                  </span>
-                  <span style={{ fontWeight: 700 }}>70%</span>
-                </div>
-              </div>
-              <div className="dp3-truck-track">
-                <div className="dp3-stop-block ambient" style={{ width: "10%" }}>
-                  061
-                </div>
-                <div className="dp3-stop-block ambient" style={{ width: "12%" }}>
-                  077
-                </div>
-                <div className="dp3-stop-block ambient" style={{ width: "29%" }}>
-                  OUT083 · 410
-                </div>
-                <div className="dp3-stop-block ambient" style={{ width: "10%" }}>
-                  075
-                </div>
-                <div className="dp3-stop-block ambient" style={{ width: "9%" }}>
-                  072
-                </div>
-                <div className="dp3-empty-track" />
-              </div>
-            </div>
-
-            {/* 6. VEH037 Dry */}
-            <div className="dp3-vehicle-row">
-              <div className="dp3-vehicle-meta">
-                <div className="dp3-vehicle-left">
-                  <span className="mono" style={{ fontWeight: 700 }}>
-                    VEH037
-                  </span>
-                  <Badge>Dry</Badge>
-                  <span>Kurunegala</span>
-                  <span className="muted">D. Pathirana</span>
-                </div>
-                <div className="dp3-vehicle-right">
-                  <span className="muted">07:00–14:30</span>
-                  <span>
-                    <b>880</b> / 1,400
-                  </span>
-                  <span style={{ fontWeight: 700 }}>63%</span>
-                </div>
-              </div>
-              <div className="dp3-truck-track">
-                <div className="dp3-stop-block ambient" style={{ width: "24%" }}>
-                  OUT090 · 340
-                </div>
-                <div className="dp3-stop-block ambient" style={{ width: "20%" }}>
-                  OUT095 · 280
-                </div>
-                <div className="dp3-stop-block ambient" style={{ width: "19%", opacity: 0.8 }}>
-                  + OUT133 · 260
-                </div>
-                <div className="dp3-empty-track" />
+                <span className="muted">Chilled stop</span>
               </div>
             </div>
           </div>
+
+          {fleet.map(({ v, orders: load }) => {
+            const used = load.reduce((sum, o) => sum + o.kg, 0);
+            const pct = v.capacityKg ? Math.round((used / v.capacityKg) * 100) : 0;
+            const inWorkshop = v.status === "workshop";
+            return (
+              <div key={v.id} className="dp3-vehicle-row">
+                <div className="dp3-vehicle-meta">
+                  <div className="dp3-vehicle-left">
+                    <span className="mono" style={{ fontWeight: 700 }}>
+                      {v.id}
+                    </span>
+                    <Badge tone="cold">❄ Reefer</Badge>
+                    {inWorkshop ? (
+                      <span style={{ color: "var(--red-text)", fontWeight: 600 }}>In the workshop</span>
+                    ) : (
+                      <span className="muted">{v.driver}</span>
+                    )}
+                  </div>
+                  <div className="dp3-vehicle-right">
+                    {inWorkshop ? (
+                      <span className="muted">{v.slots} slots unavailable</span>
+                    ) : (
+                      <>
+                        <span className="muted">
+                          {load.length} / {v.slots} slots
+                        </span>
+                        <span>
+                          <b>{used.toLocaleString("en-GB")}</b> / {v.capacityKg.toLocaleString("en-GB")} kg
+                        </span>
+                        <span style={{ fontWeight: 700 }}>{pct}%</span>
+                      </>
+                    )}
+                  </div>
+                </div>
+                <div className="dp3-truck-track">
+                  {inWorkshop ? (
+                    <div className="dp3-stop-block workshop" />
+                  ) : (
+                    <>
+                      {load.map((o) => (
+                        <div
+                          key={o.orderId}
+                          className="dp3-stop-block chilled"
+                          style={{ width: `${Math.max(12, Math.round((o.kg / v.capacityKg) * 100))}%` }}
+                          title={`${o.outletName} · ${o.orderId} · ${o.kg} kg`}
+                        >
+                          {o.outletId} · {o.kg}
+                        </div>
+                      ))}
+                      <div className="dp3-empty-track" />
+                    </>
+                  )}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
 

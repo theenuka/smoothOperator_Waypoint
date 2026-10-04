@@ -99,19 +99,6 @@ export default function DP1Dashboard() {
         title="Today's run"
         sub="Everything that changed today, as it happens."
       >
-        <button
-          type="button"
-          className="btn secondary"
-          onClick={() => {
-            setConflictFlash(true);
-            setActiveConflictBanner({ orderId: "ORD41803", outletName: "Kegalle" });
-            playConflictChime();
-            setTimeout(() => setConflictFlash(false), 4500);
-          }}
-          title="Simulate incoming conflict sound and flash"
-        >
-          🔔 Test sound & flash
-        </button>
         <Link className="btn now" to="/dispatcher/plan">
           Plan Wednesday
         </Link>
