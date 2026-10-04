@@ -1,4 +1,5 @@
-# One command for judges:  cp .env.example .env  &&  docker compose up --build
+# One command for judges:  docker compose up
+# Every value has a local-only default (the same as .env.example). Copy .env.example to .env only to change them.
 # Then open http://localhost:8080 and sign in with a seeded account (README).
 # The full stack: the app, plus a local Supabase (Postgres, auth, REST API and a gateway). Nothing is called in the cloud.
 # The live site does not use this file: Cloud Run builds the Dockerfile only. See docs/DEPLOY.md
@@ -9,15 +10,15 @@ services:
       args:
         # baked into the web app: the browser signs in through the local gateway
         LOCAL_SUPABASE_URL: http://localhost:8000
-        LOCAL_SUPABASE_ANON_KEY: ${ANON_KEY:?run cp .env.example .env first}
+        LOCAL_SUPABASE_ANON_KEY: ${ANON_KEY:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlzcyI6IndheXBvaW50LWxvY2FsIiwiaWF0IjoxNzkwMDAwMDAwLCJleHAiOjIxMDUwMDAwMDB9.1U-ZIWVZxZW-x8C-8ih9V84jPnUayeD03LK8cxjWTM0}
     ports:
       - "8080:8080"
     environment:
       NODE_ENV: production
       PORT: "8080"
       SUPABASE_URL: http://gateway:8000
-      SUPABASE_JWT_SECRET: ${JWT_SECRET:?run cp .env.example .env first}
-      SUPABASE_SERVICE_ROLE_KEY: ${SERVICE_ROLE_KEY:?run cp .env.example .env first}
+      SUPABASE_JWT_SECRET: ${JWT_SECRET:-8fb96a90b1a4f37473ffc18af2b858ab251527cc467bd01af85d4dcd6c8d0730}
+      SUPABASE_SERVICE_ROLE_KEY: ${SERVICE_ROLE_KEY:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZV9yb2xlIiwiaXNzIjoid2F5cG9pbnQtbG9jYWwiLCJpYXQiOjE3OTAwMDAwMDAsImV4cCI6MjEwNTAwMDAwMH0.WD86PFXCl8XKe6LMVWTjrH_-9_5kTMb2T2duhFYvP4I}
     depends_on:
       db: { condition: service_healthy }
       rest: { condition: service_started }
@@ -35,12 +36,12 @@ services:
       context: .
       args:
         LOCAL_SUPABASE_URL: http://localhost:8000
-        LOCAL_SUPABASE_ANON_KEY: ${ANON_KEY}
+        LOCAL_SUPABASE_ANON_KEY: ${ANON_KEY:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlzcyI6IndheXBvaW50LWxvY2FsIiwiaWF0IjoxNzkwMDAwMDAwLCJleHAiOjIxMDUwMDAwMDB9.1U-ZIWVZxZW-x8C-8ih9V84jPnUayeD03LK8cxjWTM0}
     command: ["node", "scripts/create-demo-users.mjs"]
     environment:
       SUPABASE_URL: http://gateway:8000
-      SUPABASE_SERVICE_ROLE_KEY: ${SERVICE_ROLE_KEY}
-      DEMO_PASSWORD: ${DEMO_PASSWORD:?run cp .env.example .env first}
+      SUPABASE_SERVICE_ROLE_KEY: ${SERVICE_ROLE_KEY:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZV9yb2xlIiwiaXNzIjoid2F5cG9pbnQtbG9jYWwiLCJpYXQiOjE3OTAwMDAwMDAsImV4cCI6MjEwNTAwMDAwMH0.WD86PFXCl8XKe6LMVWTjrH_-9_5kTMb2T2duhFYvP4I}
+      DEMO_PASSWORD: ${DEMO_PASSWORD:-Waypoint-local-demo}
     depends_on:
       auth: { condition: service_healthy }
       gateway: { condition: service_started }
@@ -55,9 +56,9 @@ services:
       POSTGRES_PORT: "5432"
       PGDATABASE: postgres
       POSTGRES_DB: postgres
-      PGPASSWORD: ${POSTGRES_PASSWORD:?run cp .env.example .env first}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      JWT_SECRET: ${JWT_SECRET}
+      PGPASSWORD: ${POSTGRES_PASSWORD:-74c3bc96920eb663b90b6914}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-74c3bc96920eb663b90b6914}
+      JWT_SECRET: ${JWT_SECRET:-8fb96a90b1a4f37473ffc18af2b858ab251527cc467bd01af85d4dcd6c8d0730}
       JWT_EXP: "3600"
     volumes:
       - ./docker/supabase/roles.sql:/docker-entrypoint-initdb.d/init-scripts/99-roles.sql:ro
@@ -78,8 +79,8 @@ services:
       API_EXTERNAL_URL: http://localhost:8000
       GOTRUE_SITE_URL: http://localhost:8080
       GOTRUE_DB_DRIVER: postgres
-      GOTRUE_DB_DATABASE_URL: postgres://supabase_auth_admin:${POSTGRES_PASSWORD}@db:5432/postgres
-      GOTRUE_JWT_SECRET: ${JWT_SECRET}
+      GOTRUE_DB_DATABASE_URL: postgres://supabase_auth_admin:${POSTGRES_PASSWORD:-74c3bc96920eb663b90b6914}@db:5432/postgres
+      GOTRUE_JWT_SECRET: ${JWT_SECRET:-8fb96a90b1a4f37473ffc18af2b858ab251527cc467bd01af85d4dcd6c8d0730}
       # must equal the server's SUPABASE_URL + /auth/v1 (server/src/auth.js checks it)
       GOTRUE_JWT_ISSUER: http://gateway:8000/auth/v1
       GOTRUE_JWT_AUD: authenticated
@@ -101,10 +102,10 @@ services:
   rest:
     image: postgrest/postgrest:v12.2.12
     environment:
-      PGRST_DB_URI: postgres://authenticator:${POSTGRES_PASSWORD}@db:5432/postgres
+      PGRST_DB_URI: postgres://authenticator:${POSTGRES_PASSWORD:-74c3bc96920eb663b90b6914}@db:5432/postgres
       PGRST_DB_SCHEMAS: public
       PGRST_DB_ANON_ROLE: anon
-      PGRST_JWT_SECRET: ${JWT_SECRET}
+      PGRST_JWT_SECRET: ${JWT_SECRET:-8fb96a90b1a4f37473ffc18af2b858ab251527cc467bd01af85d4dcd6c8d0730}
       PGRST_DB_USE_LEGACY_GUCS: "false"
     depends_on:
       db: { condition: service_healthy }

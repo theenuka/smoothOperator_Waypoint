@@ -151,14 +151,16 @@ export default function DP1Dashboard() {
         />
         <Stat
           label="Need a decision"
-          value={openConflicts.length + offlineVehicles.length}
-          tone={openConflicts.length + offlineVehicles.length ? "bad" : "ok"}
+          value={openConflicts.length + offlineVehicles.length + (over > 0 ? 1 : 0)}
+          tone={openConflicts.length + offlineVehicles.length + (over > 0 ? 1 : 0) ? "bad" : "ok"}
           hint={
             openConflicts.length
               ? "Phone and office disagree"
               : offlineVehicles.length
                 ? "Trucks offline"
-                : "None pending"
+                : over > 0
+                  ? "Who waits for a reefer slot"
+                  : "None pending"
           }
         />
       </div>
