@@ -1,4 +1,4 @@
-// SM4 Order detail: the journey of one order. Owner: STORE FRONTEND.  Design: /design/SM4-OrderDetail.jpg
+// SM4 Order detail: the journey of one order.  Design: docs/design/SM4-OrderDetail.jpg
 import { Link, useParams } from "react-router-dom";
 import { useApi } from "../../shared/live.js";
 import { Card, PageHead, Badge, Loading, ErrorNote } from "../../shared/ui.jsx";

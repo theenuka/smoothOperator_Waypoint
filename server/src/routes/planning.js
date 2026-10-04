@@ -1,4 +1,4 @@
-// Planning API. Owner: BACKEND A.  Contract: docs/API_CONTRACT.md#planning
+// Planning API.  Contract: docs/API_CONTRACT.md#planning
 import { Router } from "express";
 import { db } from "../db.js";
 import { rankForSlots } from "../logic/fairness.js";

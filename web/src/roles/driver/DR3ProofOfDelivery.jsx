@@ -1,4 +1,4 @@
-// DR3 Proof of delivery. Owner: DRIVER FRONTEND.  Design: /design/DR3-ProofOfDelivery.jpg
+// DR3 Proof of delivery.  Design: docs/design/DR3-ProofOfDelivery.jpg
 // Item checklist (the dock shortfall is already printed), photo, name and signature.
 // Saved through addRecord(): the phone keeps the full record and sends it when there is signal.
 import { useState } from "react";

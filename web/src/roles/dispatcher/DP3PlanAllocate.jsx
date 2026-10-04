@@ -1,4 +1,4 @@
-// DP3 Plan and allocate. Owner: DISPATCHER FRONTEND. Design: /design/DP3-PlanAllocate.jpg
+// DP3 Plan and allocate. Design: docs/design/DP3-PlanAllocate.jpg
 // Matches design: Capacity bar, 2-column workspace (Unassigned orders vs Peliyagoda Fleet), workshop vehicle visualization, and fairness table with visible reasons.
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";

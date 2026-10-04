@@ -1,4 +1,4 @@
-// Which outlet the store manager is looking at. Owner: STORE FRONTEND.
+// Which outlet the store manager is looking at.
 import { useState } from "react";
 export const OUTLETS = [
   ["OUT014", "Dehiwala · Nadeeka Fernando"],

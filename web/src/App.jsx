@@ -1,5 +1,5 @@
-// Routes for the whole app. Owner: LEAD.
-// Each role owns everything under its own path, so members never edit this file.
+// Routes for the whole app.
+// Each role app owns everything under its own path.
 import { Routes, Route, Navigate } from "react-router-dom";
 import RolePicker from "./shared/RolePicker.jsx";
 import DispatcherApp from "./roles/dispatcher/DispatcherApp.jsx";

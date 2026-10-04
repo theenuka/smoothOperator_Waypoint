@@ -1,4 +1,4 @@
-// Products a store can order. Owner: STORE FRONTEND.
+// Products a store can order.
 // SKUs come from server/src/seed.json. Two are not in the seed (cheese, bananas): see the note below.
 // cold: true means the line needs a refrigerated truck (chilled or frozen).
 export const GROUPS = [

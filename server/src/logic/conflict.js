@@ -1,4 +1,4 @@
-// Sync conflict detection. Owner: BACKEND B.
+// Sync conflict detection.
 // Pure function. A phone record conflicts with the server when the server changed the same stop
 // AFTER the phone's record was made on the device, and the two say different things.
 // Clean records are accepted silently. Real conflicts go to a person (driver screen DR6).

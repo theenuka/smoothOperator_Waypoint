@@ -1,4 +1,4 @@
-// SM7 Report a problem. Owner: STORE FRONTEND.  Design: /design/SM7-ReportIssue.jpg
+// SM7 Report a problem.  Design: docs/design/SM7-ReportIssue.jpg
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { api } from "../../shared/api.js";

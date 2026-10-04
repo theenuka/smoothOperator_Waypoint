@@ -1,4 +1,4 @@
-// DR2 Active stop. Owner: DRIVER FRONTEND.  Design: /design/DR2-ActiveStop.jpg
+// DR2 Active stop.  Design: docs/design/DR2-ActiveStop.jpg
 // One stop at a time: dock window, who receives, directions and what to hand over. One main action.
 import { Link, useParams } from "react-router-dom";
 import { useApi } from "../../shared/live.js";

@@ -1,4 +1,4 @@
-// DR4 Issue at stop. Owner: DRIVER FRONTEND.  Design: /design/DR4-IssueAtStop.jpg
+// DR4 Issue at stop.  Design: docs/design/DR4-IssueAtStop.jpg
 // The driver taps one reason, says what happens to the goods, and drives on.
 // Saved through addRecord(), so it works with no signal and sends by itself later.
 import { useState } from "react";
