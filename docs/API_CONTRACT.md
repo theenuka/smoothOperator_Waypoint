@@ -31,7 +31,7 @@ The agreement between frontend and backend. **If it's not written here, it doesn
 | | Method and path | Body / query | Returns |
 |---|---|---|---|
 | ✅ | `GET /plan` | `?date=2026-09-30` | `{ date, chilled:{ orders, slots, totalSlots, over }, reefers[], orders[], runs[] }` |
-| ✅ | `GET /plan/suggest` | `?date=2026-09-30` | `{ date, slots, rule:[3 strings], rows:[{ rank, orderId, outletId, outletName, kg, protected, gapHours, deferrals14d, lastChilled, suggestion:"serve"\|"wait", reason }] }` |
+| ✅ | `GET /plan/suggest` | `?date=2026-09-30` | `{ date, slots, rule:[3 strings], rows:[{ rank, orderId, outletId, outletName, kg, protected, gapHours, deferrals14d, lastChilled, suggestion:"serve"\|"wait", reason, waitsUntil? }] }`. `waitsUntil` (YYYY-MM-DD, the next day) is only on `wait` rows |
 
 ## Deferrals [Backend A] {#deferrals}
 

@@ -60,3 +60,10 @@ test("a reversed deferral does not count", () => {
   }).find((x) => x.outletId === "OUT045");
   assert.equal(r.protected, false);
 });
+
+test("wait rows say when the order goes instead (the next day); serve rows do not", () => {
+  for (const r of run()) {
+    if (r.suggestion === "wait") assert.equal(r.waitsUntil, "2026-10-01", r.outletId);
+    else assert.equal(r.waitsUntil, undefined, r.outletId);
+  }
+});

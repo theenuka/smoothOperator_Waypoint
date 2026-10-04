@@ -16,12 +16,14 @@ const DAY = 24 * 60 * 60 * 1000;
  * @param {Array<{outletId,fromDate,at,reversed}>} input.deferrals   deferral history
  * @param {Record<string,string>} input.lastChilled      outletId -> ISO time of last chilled delivery
  * @param {string} input.planDate                        YYYY-MM-DD being planned
- * @returns {Array<{orderId,outletId,kg,protected,gapHours,deferrals14d,suggestion,reason,rank}>}
+ * @returns {Array<{orderId,outletId,kg,protected,gapHours,deferrals14d,suggestion,reason,rank,waitsUntil?}>}
+ *   wait rows get waitsUntil: the next day (YYYY-MM-DD), when that order would go instead.
  */
 export function rankForSlots({ orders, slots, deferrals, lastChilled, planDate }) {
   const plan = new Date(planDate + "T00:00:00+05:30").getTime();
   // The two previous run dates as YYYY-MM-DD (calendar math in UTC so the time zone can't shift the day).
   const day0 = new Date(planDate + "T00:00:00Z").getTime();
+  const nextDay = new Date(day0 + DAY).toISOString().slice(0, 10);
   const lastTwoRuns = [day0 - DAY, day0 - 2 * DAY].map((t) => new Date(t).toISOString().slice(0, 10));
 
   const rows = orders.map((o) => {
@@ -60,6 +62,7 @@ export function rankForSlots({ orders, slots, deferrals, lastChilled, planDate }
     else
       reason =
         r.gapHours < 24 ? "Wait: served in the last 24 hours" : "Wait: shorter gap than outlets served";
-    return { ...r, rank: i + 1, suggestion: serve ? "serve" : "wait", reason };
+    const row = { ...r, rank: i + 1, suggestion: serve ? "serve" : "wait", reason };
+    return serve ? row : { ...row, waitsUntil: nextDay };
   });
 }
