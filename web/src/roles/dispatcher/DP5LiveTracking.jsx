@@ -1,14 +1,15 @@
 // DP5 Live tracking. Design: docs/design/DP5-LiveTracking.jpg
 // Requirements fulfilled: List of trucks with "last seen", clear red state for "no signal" explaining that deliveries are saved on phone and will sync, planned stops of RUN-VEH022 showing which are done, and route map.
 import { useState } from "react";
-import { useApi } from "../../shared/live.js";
+import { useApi, useDates } from "../../shared/live.js";
 import { Card, PageHead, Badge, Loading, StatusBadge } from "../../shared/ui.jsx";
-import { time } from "../../shared/format.js";
+import { time, longDay } from "../../shared/format.js";
 import "./dispatcher.css";
 
 export default function DP5LiveTracking() {
   const trackingApi = useApi("/tracking", ["vehicle.position", "vehicle.offline", "vehicle.online"]);
-  const runsApi = useApi("/runs?date=2026-09-29", [
+  const { today } = useDates();
+  const runsApi = useApi(today ? `/runs?date=${today}` : null, [
     "delivery.recorded",
     "sync.conflict",
     "sync.resolved",
@@ -77,7 +78,7 @@ export default function DP5LiveTracking() {
   return (
     <>
       <PageHead
-        code="TUESDAY 29 SEPTEMBER · LIVE"
+        code={`${longDay(today).toUpperCase()} · LIVE`}
         title="Live tracking"
         sub="Where every truck is, and which ones have lost signal."
       >

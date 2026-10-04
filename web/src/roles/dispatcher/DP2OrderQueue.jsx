@@ -2,10 +2,10 @@
 // Matches design: Brand / Temperature / District / Status filter sidebar, search, totals, and order lines side panel.
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useApi } from "../../shared/live.js";
+import { useApi, useDates } from "../../shared/live.js";
 import { api } from "../../shared/api.js";
 import { Card, PageHead, StatusBadge, Loading, Badge } from "../../shared/ui.jsx";
-import { kg, time } from "../../shared/format.js";
+import { kg, time, longDay, weekdayOf } from "../../shared/format.js";
 import "./dispatcher.css";
 
 const OUTLET_METADATA = {
@@ -46,9 +46,17 @@ const OUTLET_METADATA = {
 };
 
 export default function DP2OrderQueue() {
-  const { data, loading } = useApi("/orders?date=2026-09-30", ["order.placed", "deferral.decided"]);
-  const plan = useApi("/plan?date=2026-09-30", ["deferral.decided", "deferral.reversed"]);
-  const suggest = useApi("/plan/suggest?date=2026-09-30", ["deferral.decided", "deferral.reversed"]);
+  const { planDate } = useDates();
+  const meta = useApi("/meta");
+  const { data, loading } = useApi(planDate ? `/orders?date=${planDate}` : null, [
+    "order.placed",
+    "deferral.decided",
+  ]);
+  const plan = useApi(planDate ? `/plan?date=${planDate}` : null, ["deferral.decided", "deferral.reversed"]);
+  const suggest = useApi(planDate ? `/plan/suggest?date=${planDate}` : null, [
+    "deferral.decided",
+    "deferral.reversed",
+  ]);
 
   const [search, setSearch] = useState("");
   const [selectedPill, setSelectedPill] = useState("all"); // "all" | "chilled" | "protected" | "changed"
@@ -165,12 +173,15 @@ export default function DP2OrderQueue() {
     }
   };
 
+  const ordered = new Set((data || []).map((o) => o.outletId));
+  const notYet = (meta.data?.outlets || []).filter((o) => !ordered.has(o.id)).length;
+
   return (
     <>
       <PageHead
-        code="PLANNING WEDNESDAY 30 SEPTEMBER"
-        title="Orders for Wednesday"
-        sub={`${totalOrders} orders in. 3 outlets haven't ordered yet; their orders join automatically until 16:00.`}
+        code={`PLANNING ${longDay(planDate).toUpperCase()}`}
+        title={`Orders for ${weekdayOf(planDate)}`}
+        sub={`${totalOrders} orders in. ${notYet} outlet${notYet === 1 ? " hasn't" : "s haven't"} ordered yet; their orders join automatically until ${meta.data?.meta.cutoff || "16:00"}.`}
       >
         <button type="button" className="btn secondary" onClick={() => window.print()}>
           Export run sheet

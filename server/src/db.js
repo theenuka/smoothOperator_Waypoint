@@ -7,6 +7,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { supabaseStore, diff, markSaved } from "./supabaseStore.js";
+import { shiftSeed, todayInColombo } from "./logic/seedDates.js";
 
 const SEED_FILE = path.join(path.dirname(fileURLToPath(import.meta.url)), "seed.json");
 
@@ -15,7 +16,8 @@ let remote = null; // the Supabase store
 let saved = null; // what Supabase holds now, to send only changes
 let writing = Promise.resolve();
 
-const seed = () => JSON.parse(fs.readFileSync(SEED_FILE, "utf8"));
+// The seed scenario, moved so that it happens today (Sri Lanka date).
+const seed = () => shiftSeed(JSON.parse(fs.readFileSync(SEED_FILE, "utf8")), todayInColombo());
 
 // Call once before the server starts. Loads the data from Supabase (filling it from the seed when empty).
 export async function init() {

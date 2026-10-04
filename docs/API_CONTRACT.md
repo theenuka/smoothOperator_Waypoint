@@ -11,10 +11,10 @@ The contract between the web app and the API. Any change to an endpoint is made 
 
 | Method and path | Body / query | Returns |
 |---|---|---|
-| `GET /health` | | `{ ok, demoDate }` |
-| `GET /meta` | | `{ meta, depots, outlets, vehicles }` |
+| `GET /health` | | `{ ok, today }` |
+| `GET /meta` | | `{ meta, depots, outlets, vehicles }`. `meta.today` is the real date in Sri Lanka and `meta.planDate` is tomorrow, from the server clock (`meta.demoDate` = `today`, kept for old screens). Web: `useDates()` from `shared/live.js` |
 | `GET /meta/events` | `?limit=50` | events, newest first |
-| `POST /meta/reset` | | `{ ok }`, publishes `demo.reset` |
+| `POST /meta/reset` | | `{ ok }`, publishes `demo.reset`. Puts the seed back, moved so its story happens today: every seed date shifts by the same number of days |
 
 ## Orders {#orders}
 

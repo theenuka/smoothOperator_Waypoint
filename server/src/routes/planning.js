@@ -3,13 +3,14 @@ import { Router } from "express";
 import { db } from "../db.js";
 import { rankForSlots } from "../logic/fairness.js";
 import { outletName } from "./_util.js";
+import { liveDates } from "../logic/seedDates.js";
 
 const r = Router();
 
 // GET /api/plan?date=2026-09-30  -> chilled capacity and the orders competing for it
 r.get("/", (req, res) => {
   const d = db();
-  const date = req.query.date || d.meta.planDate;
+  const date = req.query.date || liveDates().planDate;
   const reefers = d.vehicles.filter((v) => v.type === "reefer");
   const slots = reefers.filter((v) => v.status !== "workshop").reduce((s, v) => s + v.slots, 0);
   const totalSlots = reefers.reduce((s, v) => s + v.slots, 0);
@@ -26,7 +27,7 @@ r.get("/", (req, res) => {
 // GET /api/plan/suggest?date=2026-09-30  -> fairness ranking (who should wait)
 r.get("/suggest", (req, res) => {
   const d = db();
-  const date = req.query.date || d.meta.planDate;
+  const date = req.query.date || liveDates().planDate;
   const slots = d.vehicles
     .filter((v) => v.type === "reefer" && v.status !== "workshop")
     .reduce((s, v) => s + v.slots, 0);

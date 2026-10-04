@@ -57,6 +57,15 @@ export function useApi(path, refreshOn = []) {
   return { ...state, reload: load };
 }
 
+/**
+ * Today (Sri Lanka) and the planning day (tomorrow), from the server clock. Both undefined until loaded,
+ * so pass them to useApi like  useApi(today ? `/runs?date=${today}` : null).
+ */
+export function useDates() {
+  const { data } = useApi("/meta");
+  return { today: data?.meta.today, planDate: data?.meta.planDate };
+}
+
 /** Recent events, newest first, kept live. Used by the dispatcher feed. */
 export function useEventFeed(limit = 30) {
   const [events, setEvents] = useState([]);
