@@ -18,6 +18,7 @@ You are helping one member of team smoothOperator build **Waypoint** for a hacka
 - Do not change the shape of API responses that already exist. You may add new fields. New endpoints must be added to `docs/API_CONTRACT.md` in the same change (Backend A/B own that section).
 - Keep the code simple and readable for beginners: plain function components, `useState`, `useEffect`, the shared hooks. No TypeScript, no Redux, no CSS frameworks, no class components.
 - Never commit `node_modules`, `server/data/` or `.env` files.
+- **Never add AI attribution to commits or pull requests**: no `Co-authored-by:` lines for any AI, no "Generated with ..." footer, no session links. Commits are authored by the team member only. CI rejects PRs that contain them.
 - After a change, the member must be able to run `npm run dev` with no errors and `npm test` must pass.
 
 ## File ownership
