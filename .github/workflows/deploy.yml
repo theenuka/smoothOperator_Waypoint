@@ -41,5 +41,5 @@ jobs:
       - name: Smoke test
         run: |
           URL=$(gcloud run services describe "$SERVICE" --project "$PROJECT_ID" --region "$REGION" --format 'value(status.url)')
-          curl -fsS "$URL/api/runs" > /dev/null
+          curl -fsS "$URL/api/health" > /dev/null  # /api/runs needs sign-in
           echo "Live: $URL"

@@ -5,6 +5,7 @@ The contract between the web app and the API. Any change to an endpoint is made 
 - Base URL: `/api` (in the web app use `api.get("/runs")`, without `/api`).
 - Request and response bodies are JSON. Errors always look like `{ "error": "message" }` with a 4xx or 5xx status.
 - Times are ISO strings (`2026-09-29T08:52:00+05:30`). Dates are `YYYY-MM-DD`.
+- Sign-in (off unless Supabase is set up, see `docs/AUTH.md`): every call sends `Authorization: Bearer <token>` (`api.js` does it). No or expired token: `401`. A role that may not use an endpoint: `403`. `GET /health` is always open.
 
 ## Meta
 

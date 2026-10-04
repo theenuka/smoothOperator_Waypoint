@@ -1,4 +1,5 @@
 // Waypoint API server.
+import "./env.js"; // first: loads server/.env (Supabase keys) when it exists
 import express from "express";
 import cors from "cors";
 import http from "node:http";
@@ -6,8 +7,9 @@ import path from "node:path";
 import fs from "node:fs";
 import { fileURLToPath } from "node:url";
 import { Server } from "socket.io";
-import { db } from "./db.js";
+import { db, init } from "./db.js";
 import { attach } from "./events.js";
+import { requireAuth, socketAuth } from "./auth.js";
 
 // Planning side: orders, planning, deferrals, notices, store issues
 import orders from "./routes/orders.js";
@@ -26,6 +28,9 @@ import meta from "./routes/meta.js";
 const app = express();
 app.use(cors());
 app.use(express.json({ limit: "5mb" }));
+
+// Sign-in check. Off until SUPABASE_URL is set (docs/AUTH.md).
+app.use("/api", requireAuth());
 
 app.get("/api/health", (req, res) => res.json({ ok: true, demoDate: db().meta.demoDate }));
 app.use("/api/meta", meta);
@@ -56,8 +61,12 @@ app.use((err, req, res, next) => {
 
 const server = http.createServer(app);
 const io = new Server(server, { cors: { origin: "*" } });
+io.use(socketAuth());
 attach(io);
 io.on("connection", (socket) => socket.emit("hello", { at: new Date().toISOString() }));
+
+// Load the data (Supabase or the JSON file) before taking requests.
+await init();
 
 const PORT = process.env.PORT || 4000;
 server.listen(PORT, () => console.log(`Waypoint API on http://localhost:${PORT}`));
