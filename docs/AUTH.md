@@ -4,7 +4,7 @@ Sign-in and the Supabase database are **always on**, in development too. There i
 
 ## What it does
 
-- The role picker stays. Each role card opens a **new tab** with a sign-in page for that role; after sign-in the tab continues into the role app. Each tab keeps its own sign-in (sessionStorage), so all four roles can be open side by side.
+- The role picker stays. Each role card opens a **new tab** with a sign-in page for that role; after sign-in the tab continues into the role app. Each role app keeps its own sign-in (saved per role in the browser), so one browser can be signed in as all four roles at once, and reopening a role keeps it signed in. Sign out only signs that role out.
 - "Reset to seed data" is in the dispatcher's bar.
 - A bar above every role app shows the name, the role, the outlet (store managers) and **Sign out**.
 - Every `/api` call must carry the Supabase access token (`Authorization: Bearer ...`). No token or an expired one gets `401`. A role calling something it may not use gets `403` (the table is `ACCESS` in `server/src/auth.js`). `/api/health` stays open.
