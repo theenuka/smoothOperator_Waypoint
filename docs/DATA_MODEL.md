@@ -2,7 +2,7 @@
 
 All data lives in one JSON object: `server/data/db.json`, created from `server/src/seed.json`. In code: `const d = db();` then change `d.something`, then `save()`.
 
-The shape belongs to the **Lead**. You may add new optional fields to your own records. Don't rename or remove fields; other people's screens read them.
+New optional fields can be added freely. Existing fields are not renamed or removed, because several screens read them.
 
 | Key | Type | Example | Notes |
 |---|---|---|---|

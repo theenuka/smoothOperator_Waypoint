@@ -1,4 +1,4 @@
-// LD1 Dock home: one card per bay, the bay being loaded now is yellow. Owner: LOADER FRONTEND.  Design: /design/LD1-DockHome.jpg
+// LD1 Dock home: one card per bay, the bay being loaded now is yellow.  Design: docs/design/LD1-DockHome.jpg
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { api } from "../../shared/api.js";

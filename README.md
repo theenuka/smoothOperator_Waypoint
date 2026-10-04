@@ -1,72 +1,133 @@
 # Waypoint
 
-Team **smoothOperator** · Rootcode Tech-Triathlon 2026 · Hackathon
+**Explain the decision. Execute the run. Never lose the truth in between.**
 
-Waypoint is a delivery planning system for a retail chain with two depots and many outlets. It has four apps that share one live source of truth:
+Waypoint is a delivery operations platform for a retail chain that supplies its outlets from regional depots. It connects the four people who touch every delivery (the dispatcher, the dock loader, the driver and the store manager) to one live source of truth.
 
-| Role | Person | Device | What they do in Waypoint |
-|---|---|---|---|
-| Dispatcher | Kavindi Perera | Desktop | Plans tomorrow's runs, decides who waits when chilled trucks are full (with a fair rule), explains why |
-| Loader | Ruwan Jayasinghe | Shared tablet at the dock | Checks lines onto the truck, flags shortfalls without blocking the truck |
-| Driver | Chamara Wickramasinghe | Own phone | Delivers with proof, keeps working with no signal, resolves sync conflicts |
-| Store manager | Nadeeka Fernando | Desktop | Orders stock, sees what is coming and why things changed |
+Team **smoothOperator** · Rootcode Tech-Triathlon 2026
 
-The two degradation scenarios from the brief both work end to end:
+![Dispatcher dashboard](docs/screenshots/dispatcher-today.jpg)
 
-1. **Dock shortfall** (LD4): the loader flags 6 of 10 detergent. The truck still leaves. The store, the driver and dispatch see it at once, with the reason.
-2. **No signal** (DR5, DR6): the driver keeps delivering offline. Records wait on the phone and sync when signal returns. If dispatch changed the same stop meanwhile, the driver gets one clear decision instead of a silent overwrite.
+## The problem
 
-## Run it (first time)
+Three things go wrong every day in outlet replenishment:
 
-You need **Node.js 20 or newer** (`node -v`) and **Git**.
+1. **Chilled capacity is short.** There are more chilled orders than refrigerated truck slots, so some stores wait. Today that decision is made ad hoc and the store finds out when the truck doesn't come.
+2. **The dock is short.** Stock runs out while a truck is being loaded. Either the truck leaves late, or it leaves short and the store is surprised at the door.
+3. **Drivers lose signal.** On routes like the A1 to Kandy, proof of delivery is lost or silently overwritten by changes made in the office.
 
-```bash
-git clone <your-repo-url>
-cd waypoint
-npm install
-npm run dev
+## What Waypoint does
+
+| Role | Device | In Waypoint |
+|---|---|---|
+| Dispatcher | Desktop | Plans tomorrow's runs. When chilled slots run out, a fairness rule suggests who waits and the dispatcher sends each store the reason. |
+| Loader | Shared dock tablet | Checks every line onto the truck. A shortfall is flagged in seconds without blocking the truck, and the missing quantity is back-ordered automatically. |
+| Driver | Own phone (installable web app) | Delivers with signature and photo proof. Everything works with no signal and syncs itself later. Real disagreements with the office are shown side by side for the driver to decide. |
+| Store manager | Desktop | Orders before the 16:00 cutoff, sees what is coming and why anything changed, confirms what arrived and reports problems. |
+
+Every change is published as an event and pushed to every open screen, so a shortfall flagged at the dock appears on the dispatcher's feed, the driver's route and the store's notices at the same moment.
+
+### Degradation scenarios
+
+- **Dock shortfall:** the loader flags 6 of 10 cartons. The truck still leaves on time; dispatch, the driver and the store are told immediately, and the other 4 are added to the store's next order.
+- **No signal:** deliveries are stored in an outbox on the phone and synced oldest first when signal returns. Duplicates are ignored, one bad record never blocks the rest, and a delivery that conflicts with an office change is never overwritten silently: the driver chooses, and the decision is logged.
+
+### Fair chilled allocation
+
+When chilled orders exceed reefer slots, outlets that waited on either of the last two runs, or twice in 14 days, are protected. The rest are ranked by the longest gap since their last chilled delivery, and on a tie the smaller order waits. The dispatcher makes the final call and the store reads the reason in plain language.
+
+| | |
+|---|---|
+| ![Plan and allocate](docs/screenshots/dispatcher-plan.jpg) | ![Flag a shortfall](docs/screenshots/loader-shortfall.jpg) |
+| ![Driver route](docs/screenshots/driver-route.jpg) | ![Sync decision](docs/screenshots/driver-sync.jpg) |
+
+## Architecture
+
+```mermaid
+flowchart LR
+  subgraph Clients
+    D[Dispatcher<br/>desktop]
+    L[Loader<br/>tablet]
+    R[Driver<br/>phone + offline outbox]
+    S[Store manager<br/>desktop]
+  end
+  subgraph Server[Node.js service]
+    API[REST API<br/>Express]
+    BUS[Event bus]
+    WS[Socket.IO]
+    LOGIC[Domain logic<br/>fairness · cutoff · back-order<br/>sync batch · conflicts]
+    DB[(Data store)]
+  end
+  D & L & S -->|HTTPS| API
+  R -->|sync batch| API
+  API --> LOGIC --> DB
+  API --> BUS --> WS -->|live events| D & L & R & S
 ```
 
-Open http://localhost:5173. The API runs on http://localhost:4000 (the web app forwards `/api` to it).
+- **Domain logic is pure and tested.** Every rule (fairness, cutoff, back-orders, stop results, sync batching, conflict detection, order validation) lives in `server/src/logic/` with no I/O, and is covered by unit tests.
+- **One contract.** All endpoints and live events are documented in [docs/API_CONTRACT.md](docs/API_CONTRACT.md).
+- **Data access is isolated** in `server/src/db.js`. This build uses a file-backed store so the demo is reproducible; the production design uses PostgreSQL with PostGIS, with each route group deployable as its own service (see [docs/DEPLOY.md](docs/DEPLOY.md)).
 
-Useful commands:
+## Tech stack
 
-| Command | What it does |
+Node.js 20, Express, Socket.IO, React 18, Vite, React Router, Node's built-in test runner, Prettier, GitHub Actions, Docker, Google Cloud Run.
+
+## Getting started
+
+Requires Node.js 20 or newer.
+
+```bash
+npm install
+npm run dev          # API on :4000, web app on http://localhost:5173
+```
+
+Open the app, pick a role, and open a second role in another window to watch changes arrive live.
+
+| Command | |
 |---|---|
-| `npm run dev` | Starts the API and the web app together, both reload when you save |
-| `npm test` | Runs the backend tests (fairness rule, sync conflicts) |
-| `npm run build` | Builds the web app into `web/dist` |
-| `npm start` | Production mode: the API also serves the built web app on one port |
-| `npm run reset-data` | Puts the demo data back (stop `npm run dev` first), or press **Reset demo data** on the home page while it runs |
-| `npm run format` | Formats all code the same way (run before every commit) |
+| `npm run dev` | API and web app with reload |
+| `npm test` | Domain logic unit tests |
+| `npm run build` | Production build of the web app |
+| `npm start` | API also serves the built app on one port |
+| `npm run format` | Format the code base |
 
-## Folder map (who owns what)
+**Reset demo data** on the home page restores the scenario: Tuesday 29 September, planning Wednesday 30 September, the Kandy run already on the road.
+
+## Project structure
 
 ```
 server/src/
-  index.js, db.js, events.js, seed.json, routes/_util.js, routes/meta.js   LEAD
-  logic/fairness.js, routes/orders.js, planning.js, deferrals.js, notices.js   BACKEND A
-  logic/conflict.js, routes/runs.js, loads.js, deliveries.js, sync.js, tracking.js   BACKEND B
+  index.js            API server, routes and live events
+  db.js, seed.json    data store and demo scenario
+  events.js           event bus (audit log + Socket.IO broadcast)
+  logic/              pure domain rules (unit tested in server/test/)
+  routes/             orders, planning, deferrals, notices, issues,
+                      runs, loads, deliveries, sync, tracking
 web/src/
-  main.jsx, App.jsx, shared/*                                                LEAD
-  roles/dispatcher/*                                                         DISPATCHER FRONTEND
-  roles/loader/*                                                             LOADER FRONTEND
-  roles/driver/*                                                             DRIVER FRONTEND
-  roles/store/*                                                              STORE FRONTEND
-docs/, scripts/, .github/                                                    everyone reads, LEAD edits
+  shared/             design tokens, UI components, API client, live hooks
+  roles/dispatcher/   DP1-DP6
+  roles/loader/       LD1-LD6
+  roles/driver/       DR1-DR7 and the offline outbox
+  roles/store/        SM1-SM7
+docs/                 API contract, data model, design system, deployment, demo
 ```
 
-**Rule number one: only edit files you own.** That is how seven people work at once with no merge conflicts. If you need a change in someone else's file, ask them in the group chat.
+## Documentation
 
-## Start here
+- [API contract](docs/API_CONTRACT.md)
+- [Data model](docs/DATA_MODEL.md)
+- [Design system](docs/DESIGN_GUIDE.md) and the reference designs in [docs/design](docs/design)
+- [Deployment](docs/DEPLOY.md)
+- [Demo walkthrough](docs/DEMO_SCRIPT.md)
+- [Contributing](CONTRIBUTING.md)
 
-1. Read [docs/START_HERE_SI.md](docs/START_HERE_SI.md) (Sinhala) or [docs/TEAM_PLAN.md](docs/TEAM_PLAN.md).
-2. Find your task file in [docs/tasks/](docs/tasks/).
-3. Read [CONTRIBUTING.md](CONTRIBUTING.md) and [docs/GIT_GUIDE.md](docs/GIT_GUIDE.md) (GitHub Flow: one branch per task, PR, CI, squash merge).
-4. Paste your block from [docs/ANTIGRAVITY_PROMPTS.md](docs/ANTIGRAVITY_PROMPTS.md) into Antigravity. AI tools also read [AGENTS.md](AGENTS.md) automatically (Claude reads `CLAUDE.md`, Gemini and Antigravity read `GEMINI.md` and `.agent/rules/`, all say the same thing).
+## Team smoothOperator
 
-Other docs: [API contract](docs/API_CONTRACT.md) · [Data model](docs/DATA_MODEL.md) · [Design guide](docs/DESIGN_GUIDE.md) · [Demo script](docs/DEMO_SCRIPT.md) · [Deploy](docs/DEPLOY.md)
-
-## Tech
-
-Node.js 20, Express, Socket.IO (live updates), a JSON file as the database for the hackathon (`server/data/db.json`), React 18 with Vite and React Router. No database server to install. The production design (AWS serverless, Postgres with PostGIS, Terraform) is in the Designathon submission; this build is the working MVP of it.
+| | |
+|---|---|
+| Theenuka Bandara | Team lead, platform and integration, delivery and sync services |
+| Shukri Ahamed | Orders, planning, deferral and store notice services |
+| Vanuja Karunaratne | Dispatcher app |
+| Chinthaka Dissanayake | Dock loader app |
+| Hirushan Wijesiriwardena | Driver app and offline sync |
+| Thivanka Dissanayaka | Store manager app |

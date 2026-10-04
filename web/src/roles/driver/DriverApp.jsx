@@ -1,4 +1,4 @@
-// Driver app (Chamara, own phone). Owner: DRIVER FRONTEND.  Task file: docs/tasks/06-driver-frontend.md
+// Driver app (Chamara, own phone).
 import { useEffect, useRef } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { PhoneShell } from "../../shared/shells.jsx";

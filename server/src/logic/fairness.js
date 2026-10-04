@@ -1,4 +1,4 @@
-// Fairness rule for deferrals. Owner: BACKEND A.
+// Fairness rule for deferrals.
 // Pure function: no database, no Express. Easy to test (see server/test/fairness.test.js).
 //
 // When there are more chilled orders than reefer slots, suggest who waits:

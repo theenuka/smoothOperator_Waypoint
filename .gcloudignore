@@ -1,0 +1,7 @@
+# Files Cloud Build should NOT upload (same idea as .gitignore)
+.git
+node_modules/
+*/node_modules/
+web/dist/
+server/data/
+*.log

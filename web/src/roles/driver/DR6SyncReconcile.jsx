@@ -1,4 +1,4 @@
-// DR6 Sync and reconcile: phone and office disagree, a person decides. Owner: DRIVER FRONTEND.  Design: /design/DR6-SyncReconcile.jpg
+// DR6 Sync and reconcile: phone and office disagree, a person decides.  Design: docs/design/DR6-SyncReconcile.jpg
 // Clean records already synced silently. Only real disagreements come here, side by side, and nothing is overwritten.
 import { Link } from "react-router-dom";
 import { api } from "../../shared/api.js";

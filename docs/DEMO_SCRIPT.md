@@ -1,6 +1,6 @@
 # Demo script (about 5 minutes)
 
-Practise this until it is boring. Two people: one talks, one clicks. Before every run press **Reset demo data** on the home page and reload all tabs.
+Two presenters: one talks, one clicks. Before every run press **Reset demo data** on the home page and reload all tabs.
 
 ## Setup
 

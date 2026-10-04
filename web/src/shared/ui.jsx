@@ -1,4 +1,4 @@
-// Small shared components. Owner: LEAD. Use these so every screen looks the same.
+// Small shared UI components used by every role app.
 import { useEffect, useState } from "react";
 
 export const Card = ({ title, action, children, className = "", ...rest }) => (
@@ -74,32 +74,4 @@ export function useToast() {
     ) : null,
     setMsg,
   ];
-}
-
-/**
- * Placeholder for a screen that is not built yet. It shows the design you must copy and your task list.
- * When you build the screen, DELETE the <Todo/> and write the real UI.
- */
-export function Todo({ code, design, owner, tasks = [] }) {
-  return (
-    <div className="todo">
-      <div className="row wrap between">
-        <b>{code}: not built yet</b>
-        <Badge tone="now">Owner: {owner}</Badge>
-      </div>
-      {tasks.length > 0 && (
-        <ol>
-          {tasks.map((t) => (
-            <li key={t}>{t}</li>
-          ))}
-        </ol>
-      )}
-      {design && (
-        <>
-          <span className="label">Target design (copy this)</span>
-          <img src={`/design/${design}.jpg`} alt={`Design for ${code}`} loading="lazy" />
-        </>
-      )}
-    </div>
-  );
 }

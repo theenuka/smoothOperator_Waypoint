@@ -1,4 +1,4 @@
-// Offline sync API. Owner: BACKEND B.  Contract: docs/API_CONTRACT.md#sync
+// Offline sync API.  Contract: docs/API_CONTRACT.md#sync
 // The driver app keeps records in an outbox while offline and sends them here when signal returns.
 import { Router } from "express";
 import { db, save, nowIso } from "../db.js";

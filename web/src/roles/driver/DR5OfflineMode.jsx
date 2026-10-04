@@ -1,4 +1,4 @@
-// DR5 Offline mode (degradation scenario 2). Owner: DRIVER FRONTEND.  Design: /design/DR5-OfflineMode.jpg
+// DR5 Offline mode (degradation scenario 2).  Design: docs/design/DR5-OfflineMode.jpg
 // Three promises: offline is said plainly, every record is complete on the phone, sending is automatic.
 import { Link } from "react-router-dom";
 import { useApi } from "../../shared/live.js";

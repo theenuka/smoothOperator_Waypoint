@@ -1,4 +1,4 @@
-// Deliveries API (proof of delivery). Owner: BACKEND B.  Contract: docs/API_CONTRACT.md#deliveries
+// Deliveries API (proof of delivery).  Contract: docs/API_CONTRACT.md#deliveries
 import { Router } from "express";
 import { db, save, newId, nowIso } from "../db.js";
 import { publish } from "../events.js";

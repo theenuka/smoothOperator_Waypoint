@@ -1,4 +1,4 @@
-// SM1 Today. Owner: STORE FRONTEND.  Design: /design/SM1-Dashboard.jpg
+// SM1 Today.  Design: docs/design/SM1-Dashboard.jpg
 import { Fragment } from "react";
 import { Link } from "react-router-dom";
 import { useApi } from "../../shared/live.js";
