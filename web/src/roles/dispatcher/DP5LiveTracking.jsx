@@ -3,14 +3,14 @@
 import { useState } from "react";
 import { useApi, useDates } from "../../shared/live.js";
 import { Card, PageHead, Badge, Loading, StatusBadge } from "../../shared/ui.jsx";
-import { time } from "../../shared/format.js";
+import { time, longDay } from "../../shared/format.js";
 import LiveMap from "./LiveMap.jsx";
 import "./dispatcher.css";
 
 export default function DP5LiveTracking() {
   const trackingApi = useApi("/tracking", ["vehicle.position", "vehicle.offline", "vehicle.online"]);
   const { today } = useDates();
-  const runsApi = useApi(today ? `/runs?date=${today}` : null, [
+  const runsApi = useApi(today ? `/runs?date=${today}` : "/runs", [
     "delivery.recorded",
     "sync.conflict",
     "sync.resolved",
@@ -66,7 +66,17 @@ export default function DP5LiveTracking() {
     return a.vehicleId.localeCompare(b.vehicleId);
   });
 
-  const selectedTruck = sortedTrucks.find((t) => t.vehicleId === activeVehicleId) || sortedTrucks[0];
+  const selectedTruck = sortedTrucks.find((t) => t.vehicleId === activeVehicleId) ||
+    sortedTrucks[0] || {
+      vehicleId: activeVehicleId,
+      driver: "Driver",
+      route: "Local run",
+      online: true,
+      isOffline: false,
+      deliveredCount: 0,
+      totalStops: 0,
+      stops: [],
+    };
   const selectedRun = runs.find((r) => r.vehicleId === selectedTruck?.vehicleId) || runs[0];
 
   const filteredTrucks = sortedTrucks.filter((t) => {
@@ -80,7 +90,7 @@ export default function DP5LiveTracking() {
   return (
     <>
       <PageHead
-        code={`${longDay(today).toUpperCase()} · LIVE`}
+        code={`${(longDay(today) || "TODAY").toUpperCase()} · LIVE`}
         title="Live tracking"
         sub="Where every truck is, and which ones have lost signal."
       >
@@ -246,7 +256,7 @@ export default function DP5LiveTracking() {
             {selectedTruck?.isOffline && (
               <div className="notice bad" style={{ fontSize: 12.5, lineHeight: 1.45 }}>
                 <b>
-                  {selectedTruck.vehicleId} lost signal in {selectedTruck.place}.
+                  {selectedTruck?.vehicleId} lost signal in {selectedTruck?.place || "Kadugannawa pass"}.
                 </b>
                 <br />
                 Deliveries are saved securely on the driver&apos;s phone outbox and will sync automatically to
@@ -266,6 +276,27 @@ export default function DP5LiveTracking() {
               >
                 Message outlet
               </button>
+              {selectedTruck?.lat && selectedTruck?.lng && (
+                <a
+                  className="btn secondary"
+                  style={{
+                    width: "100%",
+                    minHeight: 36,
+                    fontSize: 12.5,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 6,
+                    textDecoration: "none",
+                  }}
+                  href={`https://www.google.com/maps?q=${selectedTruck.lat},${selectedTruck.lng}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title={`Open ${selectedTruck.vehicleId}'s realtime coordinates in Google Maps`}
+                >
+                  <span style={{ fontSize: 14 }}>📍</span> Open in Google Maps ↗
+                </a>
+              )}
             </div>
           </div>
 

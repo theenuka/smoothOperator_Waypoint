@@ -25,7 +25,13 @@ export default function LiveMap({ trucks = [], selectedTruckId, selectedRun, onS
 
   // 1. Initialize Map instance once
   useEffect(() => {
-    if (!mapContainerRef.current || mapInstanceRef.current) return;
+    if (!mapContainerRef.current) return;
+    if (mapInstanceRef.current) return;
+
+    // Clear any stale Leaflet id from hot reloading or StrictMode
+    if (mapContainerRef.current._leaflet_id) {
+      delete mapContainerRef.current._leaflet_id;
+    }
 
     // Centered on Sri Lanka Western - Central corridor
     const map = L.map(mapContainerRef.current, {
@@ -51,8 +57,13 @@ export default function LiveMap({ trucks = [], selectedTruckId, selectedRun, onS
     mapInstanceRef.current = map;
 
     return () => {
-      map.remove();
-      mapInstanceRef.current = null;
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
+      }
+      if (mapContainerRef.current && mapContainerRef.current._leaflet_id) {
+        delete mapContainerRef.current._leaflet_id;
+      }
     };
   }, []);
 
@@ -246,7 +257,13 @@ export default function LiveMap({ trucks = [], selectedTruckId, selectedRun, onS
         existingMarkers.set(t.vehicleId, marker);
       }
 
-      // Offline warning popup / tooltip
+      // Popup with vehicle details & Google Maps link
+      const gmapsLink = `<div style="margin-top: 6px; padding-top: 5px; border-top: 1px solid #e5e0d8;">
+        <a href="https://www.google.com/maps?q=${t.lat},${t.lng}" target="_blank" rel="noopener noreferrer" style="color: #2462b8; text-decoration: none; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
+          📍 Open in Google Maps ↗
+        </a>
+      </div>`;
+
       if (isOffline) {
         marker.bindPopup(`
           <div style="font-family: var(--f-ui); padding: 4px; max-width: 200px;">
@@ -257,12 +274,26 @@ export default function LiveMap({ trucks = [], selectedTruckId, selectedRun, onS
               Last seen: <b>${t.at ? time(t.at) : "recently"}</b><br/>
               Location: <b>${t.place || "En route"}</b>
             </div>
-            <div style="font-size: 11px; color: #6b675e; border-top: 1px solid #e5e0d8; padding-top: 4px;">
-              Deliveries saved securely on driver's phone.
+            <div style="font-size: 11px; color: #6b675e;">
+              Deliveries saved securely on phone.
             </div>
+            ${gmapsLink}
           </div>
         `);
       } else {
+        marker.bindPopup(`
+          <div style="font-family: var(--f-ui); padding: 4px; max-width: 200px;">
+            <div style="color: #2f7a4a; font-weight: 700; font-size: 13px;">
+              ● Online (${t.vehicleId})
+            </div>
+            <div style="font-size: 11.5px; color: #56534b; margin: 4px 0;">
+              Route: <b>${t.route}</b><br/>
+              Driver: <b>${t.driver}</b><br/>
+              Delivered: <b>${t.deliveredCount} of ${t.totalStops} stops</b>
+            </div>
+            ${gmapsLink}
+          </div>
+        `);
         marker.bindTooltip(
           `<b>${t.vehicleId}</b> · ${t.route}<br/><span style="color:#2f7a4a;">Online · Tracking</span>`,
           { direction: "top" }
@@ -284,24 +315,28 @@ export default function LiveMap({ trucks = [], selectedTruckId, selectedRun, onS
     const map = mapInstanceRef.current;
     if (!map) return;
 
-    const points = [];
-    if (selectedTruck?.lat && selectedTruck?.lng) {
-      points.push([selectedTruck.lat, selectedTruck.lng]);
-    }
-    (selectedTruck?.stops || []).forEach((s) => {
-      if (s.outlet?.lat && s.outlet?.lng) {
-        points.push([s.outlet.lat, s.outlet.lng]);
+    try {
+      const points = [];
+      if (typeof selectedTruck?.lat === "number" && typeof selectedTruck?.lng === "number") {
+        points.push([selectedTruck.lat, selectedTruck.lng]);
       }
-    });
-    // Add Peliyagoda depot
-    points.push([DEPOTS.PLG.lat, DEPOTS.PLG.lng]);
-    if (selectedTruckId === "VEH022") {
-      points.push([DEPOTS.KDY.lat, DEPOTS.KDY.lng]);
-    }
+      (selectedTruck?.stops || []).forEach((s) => {
+        if (typeof s.outlet?.lat === "number" && typeof s.outlet?.lng === "number") {
+          points.push([s.outlet.lat, s.outlet.lng]);
+        }
+      });
+      // Add Peliyagoda depot
+      if (DEPOTS.PLG) points.push([DEPOTS.PLG.lat, DEPOTS.PLG.lng]);
+      if (selectedTruckId === "VEH022" && DEPOTS.KDY) {
+        points.push([DEPOTS.KDY.lat, DEPOTS.KDY.lng]);
+      }
 
-    if (points.length > 0) {
-      const bounds = L.latLngBounds(points);
-      map.fitBounds(bounds, { padding: [40, 40], maxZoom: 13 });
+      if (points.length > 0) {
+        const bounds = L.latLngBounds(points);
+        map.fitBounds(bounds, { padding: [40, 40], maxZoom: 13 });
+      }
+    } catch {
+      // Safe fallback if bounds fail
     }
   };
 
@@ -316,8 +351,29 @@ export default function LiveMap({ trucks = [], selectedTruckId, selectedRun, onS
     <div className="dp5-map-container-relative">
       <div ref={mapContainerRef} className="dp5-leaflet-map" />
 
-      {/* Map Control overlay: Recenter */}
+      {/* Map Control overlay: Google Maps & Recenter */}
       <div className="dp5-map-overlay-controls">
+        {selectedTruck?.lat && selectedTruck?.lng && (
+          <a
+            className="dp-chip"
+            style={{
+              background: "#ffffff",
+              boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
+              cursor: "pointer",
+              textDecoration: "none",
+              color: "var(--ink)",
+              display: "flex",
+              alignItems: "center",
+              gap: 4,
+            }}
+            href={`https://www.google.com/maps?q=${selectedTruck.lat},${selectedTruck.lng}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            title={`Open ${selectedTruck.vehicleId} in Google Maps`}
+          >
+            📍 Google Maps ↗
+          </a>
+        )}
         <button
           type="button"
           className="dp-chip"

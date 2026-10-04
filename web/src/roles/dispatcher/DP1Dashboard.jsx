@@ -153,8 +153,8 @@ export default function DP1Dashboard() {
         />
         <Stat
           label="Need a decision"
-          value={openConflicts.length + offlineVehicles.length + (over > 0 ? 1 : 0)}
-          tone={openConflicts.length + offlineVehicles.length + (over > 0 ? 1 : 0) ? "bad" : "ok"}
+          value={needDecisionCount}
+          tone={needDecisionCount ? "bad" : "ok"}
           hint={
             openConflicts.length
               ? "Phone and office disagree"
