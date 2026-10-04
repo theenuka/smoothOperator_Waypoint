@@ -132,12 +132,13 @@ Configuration: `docker-compose.yml` has local-only defaults for every value, lis
 
 The scenario always runs on today's date (Sri Lanka time; on a new day the data starts again from the seed): the Kandy truck (VEH022) is on the road and tomorrow is being planned.
 
-1. On the home page, open **Loader**, **Dispatcher** and **Store manager**. Each opens in its own tab; sign in with the account above. All three stay signed in side by side.
-2. **Loader:** open VEH022, then stop 5 **Kandy City**, tap **Rice, 5 kg bag**, count 4 of 5, pick a reason and **Flag 1 short and keep loading**. The truck is not blocked.
-3. **Dispatcher:** the shortfall appears in the live feed with no refresh. Open **Plan**: 8 chilled orders for 5 reefer slots. Open **Decide**, keep the three suggested waits, write the reason and **Confirm 3 deferrals**.
-4. **Store manager:** switch the outlet to **OUT072 Kandy City** to read the shortfall notice, then to an outlet that waits to read why.
-5. **Driver** (phone size, open from the home page): the route shows the short item at Kandy City. Turn the network off in DevTools, deliver a stop with signature, turn it back on and watch it sync.
-6. **Dispatcher:** **Reset to seed data** in the top bar puts the scenario back.
+1. On the home page, open all four roles. Each opens in its own tab; sign in with the account above. All four stay signed in side by side.
+2. **Loader** (Ruwan): open VEH022, then stop 5 **Kandy City**, tap **Rice, 5 kg bag**, count 4 of 5, pick a reason and **Flag 1 short and keep loading**. The truck is not blocked.
+3. **Dispatcher** (Kavindi): the shortfall is already in the live feed, no refresh. **Driver** (Chamara): the Kandy City stop shows the short item.
+4. **Dispatcher:** open **Plan**: 8 chilled orders for 5 reefer slots. Open **Decide**, keep the three suggested waits, write the reason and **Confirm 3 deferrals**.
+5. **Store manager** (Nadeeka, OUT014 Dehiwala): Today shows she is protected on the next tight day. **Check what arrived** on this morning's delivery and confirm it, then place an order in **Order**: it appears in the dispatcher's feed at once.
+6. **Driver:** tap **Online** at the top to go to **No signal**, deliver Kegalle with a signature (saved on the phone), then go back online and watch it sync.
+7. **Dispatcher:** **Reset to seed data** in the top bar puts the scenario back.
 
 The full five minute script is in [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md).
 

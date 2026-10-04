@@ -5,6 +5,7 @@
 # The live site does not use this file: Cloud Run builds the Dockerfile only. See docs/DEPLOY.md
 services:
   waypoint:
+    pull_policy: build # always build from this checkout, never reuse an old image
     build:
       context: .
       args:
@@ -32,6 +33,7 @@ services:
 
   # Creates the four demo accounts (one per role), then exits
   seed-users:
+    pull_policy: build
     build:
       context: .
       args:
