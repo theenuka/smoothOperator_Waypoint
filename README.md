@@ -6,7 +6,7 @@ Waypoint is a delivery operations platform for a retail chain that supplies its 
 
 Team **smoothOperator** · Rootcode Tech-Triathlon 2026
 
-![Dispatcher dashboard](docs/screenshots/dispatcher-today.jpg)
+![Waypoint on the dispatcher's desktop, the dock tablet and the driver's phone](docs/screenshots/hero.jpg)
 
 ## The problem
 
@@ -36,10 +36,27 @@ Every change is published as an event and pushed to every open screen, so a shor
 
 When chilled orders exceed reefer slots, outlets that waited on either of the last two runs, or twice in 14 days, are protected. The rest are ranked by the longest gap since their last chilled delivery, and on a tie the smaller order waits. The dispatcher makes the final call and the store reads the reason in plain language.
 
-| | |
-|---|---|
-| ![Plan and allocate](docs/screenshots/dispatcher-plan.jpg) | ![Flag a shortfall](docs/screenshots/loader-shortfall.jpg) |
-| ![Driver route](docs/screenshots/driver-route.jpg) | ![Sync decision](docs/screenshots/driver-sync.jpg) |
+## Screens
+
+### Dispatcher: plan and allocate
+Capacity, the reefer fleet and the fairness ranking update as the dispatcher ticks who waits.
+
+![Plan and allocate](docs/screenshots/dispatcher-plan.jpg)
+
+### Loader: the dock tablet
+Dark, glove-friendly screens for 04:30. The truck is loaded last stop first, and a shortfall is flagged without blocking it.
+
+![Load plan and shortfall](docs/screenshots/loader.jpg)
+
+### Driver: the phone
+Route, stop handover, proof of delivery with signature and photo, and the sync decision when phone and office disagree.
+
+![Driver app](docs/screenshots/driver.jpg)
+
+### Store manager
+What is coming and why it changed, in plain language.
+
+![Store manager](docs/screenshots/store.jpg)
 
 ## Architecture
 
@@ -90,6 +107,7 @@ Open the app, pick a role, and open a second role in another window to watch cha
 | `npm run build` | Production build of the web app |
 | `npm start` | API also serves the built app on one port |
 | `npm run format` | Format the code base |
+| `npm run sim` | Drive VEH022 along the A1 so the live map moves |
 
 **Reset demo data** on the home page restores the scenario: Tuesday 29 September, planning Wednesday 30 September, the Kandy run already on the road.
 
@@ -125,7 +143,7 @@ docs/                 API contract, data model, design system, deployment, demo
 
 | | |
 |---|---|
-| Theenuka Bandara | Team lead, platform and integration, delivery and sync services |
+| Theenuka Bandara | Platform, integration, delivery and sync services |
 | Shukri Ahamed | Orders, planning, deferral and store notice services |
 | Vanuja Karunaratne | Dispatcher app |
 | Chinthaka Dissanayake | Dock loader app |
