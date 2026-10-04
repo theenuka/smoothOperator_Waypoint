@@ -98,6 +98,8 @@ export default function DP1Dashboard() {
 
   const totalAlerts = offlineVehicles.length + (over > 0 ? 1 : 0) + shortfalls.length + openConflicts.length;
 
+  const needDecisionCount = openConflicts.length + offlineVehicles.length + (over > 0 ? 1 : 0);
+
   return (
     <>
       <PageHead
@@ -182,7 +184,12 @@ export default function DP1Dashboard() {
                   (s) => (s.status === "pending" || s.status === "next") && s.order?.status !== "deferred"
                 );
                 const remainingNames = pendingStops.map((s) => s.outletName).join(", ");
-                const routeName = r.vehicle?.type === "reefer" ? "Colombo S. Reefer" : "Kandy Route (A1)";
+                let routeName = "Local Run";
+                if (r.vehicleId === "VEH022") routeName = "Kandy Route (A1)";
+                else if (r.vehicleId === "VEH014") routeName = "Colombo South Reefer";
+                else if (r.vehicleId === "VEH019") routeName = "Colombo Central Reefer";
+                else if (r.vehicleId === "VEH026") routeName = "Gampaha Reefer";
+                else if (r.vehicle?.type === "reefer") routeName = "Chilled Reefer";
 
                 return (
                   <div key={r.id} className={`dp-run-card ${isOffline ? "is-offline" : ""}`}>
