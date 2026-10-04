@@ -45,6 +45,7 @@ The agreement between frontend and backend. **If it's not written here, it doesn
 |---|---|---|---|
 | ✅ | `GET /notices` | `?outletId=OUT014` | `[{ id, outletId, type:"deferral"\|"shortfall"\|"failed", title, body, at, read }]` newest first |
 | ✅ | `POST /notices/:id/read` | | the notice |
+| 🟡 | `POST /issues` | `{ outletId, deliveryId, sku, problem:"short"|"damaged"|"wrong_item"|"past_date", note, qty?, fix?:"fix"|"credit", receivedBy? }` | the issue (201): `{ id, outletId, deliveryId, orderId, sku, problem, qty, fix, note, receivedBy, status:"open", at }`, stored in `db().issues`. 400 `{ error }` for unknown store, problem type or delivery. Publishes `issue.reported`. Router is `issues` exported from `routes/notices.js`; waiting for the Lead to mount it at `/api/issues` |
 
 ## Runs [Backend B] {#runs}
 
@@ -117,4 +118,4 @@ The server emits `"event"` with `{ id, type, at, payload }`. In React use `useAp
 
 | Requested by | Method and path | Body | Response | Owner | Status |
 |---|---|---|---|---|---|
-| Store FE | `POST /issues` | `{ outletId, deliveryId, sku, problem, note }` | the issue (201), publishes `issue.reported` | Backend A | ⬜ |
+| Store FE | `POST /issues` | `{ outletId, deliveryId, sku, problem, note }` | the issue (201), publishes `issue.reported` | Backend A | 🟡 built, see Notices; needs mount in `index.js` |
