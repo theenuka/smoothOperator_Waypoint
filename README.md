@@ -100,10 +100,20 @@ The live demo is at [waypoint.theenuka.in](https://waypoint.theenuka.in). To run
 ```bash
 git clone https://github.com/theenuka/waypoint.git
 cd waypoint
+cp .env.example .env
 docker compose up --build
 ```
 
-Open http://localhost:8080 when the log says the server is listening. The API, live events and web app all run from that one container, and the demo data is created on first start. Stop with `Ctrl+C`; `docker compose down` removes the container, and the next start begins from the seeded scenario again.
+Open http://localhost:8080 when the log says the server is listening. Compose starts the app and a local Supabase (Postgres, auth, REST API and a gateway on port 8000), so nothing is called in the cloud. The first start downloads about 1 GB of images, creates the tables, fills them with the demo data and creates the four accounts below. The `.env` values are local-only demo keys.
+
+| Role | Email | Password (local) |
+|---|---|---|
+| Dispatcher | kavindi@waypoint.demo | `Waypoint-local-demo` |
+| Loader | ruwan@waypoint.demo | `Waypoint-local-demo` |
+| Driver | chamara@waypoint.demo | `Waypoint-local-demo` |
+| Store manager (OUT014) | nadeeka@waypoint.demo | `Waypoint-local-demo` |
+
+Stop with `Ctrl+C`. The data is kept between starts; `docker compose down -v` deletes it, and the next start begins from the seeded scenario again.
 
 **Judge walkthrough (3 minutes):**
 

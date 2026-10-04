@@ -5,3 +5,8 @@ server/data
 .git
 .github
 *.log
+# local env files: never baked into the image (secrets; the cloud build uses web/.env.production)
+server/.env
+web/.env
+web/.env*.local
+.env
