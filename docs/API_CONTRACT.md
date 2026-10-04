@@ -37,7 +37,7 @@ The contract between the web app and the API. Any change to an endpoint is made 
 | Method and path | Body / query | Returns |
 |---|---|---|
 | `GET /deferrals` | `?outletId=OUT014` | deferral log, newest first, with `outletName` |
-| `POST /deferrals` | `{ orderIds:[...], toDate, reason, decidedBy }` | created deferrals (201). Sets order `status:"deferred"`, creates a store notice, publishes `deferral.decided` per order |
+| `POST /deferrals` | `{ orderIds:[...], toDate, reason, decidedBy }` | created deferrals (201). Sets order `status:"deferred"`, creates a store notice (it names the store's previous wait, e.g. "You also waited on Friday 25 September."), publishes `deferral.decided` per order |
 | `POST /deferrals/:id/reverse` | `{ by, note }` | the deferral. Publishes `deferral.reversed` |
 
 ## Notices and store issues {#notices}
