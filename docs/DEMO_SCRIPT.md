@@ -11,6 +11,8 @@ Open four browser windows, arranged so the judges see them:
 3. Loader: `/loader/home`
 4. Store: `/store/today` (switch the outlet with the dropdown when told)
 
+Optional: run `npm run sim` in another terminal so VEH022 moves along the A1 on the dispatcher's Live screen (DP5).
+
 ## 0. The problem (30 s)
 
 "Retail chains in Sri Lanka lose the truth between the depot office, the dock, the truck and the store. Three problems: chilled trucks are always short, so someone waits and nobody knows why; the dock is short of stock, so trucks leave late or stores get surprises; and drivers lose signal on roads like the A1, so records get lost or overwritten. Waypoint gives every role one live truth."

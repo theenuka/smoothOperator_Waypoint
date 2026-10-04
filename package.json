@@ -10,6 +10,7 @@
     "start": "npm run start -w server",
     "test": "npm test -w server",
     "reset-data": "npm run reset -w server",
+    "sim": "npm run sim -w server",
     "format": "prettier --write \"server/src/**/*.js\" \"server/test/**/*.js\" \"web/src/**/*.{js,jsx,css}\"",
     "format:check": "prettier --check \"server/src/**/*.js\" \"server/test/**/*.js\" \"web/src/**/*.{js,jsx,css}\""
   },

@@ -3,11 +3,12 @@ import { Router } from "express";
 import { db, save, nowIso } from "../db.js";
 import { publish } from "../events.js";
 import { httpError, wrap } from "./_util.js";
+import { silentMinutes } from "../logic/runSummary.js";
 
 const r = Router();
 
-// GET /api/tracking  -> last known position and signal state per vehicle
-r.get("/", (req, res) => res.json(Object.values(db().positions)));
+// GET /api/tracking  -> last known position, signal state and silentMinutes per vehicle
+r.get("/", (req, res) => res.json(silentMinutes(db().positions)));
 
 // POST /api/tracking/ping  { vehicleId, lat, lng }
 r.post(
