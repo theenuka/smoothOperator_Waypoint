@@ -1,9 +1,10 @@
 // SM1 Today.  Design: docs/design/SM1-Dashboard.jpg
-import { Fragment } from "react";
-import { Link } from "react-router-dom";
+import { Fragment, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useApi } from "../../shared/live.js";
-import { Card, PageHead, Badge, StatusBadge, Loading, ErrorNote } from "../../shared/ui.jsx";
+import { Card, PageHead, Badge, StatusBadge, Loading, ErrorNote, useToast } from "../../shared/ui.jsx";
 import { day, time } from "../../shared/format.js";
+import { receiptFor } from "./receipts.js";
 import "./store.css";
 
 const LIVE = [
@@ -29,6 +30,18 @@ const weekday = (iso) =>
 const mins = (hhmm) => Number(hhmm.slice(0, 2)) * 60 + Number(hhmm.slice(3, 5));
 
 export default function SM1Dashboard({ outletId }) {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [toast, show] = useToast();
+  // A message handed over by another screen (SM6 after "Sign and confirm"). Show it once,
+  // then clear it so a page reload does not show it again.
+  useEffect(() => {
+    const message = location.state?.message;
+    if (!message) return;
+    show(message);
+    navigate(location.pathname, { replace: true, state: null });
+  }, [location.state]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const meta = useApi("/meta");
   const orders = useApi(`/orders?outletId=${outletId}`, LIVE);
   const notices = useApi(`/notices?outletId=${outletId}`, LIVE);
@@ -36,6 +49,9 @@ export default function SM1Dashboard({ outletId }) {
   const deferrals = useApi(`/deferrals?outletId=${outletId}`, LIVE);
   const demoDate = meta.data?.meta.demoDate;
   const runs = useApi(demoDate ? `/runs?date=${demoDate}` : null, LIVE);
+  // When the demo data was last reset: checks signed before that are forgotten.
+  const events = useApi("/meta/events?limit=200", ["demo.reset"]);
+  const resetAt = (events.data || []).find((e) => e.type === "demo.reset")?.at;
 
   const err = orders.error || notices.error || meta.error;
   if (err) return <ErrorNote error={err} />;
@@ -51,6 +67,7 @@ export default function SM1Dashboard({ outletId }) {
   const defs = (deferrals.data || []).filter((d) => !d.reversed);
   const unread = (notices.data || []).filter((n) => !n.read);
   const arrivalOf = (id) => dels.find((d) => d.orderId === id && d.status === "delivered");
+  const checkedOf = (id) => receiptFor(arrivalOf(id)?.id, resetAt); // signed on SM6 in this browser
   const shortNoticeOf = (o) =>
     (notices.data || []).find(
       (n) =>
@@ -72,6 +89,7 @@ export default function SM1Dashboard({ outletId }) {
     const run = (runs.data || []).find((r) => r.stops.some((s) => s.orderId === hero.id));
     const stop = run?.stops.find((s) => s.orderId === hero.id);
     const arrival = arrivalOf(hero.id);
+    const receipt = checkedOf(hero.id);
     const onWay = !!run?.departedAt;
     const done = [
       true,
@@ -79,13 +97,14 @@ export default function SM1Dashboard({ outletId }) {
       ["loaded", "delivered"].includes(hero.status) || onWay,
       onWay,
       !!arrival,
-      false, // there is no "receipt confirmed" record yet
+      !!receipt,
     ];
     const active = done.indexOf(false);
-    const waiting = !!arrival && hero.deliveryDate === demoDate;
+    const waiting = !!arrival && hero.deliveryDate === demoDate && !receipt;
 
     let big = day(hero.deliveryDate);
-    if (arrival) big = `Arrived ${time(arrival.recordedAt)}`;
+    if (receipt) big = `Checked ${time(receipt.at)}`;
+    else if (arrival) big = `Arrived ${time(arrival.recordedAt)}`;
     else if (onWay && stop) big = `ETA ${stop.eta}`;
     else if (done[2]) big = "Loaded";
 
@@ -102,6 +121,10 @@ export default function SM1Dashboard({ outletId }) {
             </span>
             {waiting ? (
               <span className="sm-chip">■ Waiting for your check</span>
+            ) : receipt ? (
+              <Badge tone="ok">
+                <span className="dot" /> Checked by {receipt.by}
+              </Badge>
             ) : hero.chilled ? (
               <Badge tone="cold">Chilled</Badge>
             ) : (
@@ -175,7 +198,8 @@ export default function SM1Dashboard({ outletId }) {
   };
   const badge = (o) => {
     if (o.status === "deferred") return <Badge tone="bad">■ Deferred</Badge>;
-    if (o.status === "delivered" && o.deliveryDate === demoDate) return <Badge tone="now">■ Check it</Badge>;
+    if (o.status === "delivered" && o.deliveryDate === demoDate && !checkedOf(o.id))
+      return <Badge tone="now">■ Check it</Badge>;
     if (o.status === "delivered")
       return (
         <Badge tone="ok">
@@ -194,7 +218,7 @@ export default function SM1Dashboard({ outletId }) {
       kind:
         o.status === "deferred"
           ? "bad"
-          : o.status === "delivered" && o.deliveryDate === demoDate
+          : o.status === "delivered" && o.deliveryDate === demoDate && !checkedOf(o.id)
             ? "now"
             : "ok",
     }));
@@ -336,6 +360,7 @@ export default function SM1Dashboard({ outletId }) {
           </div>
         </Card>
       </div>
+      {toast}
     </>
   );
 }
