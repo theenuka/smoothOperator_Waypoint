@@ -39,7 +39,8 @@ The contract between the web app and the API. Any change to an endpoint is made 
 | Method and path | Body / query | Returns |
 |---|---|---|
 | `GET /deferrals` | `?outletId=OUT014` | deferral log, newest first, with `outletName` |
-| `POST /deferrals` | `{ orderIds:[...], toDate, reason, decidedBy }` | created deferrals (201). Sets order `status:"deferred"`, creates a store notice (it names the store's previous wait, e.g. "You also waited on Friday 25 September."), publishes `deferral.decided` per order |
+| `GET /deferrals/preview` | `?orderId=ORD41907&toDate=2026-10-01` | exactly what the store will be told if this order moves, saves nothing: `{ orderId, outletId, outletName, toDate, title, body, signedBy, tiles:[{ label, value, tone? }], footnote, suggestedReason }`. Tiles come from the data: lines and kg, the new date with the outlet dock window, the days it cannot wait again. DP4 shows it |
+| `POST /deferrals` | `{ orderIds:[...], toDate, reason }` | created deferrals (201). `decidedBy` is the signed-in user. Sets order `status:"deferred"`, creates a store notice built like the preview (adds `signedBy`, `tiles`, `footnote`; names the previous wait), publishes `deferral.decided` per order. An unknown order id changes nothing (404) |
 | `POST /deferrals/:id/reverse` | `{ by, note }` | the deferral. Publishes `deferral.reversed` |
 
 ## Notices and store issues {#notices}

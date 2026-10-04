@@ -3,9 +3,45 @@ import { Router } from "express";
 import { db, save, newId, nowIso } from "../db.js";
 import { publish } from "../events.js";
 import { httpError, wrap, outletName } from "./_util.js";
-import { niceDate, alsoWaited } from "../logic/noticeText.js";
+import { deferralNotice } from "../logic/noticeText.js";
 
 const r = Router();
+
+// Who signs a notice: the signed-in dispatcher (never a name sent by the browser), and the outlet's depot.
+const signer = (req, d, outlet) => {
+  const depot = d.depots.find((x) => x.id === outlet.depot)?.name;
+  const who = req.user?.name ? [req.user.name, "dispatcher"] : ["Dispatch team"];
+  return [...who, depot].filter(Boolean).join(", ");
+};
+
+const noticeFor = (req, d, order, toDate, reason) => {
+  const outlet = d.outlets.find((x) => x.id === order.outletId) || {};
+  return deferralNotice({
+    order,
+    outlet,
+    toDate,
+    reason,
+    deferrals: d.deferrals,
+    signedBy: signer(req, d, outlet),
+  });
+};
+
+// GET /api/deferrals/preview?orderId=ORD41907&toDate=2026-10-01
+// Exactly what the store will be told if this order moves (DP4 shows it before you confirm). Saves nothing.
+r.get("/preview", (req, res, next) => {
+  const { orderId, toDate } = req.query;
+  const d = db();
+  const o = d.orders.find((x) => x.id === orderId);
+  if (!o) return next(httpError(404, "Order not found"));
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(toDate || "")) return next(httpError(400, "toDate must be YYYY-MM-DD"));
+  res.json({
+    orderId: o.id,
+    outletId: o.outletId,
+    outletName: outletName(d, o.outletId),
+    toDate,
+    ...noticeFor(req, d, o, toDate),
+  });
+});
 
 // GET /api/deferrals?outletId=OUT014   (the deferral log, newest first)
 r.get("/", (req, res) => {
@@ -15,18 +51,23 @@ r.get("/", (req, res) => {
   res.json(list.map((x) => ({ ...x, outletName: outletName(d, x.outletId) })));
 });
 
-// POST /api/deferrals  { orderIds:[...], toDate, reason, decidedBy }
+// POST /api/deferrals  { orderIds:[...], toDate, reason }
 // Defers the orders, writes the log, and sends each store a plain-language notice.
+// decidedBy is the signed-in user; a decidedBy in the body is only used when there is none.
 r.post(
   "/",
   wrap((req, res) => {
-    const { orderIds = [], toDate, reason, decidedBy = "Dispatcher" } = req.body || {};
+    const { orderIds = [], toDate, reason } = req.body || {};
     if (!orderIds.length || !toDate || !reason)
       throw httpError(400, "orderIds, toDate and reason are required");
+    const decidedBy = req.user?.name || req.body.decidedBy || "Dispatcher";
     const d = db();
-    const created = orderIds.map((id) => {
-      const o = d.orders.find((x) => x.id === id);
-      if (!o) throw httpError(404, `Order ${id} not found`);
+    // Check every order first, so a bad id changes nothing.
+    const orders = orderIds.map((id) => d.orders.find((x) => x.id === id) || id);
+    const missing = orders.find((o) => typeof o === "string");
+    if (missing) throw httpError(404, `Order ${missing} not found`);
+    const created = orders.map((o) => {
+      const { suggestedReason, ...notice } = noticeFor(req, d, o, toDate, reason); // before the order moves
       const def = {
         id: newId("DEF"),
         orderId: o.id,
@@ -43,13 +84,11 @@ r.post(
       o.changedBy = decidedBy;
       o.deliveryDate = toDate;
       d.deferrals.push(def);
-      const waits = d.deferrals.filter((x) => x.outletId === o.outletId && !x.reversed).length;
       d.notices.unshift({
         id: newId("NT"),
         outletId: o.outletId,
         type: "deferral",
-        title: `Your order ${o.id} now arrives ${niceDate(toDate)}`,
-        body: `${reason}${alsoWaited(d.deferrals, def)} You are protected on the next tight day.${waits >= 2 ? " This is not your first wait, so your next order goes to the front of the queue." : ""}`,
+        ...notice,
         at: def.at,
         read: false,
       });
@@ -72,7 +111,7 @@ r.post(
     if (!def) throw httpError(404, "Deferral not found");
     def.reversed = true;
     def.reversedAt = nowIso();
-    def.reversedBy = req.body?.by || "Dispatcher";
+    def.reversedBy = req.user?.name || req.body?.by || "Dispatcher";
     def.note = req.body?.note || "";
     save();
     publish("deferral.reversed", def);
