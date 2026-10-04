@@ -2,10 +2,26 @@
 // DesktopShell: dispatcher + store manager.  DockShell: loader tablet (dark).  PhoneShell: driver.
 import { NavLink, Link } from "react-router-dom";
 
-const Mark = () => (
-  <svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true">
-    <path d="M7 24V8l9 8 9-8v16" fill="none" stroke="#1B1A17" strokeWidth="3.6" strokeLinejoin="round" />
+/** The Waypoint mark (brand guide): two waypoints joined by a dashed route. */
+export const LogoMark = ({ size = 22, color = "var(--ink)" }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <circle cx="6" cy="6" r="2.7" stroke={color} strokeWidth="2" />
+    <circle cx="18" cy="18" r="2.7" fill={color} />
+    <path d="M8.3 8.3L15.7 15.7" stroke={color} strokeWidth="2" strokeDasharray="2.2 2.4" />
   </svg>
+);
+
+/** Logo lockup: the mark on its safety-yellow tile, then the wordmark. */
+export const Logo = ({ tile = 32, word = 24, dark = false, suffix }) => (
+  <span className="logo" style={{ gap: Math.round(tile * 0.3) }}>
+    <span className="logo-tile" style={{ width: tile, height: tile, borderRadius: Math.round(tile * 0.18) }}>
+      <LogoMark size={Math.round(tile * 0.6)} />
+    </span>
+    <span className="logo-word" style={{ fontSize: word, color: dark ? "var(--dock-text)" : "var(--ink)" }}>
+      Waypoint
+      {suffix && <span className="logo-suffix">{suffix}</span>}
+    </span>
+  </span>
 );
 
 /** nav = [{ to: "dashboard", code: "DP1", label: "Today" }, ...] (paths relative to the role) */
@@ -14,7 +30,7 @@ export function DesktopShell({ person, nav, title, children }) {
     <div className="shell">
       <nav className="rail" aria-label={`${person.role} menu`}>
         <Link to="/" className="rail-mark" aria-label="Waypoint home: switch role">
-          <Mark />
+          <LogoMark size={24} />
         </Link>
         {nav.map((n) => (
           <NavLink key={n.to} to={n.to} className={({ isActive }) => (isActive ? "active" : "")}>
@@ -29,7 +45,9 @@ export function DesktopShell({ person, nav, title, children }) {
       </nav>
       <div className="main">
         <div className="topbar">
-          <b style={{ fontFamily: "var(--f-display)", fontSize: 22, fontWeight: 800 }}>WAYPOINT</b>
+          <span className="logo-word" style={{ fontSize: 24 }}>
+            Waypoint
+          </span>
           <span className="label">{title}</span>
           <div className="who">
             <div className="col" style={{ gap: 0, alignItems: "flex-end" }}>
@@ -50,11 +68,7 @@ export function DockShell({ nav, right, children }) {
     <div className="dock">
       <div className="topbar">
         <Link to="/" style={{ textDecoration: "none" }} aria-label="Waypoint home: switch role">
-          <b
-            style={{ fontFamily: "var(--f-display)", fontSize: 22, fontWeight: 800, color: "var(--yellow)" }}
-          >
-            WAYPOINT DOCK
-          </b>
+          <Logo tile={30} word={23} dark suffix="Dock" />
         </Link>
         <nav className="dock-tabs" aria-label="Loader menu">
           {nav.map((n) => (
