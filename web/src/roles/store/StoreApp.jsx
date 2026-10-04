@@ -1,7 +1,9 @@
 // Store manager app (Nadeeka, desktop).
 import { Routes, Route, Navigate } from "react-router-dom";
 import { DesktopShell } from "../../shared/shells.jsx";
-import { useOutlet, OUTLETS } from "./outlet.js";
+import { useAuth } from "../../shared/auth.jsx";
+import { useApi } from "../../shared/live.js";
+import { Empty } from "../../shared/ui.jsx";
 import SM1Dashboard from "./SM1Dashboard.jsx";
 import SM2PlaceOrder from "./SM2PlaceOrder.jsx";
 import SM3OrderQueue from "./SM3OrderQueue.jsx";
@@ -19,28 +21,47 @@ const nav = [
   { to: "issue", code: "SM7", label: "Problem" },
 ];
 
+const initialsOf = (name) =>
+  name
+    .split(" ")
+    .map((w) => w[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+
 export default function StoreApp() {
-  const [outletId, setOutletId] = useOutlet();
-  const person = { name: "Nadeeka Fernando", role: "Store manager", initials: "NF" };
+  // The store comes from the signed-in account (Supabase app_metadata.outletId), so a manager only
+  // ever sees their own store. There is no switch.
+  const { user } = useAuth();
+  const outletId = user?.outletId;
+  const meta = useApi("/meta");
+  const outlet = meta.data?.outlets.find((o) => o.id === outletId);
+  const person = {
+    name: user?.name || "Store manager",
+    role: "Store manager",
+    initials: initialsOf(user?.name || "S M"),
+  };
   const props = { outletId };
+
+  if (!outletId)
+    return (
+      <DesktopShell person={person} nav={[]}>
+        <Empty>
+          This account is not linked to a store yet. Ask the Lead to add your outlet to your sign-in
+          (docs/AUTH.md).
+        </Empty>
+      </DesktopShell>
+    );
+
   return (
     <DesktopShell
       person={person}
       nav={nav}
       title={
-        <select
-          className="select"
-          style={{ minHeight: 32, padding: "4px 8px", width: "auto" }}
-          value={outletId}
-          onChange={(e) => setOutletId(e.target.value)}
-          aria-label="Outlet (demo switch)"
-        >
-          {OUTLETS.map(([id, label]) => (
-            <option key={id} value={id}>
-              {id} · {label}
-            </option>
-          ))}
-        </select>
+        <span className="mono small" aria-label="Your store">
+          {outletId}
+          {outlet ? ` · ${outlet.name}` : ""}
+        </span>
       }
     >
       <Routes>
