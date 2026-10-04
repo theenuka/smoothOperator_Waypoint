@@ -2,6 +2,7 @@
 import { Router } from "express";
 import { db } from "../db.js";
 import { httpError, outletName } from "./_util.js";
+import { summarizeRun } from "../logic/runSummary.js";
 
 const r = Router();
 
@@ -32,6 +33,21 @@ r.get("/:id", (req, res, next) => {
   const run = d.runs.find((x) => x.id === req.params.id);
   if (!run) return next(httpError(404, "Run not found"));
   res.json(expand(d, run));
+});
+
+// GET /api/runs/:id/summary  -> trip summary for DR7
+r.get("/:id/summary", (req, res, next) => {
+  const d = db();
+  const run = d.runs.find((x) => x.id === req.params.id);
+  if (!run) return next(httpError(404, "Run not found"));
+  res.json(
+    summarizeRun({
+      run,
+      deliveries: d.deliveries,
+      shortfalls: d.loads[run.id]?.shortfalls || [],
+      orders: d.orders,
+    })
+  );
 });
 
 export default r;

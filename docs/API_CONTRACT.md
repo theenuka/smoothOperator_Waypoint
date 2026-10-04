@@ -55,6 +55,7 @@ The contract between the web app and the API. Any change to an endpoint is made 
 |---|---|---|
 | `GET /runs` | `?date=2026-09-29&vehicleId=VEH022` | runs, expanded like below |
 | `GET /runs/:id` | | `{ id, vehicleId, vehicle, date, driver, bay, status, stops:[{ seq, outletId, outletName, outlet, orderId, order, eta, status:"delivered"\|"next"\|"pending"\|"failed", shortfalls[] }] }` |
+| `GET /runs/:id/summary` | | `{ runId, vehicleId, driver, stops, delivered, failed, deferred, pending, firstDeliveryAt, lastDeliveryAt, shortfallsHandedOver:[{ orderId, outletId, name, missing }], done }` |
 
 ## Loads (dock) {#loads}
 
@@ -87,7 +88,7 @@ A failed record adds `"status": "failed", "issue": "store_closed"|"refused"|"dam
 |---|---|---|
 | `POST /sync` | `{ deviceId, records:[delivery records] }` | `{ accepted:[clientId], duplicates:[clientId], conflicts:[conflict], errors:[{ clientId, error }] }`. Records are applied oldest first; the same `clientId` twice is saved once; a bad record (e.g. unknown order) only lands in `errors` and the rest still sync. Errored records stay on the phone |
 | `GET /sync/conflicts` | `?runId=RUN-VEH022&status=open` | conflicts |
-| `POST /sync/resolve` | `{ conflictId, choice:"phone"\|"server", by }` | the conflict. `phone` = delivery kept and deferral reversed. Publishes `sync.resolved` |
+| `POST /sync/resolve` | `{ conflictId, choice:"phone"\|"server", by }` | the conflict. `phone` = the phone record wins: a delivered record reverses the office deferral; a failed record marks the stop failed, supersedes the office delivery and notifies the store. Publishes `sync.resolved` |
 
 A **conflict**: `{ id, clientId, runId, orderId, outletId, outletName, phone:{record}, server:{ status, changedAt, changedBy, deferralId, reason, toDate }, why, status:"open"\|"resolved", choice, resolvedBy, at }`
 
@@ -95,7 +96,7 @@ A **conflict**: `{ id, clientId, runId, orderId, outletId, outletName, phone:{re
 
 | Method and path | Body / query | Returns |
 |---|---|---|
-| `GET /tracking` | | `[{ vehicleId, lat, lng, at, online, place }]` |
+| `GET /tracking` | | `[{ vehicleId, lat, lng, at, online, place, silentMinutes }]`. `silentMinutes` is the time since the vehicle's last ping, measured against the freshest ping in the fleet |
 | `POST /tracking/ping` | `{ vehicleId, lat, lng }` | position. Publishes `vehicle.position` |
 | `POST /tracking/signal` | `{ vehicleId, online, place }` | position. Publishes `vehicle.offline` / `vehicle.online` |
 

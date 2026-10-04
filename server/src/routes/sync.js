@@ -1,10 +1,12 @@
 // Offline sync API.  Contract: docs/API_CONTRACT.md#sync
 // The driver app keeps records in an outbox while offline and sends them here when signal returns.
 import { Router } from "express";
-import { db, save, nowIso } from "../db.js";
+import { db, save, nowIso, newId } from "../db.js";
 import { publish } from "../events.js";
 import { applyDelivery } from "./deliveries.js";
 import { processBatch } from "../logic/syncBatch.js";
+import { resolution } from "../logic/resolve.js";
+import { applyStopResult, failureNotice } from "../logic/stops.js";
 import { httpError, wrap } from "./_util.js";
 
 const r = Router();
@@ -43,22 +45,45 @@ r.post(
     c.choice = choice;
     c.resolvedBy = by;
     c.resolvedAt = nowIso();
-    if (choice === "phone") {
+    const plan = resolution(c, choice);
+    if (plan.apply) {
       const order = d.orders.find((o) => o.id === c.orderId);
-      order.status = "delivered";
-      order.deliveryDate = c.phone.recordedAt?.slice(0, 10) || order.deliveryDate;
-      d.deliveries.push({ id: `DLV-${c.clientId}`, ...c.phone, status: "delivered", syncedAt: nowIso() });
-      const def = d.deferrals.find((x) => x.id === c.server.deferralId);
-      if (def)
-        Object.assign(def, {
-          reversed: true,
-          reversedAt: nowIso(),
-          reversedBy: by,
-          note: `Delivered at ${c.phone.recordedAt} while offline`,
+      order.status = plan.orderStatus;
+      if (plan.stopStatus === "delivered")
+        order.deliveryDate = c.phone.recordedAt?.slice(0, 10) || order.deliveryDate;
+      const id = `DLV-${c.clientId}`;
+      if (plan.supersedeOfficeDelivery)
+        d.deliveries
+          .filter((x) => x.orderId === c.orderId && x.status === "delivered" && !x.supersededBy)
+          .forEach((x) => (x.supersededBy = id));
+      d.deliveries.push({ id, ...c.phone, status: plan.stopStatus, syncedAt: nowIso() });
+      if (plan.reverseDeferral) {
+        const def = d.deferrals.find((x) => x.id === c.server.deferralId);
+        if (def)
+          Object.assign(def, {
+            reversed: true,
+            reversedAt: nowIso(),
+            reversedBy: by,
+            note: `Delivered at ${c.phone.recordedAt} while offline`,
+          });
+      }
+      if (plan.notice) {
+        const n = failureNotice(c.phone);
+        d.notices.unshift({
+          id: newId("NT"),
+          outletId: c.outletId,
+          type: "failed",
+          ...n,
+          at: nowIso(),
+          read: false,
         });
+      }
       const run = d.runs.find((x) => x.id === c.runId);
-      const stop = run?.stops.find((s) => s.orderId === c.orderId);
-      if (stop) stop.status = "delivered";
+      if (run) {
+        const { stops, runDone } = applyStopResult(run.stops, c.orderId, plan.stopStatus);
+        run.stops = stops;
+        if (runDone) run.status = "done";
+      }
     }
     save();
     publish("sync.resolved", { conflictId: c.id, orderId: c.orderId, choice, by });
