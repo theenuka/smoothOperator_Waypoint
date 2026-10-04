@@ -21,6 +21,35 @@ gcloud run deploy waypoint --source . --region asia-southeast1 --allow-unauthent
 - The region is Singapore (`asia-southeast1`) because Cloud Run custom domains are not offered in Mumbai.
 - Deploy again after merging new PRs: `git checkout main && git pull`, then the same `gcloud run deploy` command.
 
+## Continuous deployment
+
+Every push to `main` that passes CI is deployed by `.github/workflows/deploy.yml`, then smoke tested. GitHub signs in to Google Cloud with Workload Identity Federation, so there is no service account key anywhere. It can also be run by hand from the Actions tab (**Deploy → Run workflow**).
+
+Each deploy starts a fresh container, so the demo data resets. Stop merging before a live demo.
+
+One-time setup:
+
+```bash
+PROJECT_ID=waypoint-smoothop
+PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID --format='value(projectNumber)')
+REPO=theenuka/waypoint
+SA=github-deployer@$PROJECT_ID.iam.gserviceaccount.com
+
+gcloud services enable iamcredentials.googleapis.com sts.googleapis.com
+gcloud iam service-accounts create github-deployer --display-name "GitHub Actions deployer"
+for role in run.admin iam.serviceAccountUser cloudbuild.builds.editor artifactregistry.writer storage.admin serviceusage.serviceUsageConsumer; do
+  gcloud projects add-iam-policy-binding $PROJECT_ID --member "serviceAccount:$SA" --role "roles/$role" --condition None --quiet > /dev/null
+done
+
+gcloud iam workload-identity-pools create github --location global --display-name "GitHub"
+gcloud iam workload-identity-pools providers create-oidc waypoint --location global --workload-identity-pool github \
+  --issuer-uri https://token.actions.githubusercontent.com \
+  --attribute-mapping "google.subject=assertion.sub,attribute.repository=assertion.repository" \
+  --attribute-condition "assertion.repository == '$REPO'"
+gcloud iam service-accounts add-iam-policy-binding $SA --role roles/iam.workloadIdentityUser \
+  --member "principalSet://iam.googleapis.com/projects/$PROJECT_NUMBER/locations/global/workloadIdentityPools/github/attribute.repository/$REPO"
+```
+
 ## Custom domain
 
 The live demo runs at https://waypoint.theenuka.in.
